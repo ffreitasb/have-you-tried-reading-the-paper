@@ -1,0 +1,28 @@
+PRD_REPOSITORY_BOOTSTRAP_ZENODO_V1.md
+
+# Local agent state and workspace tools
+.claude-flow/
+.repowise/
+.kilo/
+.claude/
+
+# Editors and OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Python and local validation output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+validation-output/
+lychee-report.md
+*.tmp
+.env
+.env.*
