@@ -8,11 +8,9 @@
 
 [**English**](README.md) · [**Português (Brasil)**](README.pt-BR.md)
 
-![Conhecimento Aberto](https://img.shields.io/badge/conhecimento%20aberto-feito%20para%20ser%20compartilhado-2ea44f)
 [![Licença: CC BY-SA 4.0](https://img.shields.io/badge/licen%C3%A7a-CC%20BY--SA%204.0-1769aa)](LICENSE)
+[![Repository integrity](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml/badge.svg?branch=main)](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml)
 ![Idiomas](https://img.shields.io/badge/idiomas-English%20%7C%20Portugu%C3%AAs-0969da)
-![Base de Conhecimento](https://img.shields.io/badge/base%20de%20conhecimento-22%20docs%20por%20idioma-8250df)
-![Escopo](https://img.shields.io/badge/escopo-engenharia%20de%20foundation%20models-f97316)
 ![Status](https://img.shields.io/badge/status-refer%C3%AAncia%20viva-1f883d)
 
 </div>
