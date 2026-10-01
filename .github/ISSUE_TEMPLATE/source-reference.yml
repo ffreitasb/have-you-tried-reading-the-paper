@@ -1,0 +1,30 @@
+name: Source or reference / Fonte ou referência
+description: Propose a missing, updated, or stronger reference.
+title: "[Reference]: "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document, language, and section / Documento, idioma e seção
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current reference or gap / Referência atual ou lacuna
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed source / Fonte proposta
+      description: Provide a stable URL or DOI, title, authors, date, and relevant sections.
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Relevance and claim impact / Relevância e impacto nas afirmações
+      description: Explain why the source is stronger and whether the surrounding claims need to change in either edition.
+    validations:
+      required: true

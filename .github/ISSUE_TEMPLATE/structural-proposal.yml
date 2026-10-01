@@ -1,0 +1,43 @@
+name: Structural proposal / Proposta estrutural
+description: Propose a category, datasheet, or ontology change with evidence.
+title: "[Structure]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A new product/model name is not automatically a new mathematical category.
+        Nome novo de produto ou modelo não constitui automaticamente uma nova categoria matemática.
+        Read the language-specific CONVENTIONS.md before proposing a new numbered document.
+  - type: input
+    id: proposal
+    attributes:
+      label: Proposed structural change / Mudança estrutural proposta
+    validations:
+      required: true
+  - type: textarea
+    id: mechanism
+    attributes:
+      label: Mathematical distinction / Distinção matemática
+      description: What changes in representation, objective, inference topology, or state dynamics?
+    validations:
+      required: true
+  - type: textarea
+    id: existing
+    attributes:
+      label: Why existing coverage is insufficient / Por que a cobertura atual não atende
+      description: Identify the closest existing documents and explain the boundary.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Primary evidence / Evidência primária
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Bilingual and navigation impact / Impacto bilíngue e na navegação
+      description: Outline the changes to both editions, indexes, conventions, and validation inventory.
+    validations:
+      required: true

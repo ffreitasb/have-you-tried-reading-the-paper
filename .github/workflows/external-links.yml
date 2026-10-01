@@ -1,0 +1,54 @@
+name: External links
+
+on:
+  schedule:
+    - cron: "23 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-links
+  cancel-in-progress: false
+
+jobs:
+  external-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check external references
+        id: lychee
+        continue-on-error: true
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          lycheeVersion: v0.24.2
+          args: >-
+            --no-progress --include-verbatim --scheme https --scheme http
+            --max-concurrency 2 --timeout 25 --max-retries 2 --retry-wait-time 5
+            --user-agent 'EducationalReferenceLinkCheck/1.0 (contact@ffreitasb.cc)'
+            --exclude '^https://github\.com/ffreitasb/have-you-tried-reading-the-paper/(actions|issues/new)'
+            '*.md' 'docs/**/*.md'
+          output: lychee-report.md
+          format: markdown
+          fail: false
+      - name: Publish report in job summary
+        if: always()
+        run: |
+          if [ -f lychee-report.md ]; then
+            cat lychee-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Link checker did not produce a report; inspect its step log.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Retain external link report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: external-link-report
+          path: lychee-report.md
+          if-no-files-found: warn
+          retention-days: 30

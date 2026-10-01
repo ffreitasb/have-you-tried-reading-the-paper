@@ -1,0 +1,2 @@
+# Current stable CFF validator; also supplies the YAML parser used by validation.
+cffconvert==2.0.0

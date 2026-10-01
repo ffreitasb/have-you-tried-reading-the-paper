@@ -1,0 +1,30 @@
+name: Localization parity / Paridade de localização
+description: Report a conceptual or localization divergence between editions.
+title: "[Localization]: "
+body:
+  - type: input
+    id: english
+    attributes:
+      label: English document and section / Documento e seção em inglês
+    validations:
+      required: true
+  - type: input
+    id: portuguese
+    attributes:
+      label: Portuguese document and section / Documento e seção em português
+    validations:
+      required: true
+  - type: textarea
+    id: divergence
+    attributes:
+      label: Conceptual divergence / Divergência conceitual
+      description: Quote both passages and explain the difference in meaning. Literal wording differences alone are not errors.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed localization and evidence / Localização proposta e evidência
+      description: Explain the intended meaning and cite technical evidence when claims or terminology change.
+    validations:
+      required: true

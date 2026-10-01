@@ -1,0 +1,38 @@
+name: Technical correction / Correção técnica
+description: Report a specific technical claim with authoritative evidence.
+title: "[Correction]: "
+body:
+  - type: input
+    id: document
+    attributes:
+      label: Document and language / Documento e idioma
+      placeholder: docs/en-US/02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section / Seção
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Current claim / Afirmação atual
+      description: Quote the exact passage, equation, or table entry.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction / Correção proposta
+      description: Explain the mechanism and the impact on both language editions.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Primary or authoritative evidence / Evidência primária ou confiável
+      description: Link sources with sections or equations, or give reproducible experiment details and limitations.
+    validations:
+      required: true
