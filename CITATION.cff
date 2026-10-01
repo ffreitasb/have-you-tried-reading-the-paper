@@ -46,3 +46,17 @@ keywords:
   - AI security
   - open education
   - open knowledge
+version: "1.0.0"
+date-released: "2026-10-01"
+preferred-citation:
+  type: manual
+  title: "Have You Tried Reading the Paper?"
+  authors:
+    - family-names: "Braga"
+      given-names: "Felipe Freitas"
+      alias: "Felipe Freitas"
+      email: "contact@ffreitasb.cc"
+      orcid: "https://orcid.org/0009-0006-9142-5072"
+  year: 2026
+  version: "1.0.0"
+  url: "https://github.com/ffreitasb/have-you-tried-reading-the-paper"

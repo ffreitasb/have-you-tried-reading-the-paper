@@ -1,0 +1,43 @@
+{
+  "title": "Have You Tried Reading the Paper?",
+  "version": "1.0.0",
+  "publication_date": "2026-10-01",
+  "access_right": "open",
+  "license": "cc-by-sa-4.0",
+  "upload_type": "publication",
+  "publication_type": "technicalnote",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Braga, Felipe Freitas",
+      "orcid": "0009-0006-9142-5072"
+    }
+  ],
+  "description": "An open, bilingual (English and Brazilian Portuguese) engineering reference for understanding modern foundation models below the interface layer. The project connects representations, tensors, objectives, architectures, inference, runtime, training, evaluation, retrieval, multimodality, agents, world models, security, and failure modes through equations, system-level relationships, and implementation-aware datasheets. The knowledge base is human-directed and AI-assisted; detailed production provenance is documented in PROVENANCE.md.",
+  "keywords": [
+    "artificial intelligence",
+    "machine learning",
+    "foundation models",
+    "generative AI",
+    "large language models",
+    "transformers",
+    "diffusion models",
+    "multimodal AI",
+    "local AI",
+    "inference",
+    "retrieval",
+    "AI agents",
+    "world models",
+    "model evaluation",
+    "AI security",
+    "open education",
+    "open knowledge"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/ffreitasb/have-you-tried-reading-the-paper",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
