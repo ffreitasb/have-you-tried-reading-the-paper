@@ -274,6 +274,14 @@ Consulte o [`CHANGELOG.md`](docs/pt-BR/CHANGELOG.md) e o [`CONVENTIONS.md`](docs
 
 ---
 
+## Mais fundo no rabbit hole
+
+Se você gosta de insights da madrugada, bits sendo obsessivamente escovados e ocasionais devaneios filosófico-ontológicos que provavelmente começaram como uma nota inocente sobre algum detalhe de implementação, visite o [TRANSMISSION_LOG](https://ffreitasb.cc/flogao/).
+
+Sem qualquer promessa de permanecer no assunto.
+
+---
+
 ## Contribuindo
 
 Correções, referências melhores, contraexemplos reproduzíveis, derivações mais claras, notas de implementação e adições genuinamente úteis são bem-vindas.

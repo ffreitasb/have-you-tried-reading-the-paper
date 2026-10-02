@@ -274,6 +274,14 @@ See the language-specific [`CHANGELOG.md`](docs/en-US/CHANGELOG.md) and [`CONVEN
 
 ---
 
+## Further down the rabbit hole
+
+If you're into midnight technical rabbit holes, obsessively polished bits, and the occasional philosophical-ontological detour that probably started as an innocent note about some implementation detail, visit the author's [TRANSMISSION_LOG](https://ffreitasb.cc/flogao/).
+
+No promises about staying on topic.
+
+---
+
 ## Contributing
 
 Corrections, better references, reproducible counterexamples, clearer derivations, implementation notes, and genuinely useful additions are welcome.
