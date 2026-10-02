@@ -21,6 +21,13 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python for archive verification
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install metadata validation dependencies
+        run: python -m pip install -r scripts/requirements-validation.txt
       - name: Check external references
         id: lychee
         continue-on-error: true
@@ -36,6 +43,9 @@ jobs:
           output: lychee-report.md
           format: markdown
           fail: false
+      - name: Verify archived Zenodo metadata and release bytes
+        continue-on-error: true
+        run: python scripts/verify_zenodo_archive.py
       - name: Publish report in job summary
         if: always()
         run: |
@@ -49,6 +59,8 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: external-link-report
-          path: lychee-report.md
+          path: |
+            lychee-report.md
+            validation-output/zenodo-verification.json
           if-no-files-found: warn
           retention-days: 30
