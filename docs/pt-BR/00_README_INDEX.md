@@ -13,7 +13,7 @@ Esta coleção não é uma enciclopédia de marcas/checkpoints.
 
 A regra de crescimento é:
 
-\[
+```math
 \boxed{
 NewDatasheet
 \iff
@@ -25,7 +25,7 @@ NewDatasheet
 \lor
 \Delta StateDynamics
 }
-\]
+```
 
 Portanto `MoE`, `LoRA`, `RAG`, `reasoning model`, `quantization`, `speculative decoding`, `MCP` ou um novo sampler não viram automaticamente “tipos de modelo”. Eles entram no arquivo cuja matemática realmente modificam.
 
@@ -76,7 +76,7 @@ Security / Monitoring / Feedback
 
 Para quase qualquer sistema moderno, procure:
 
-\[
+```math
 \boxed{
 Representation
 \rightarrow
@@ -92,7 +92,7 @@ Output
 \rightarrow
 Physical\ Cost
 }
-\]
+```
 
 Pergunte, nessa ordem:
 
@@ -190,9 +190,9 @@ FOUNDATION MODEL ENGINEERING
 
 Descreve qualquer modelo por eixos ortogonais:
 
-\[
+```math
 M=(R,O,B,C,I,S,D,\Omega)
-\]
+```
 
 Use quando quiser saber **que tipo de sistema está olhando antes de estudar os knobs**.
 
@@ -406,9 +406,9 @@ Cobre:
 
 Cobre:
 
-\[
+```math
 P(s_{t+1}|s_t,a_t)
-\]
+```
 
 mais:
 
@@ -638,9 +638,9 @@ Para construir o modelo mental do zero sem repetir fundamentos:
 
 ## 8.1 Backbone ≠ objective
 
-\[
+```math
 Transformer\neq Autoregression
-\]
+```
 
 Transformer pode parametrizar:
 
@@ -658,20 +658,20 @@ Transformer pode parametrizar:
 
 ## 8.2 Seed ≠ determinismo
 
-\[
+```math
 Reproducibility
 =f(weights,inputs,seed,dtype,kernel,backend,hardware,parallelism,version)
-\]
+```
 
 ---
 
 ## 8.3 Capacity ≠ search budget
 
-\[
+```math
 ModelCapacity
 \neq
 TestTimeCompute
-\]
+```
 
 Mais samples/steps/rollouts podem melhorar output sem alterar pesos.
 
@@ -679,9 +679,9 @@ Mais samples/steps/rollouts podem melhorar output sem alterar pesos.
 
 ## 8.4 Quality é frequentemente vetorial
 
-\[
+```math
 Q=(correctness,latency,memory,safety,cost,style,\ldots)
-\]
+```
 
 Um único scalar pode esconder trade-offs.
 
@@ -691,27 +691,27 @@ Um único scalar pode esconder trade-offs.
 
 Não assumir:
 
-\[
+```math
 MoreSteps\Rightarrow Better
-\]
+```
 
-\[
+```math
 MoreCFG\Rightarrow Better
-\]
+```
 
-\[
+```math
 MoreContext\Rightarrow Better
-\]
+```
 
-\[
+```math
 LargerModel\Rightarrow BetterForMyConstraint
-\]
+```
 
 ---
 
 # 9. O ciclo completo da coleção
 
-\[
+```math
 \boxed{
 PERCEIVE
 \rightarrow
@@ -727,11 +727,11 @@ ACT
 \rightarrow
 PREDICT\ WORLD
 }
-\]
+```
 
 envolto por:
 
-\[
+```math
 \boxed{
 TRAIN
 \leftrightarrow
@@ -739,7 +739,7 @@ EVALUATE
 \leftrightarrow
 SECURE/MONITOR
 }
-\]
+```
 
 Esse é o motivo de a coleção ter parado de ser apenas uma “GUT de IA generativa” e se tornado uma referência de **Foundation Model Engineering**.
 
@@ -761,9 +761,9 @@ Pergunte:
 
 Se a resposta for apenas o item 5:
 
-\[
+```math
 \boxed{UpdateExistingDatasheet}
-\]
+```
 
 não criar categoria nova.
 

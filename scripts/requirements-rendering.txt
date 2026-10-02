@@ -1,0 +1,3 @@
+# Parser versions used for the approved GitHub/MkDocs compatibility proof.
+Markdown==3.11
+pymdown-extensions==12.1

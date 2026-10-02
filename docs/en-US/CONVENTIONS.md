@@ -15,7 +15,7 @@ updated: 2026-10-01
 
 A new domain file is justified only when at least one of these axes changes materially:
 
-\[
+```math
 \boxed{
 Representation
 \lor
@@ -25,7 +25,7 @@ InferenceTopology
 \lor
 StateDynamics
 }
-\]
+```
 
 Do not create a separate file merely because there is:
 
@@ -106,9 +106,9 @@ True by definition.
 
 Example:
 
-\[
+```math
 Recall@K=RelevantRetrieved@K/TotalRelevant
-\]
+```
 
 ## Architecture fact
 
@@ -126,9 +126,9 @@ A useful engineering model.
 
 Example:
 
-\[
+```math
 M_{KV}\approx2LTn_{kv}d_hbB
-\]
+```
 
 State assumptions when necessary.
 
@@ -158,9 +158,9 @@ Two knobs can produce a similar subjective effect without being equivalent.
 
 Example:
 
-\[
+```math
 Temperature\neq CFG
-\]
+```
 
 even if both can alter the perceived degree of “freedom.”
 
@@ -174,15 +174,15 @@ Symbols are local to the domain where collisions exist.
 
 Rules:
 
-- \(\mathcal L\) reserved for loss whenever practical;
-- \(\theta\) for learned parameters;
-- \(B\) for batch;
-- \(T\) for length/time, always contextualized;
-- \(d\) for dimension;
-- \(r\) for low-rank rank in PEFT context;
-- \(\eta\) for learning rate in training context;
-- \(\tau\) for contrastive/calibration temperature when defined;
-- \(s\) for CFG/guidance when defined.
+- $`\mathcal L`$ reserved for loss whenever practical;
+- $`\theta`$ for learned parameters;
+- $`B`$ for batch;
+- $`T`$ for length/time, always contextualized;
+- $`d`$ for dimension;
+- $`r`$ for low-rank rank in PEFT context;
+- $`\eta`$ for learning rate in training context;
+- $`\tau`$ for contrastive/calibration temperature when defined;
+- $`s`$ for CFG/guidance when defined.
 
 See collisions in [19_PARAMETER_GLOSSARY_AND_REGISTRY](19_PARAMETER_GLOSSARY_AND_REGISTRY.md).
 
@@ -196,21 +196,21 @@ Preferred forms:
 
 ## Sequence
 
-\[
+```math
 [B,T,d]
-\]
+```
 
 ## Latent image
 
-\[
+```math
 [B,C,H,W]
-\]
+```
 
 ## Video
 
-\[
+```math
 [B,T,C,H,W]
-\]
+```
 
 or another order **provided it is declared**.
 
@@ -224,9 +224,9 @@ Do not silently assume a framework convention.
 
 Prefer GiB/MiB when computing in binary units.
 
-\[
+```math
 1GiB=2^{30}\ bytes
-\]
+```
 
 ## Commercial storage
 
@@ -415,9 +415,9 @@ Example:
 
 Sampling Temperature:
 
-\[
+```math
 T>0
-\]
+```
 
 is the mathematical domain.
 
@@ -435,7 +435,7 @@ as a universal law.
 
 Use:
 
-\[
+```math
 Reproducibility
 =f(
 weights,
@@ -448,7 +448,7 @@ hardware,
 parallelism,
 versions
 )
-\]
+```
 
 ---
 
@@ -465,9 +465,9 @@ Whenever a parameter increases a relevant dimension, try to show the impact on:
 
 Example:
 
-\[
+```math
 \frac{\partial M_{KV}}{\partial T}
-\]
+```
 
 is more useful than simply saying “more context uses more VRAM.”
 
@@ -491,12 +491,12 @@ Every control section should, where possible, point to a measurable variable.
 
 Ideal:
 
-\[
+```math
 Control
 \rightarrow StatePerturbation
 \rightarrow Observable
 \rightarrow Output
-\]
+```
 
 That turns tuning into experimentation.
 
@@ -592,7 +592,7 @@ The collection should not answer only:
 
 It should let the reader reconstruct:
 
-\[
+```math
 \boxed{
 Architecture
 \rightarrow
@@ -608,11 +608,11 @@ Output
 \rightarrow
 Cost
 }
-\]
+```
 
 And across the full lifecycle:
 
-\[
+```math
 \boxed{
 Data
 \rightarrow
@@ -626,6 +626,6 @@ Evaluation
 \rightarrow
 Security/Monitoring
 }
-\]
+```
 
 That is the epistemic contract of the collection.

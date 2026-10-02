@@ -16,38 +16,38 @@ Related: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UNIFIED
 
 Classical system:
 
-\[
+```math
 x_{t+1}=f(x_t,u_t)+w_t
-\]
+```
 
-\[
+```math
 y_t=h(x_t)+v_t
-\]
+```
 
 where:
 
-- \(x_t\): state;
-- \(u_t\): control;
-- \(y_t\): observation;
-- \(w_t,v_t\): noise.
+- $`x_t`$: state;
+- $`u_t`$: control;
+- $`y_t`$: observation;
+- $`w_t,v_t`$: noise.
 
 Learned world model:
 
-\[
+```math
 \hat x_{t+1}=f_\theta(\hat x_t,u_t)
-\]
+```
 
 or probabilistically:
 
-\[
+```math
 p_\theta(x_{t+1}|x_t,u_t)
-\]
+```
 
 The central analogy:
 
-\[
+```math
 \boxed{World\ Model\approx Learned\ Plant\ Model}
-\]
+```
 
 ---
 
@@ -55,17 +55,17 @@ The central analogy:
 
 ## Model-free
 
-\[
+```math
 a_t\sim\pi_\theta(a|o_t)
-\]
+```
 
 Does not explicitly require prediction of the next state.
 
 ## Model-based
 
-\[
+```math
 \hat s_{t+1}=f_\theta(s_t,a_t)
-\]
+```
 
 The policy/planner can imagine consequences before acting.
 
@@ -75,21 +75,21 @@ The policy/planner can imagine consequences before acting.
 
 A robot/agent rarely observes the true state:
 
-\[
+```math
 o_t\sim p(o_t|s_t)
-\]
+```
 
 We need to infer a belief/latent state:
 
-\[
+```math
 b_t=P(s_t|o_{1:t},a_{1:t-1})
-\]
+```
 
 or a recurrent embedding:
 
-\[
+```math
 z_t=F(z_{t-1},o_t,a_{t-1})
-\]
+```
 
 This approaches the POMDP formulation.
 
@@ -99,27 +99,27 @@ This approaches the POMDP formulation.
 
 Idealized architecture:
 
-\[
+```math
 o_t\xrightarrow{Encoder}z_t
-\]
+```
 
-\[
+```math
 (z_t,a_t)\xrightarrow{Dynamics}\hat z_{t+1}
-\]
+```
 
-\[
+```math
 \hat z_{t+1}\xrightarrow{Decoder}\hat o_{t+1}
-\]
+```
 
 Optionally:
 
-\[
+```math
 (z_t,a_t)\rightarrow \hat r_t
-\]
+```
 
-\[
+```math
 z_t\rightarrow \hat v_t
-\]
+```
 
 ---
 
@@ -129,9 +129,9 @@ z_t\rightarrow \hat v_t
 
 Predicts future image/video:
 
-\[
+```math
 p(I_{t+1:t+H}|I_{\le t},a_{t:t+H})
-\]
+```
 
 Pros:
 
@@ -145,9 +145,9 @@ Cons:
 
 ## Latent-space
 
-\[
+```math
 z_{t+1}=f_\theta(z_t,a_t)
-\]
+```
 
 Pros:
 
@@ -165,23 +165,23 @@ Cons:
 
 Deterministic:
 
-\[
+```math
 \hat s_{t+1}=f_\theta(s_t,a_t)
-\]
+```
 
 Probabilistic:
 
-\[
+```math
 s_{t+1}\sim p_\theta(s|s_t,a_t)
-\]
+```
 
 Real worlds have multiple plausible futures.
 
 When uncertainty matters, a single mean prediction can be dangerous:
 
-\[
+```math
 E[s_{t+1}]\notin feasible\ states
-\]
+```
 
 for multimodal distributions.
 
@@ -189,21 +189,21 @@ for multimodal distributions.
 
 # 7. Multi-step rollout
 
-\[
+```math
 \hat s_{t+k}=f_\theta(\hat s_{t+k-1},a_{t+k-1})
-\]
+```
 
 Recursive error:
 
-\[
+```math
 e_{t+k}\approx F(e_{t+k-1},model\ error)
-\]
+```
 
 As horizon grows:
 
-\[
+```math
 H\uparrow\Rightarrow accumulated\ model\ error\uparrow
-\]
+```
 
 not necessarily linearly.
 
@@ -213,18 +213,18 @@ not necessarily linearly.
 
 We want:
 
-\[
+```math
 a^*_{t:t+H-1}
 =
 \arg\max_{a_{t:t+H-1}}
 \sum_{k=0}^{H-1}\gamma^kR(\hat s_{t+k},a_{t+k})
-\]
+```
 
 Typically, only the first action is executed before replanning:
 
-\[
+```math
 MPC: plan\rightarrow act\rightarrow observe\rightarrow replan
-\]
+```
 
 This is the direct bridge to model-predictive control.
 
@@ -234,17 +234,17 @@ This is the direct bridge to model-predictive control.
 
 ## Sampling
 
-Sample \(N\) action sequences:
+Sample $`N`$ action sequences:
 
-\[
+```math
 A^{(1)},\ldots,A^{(N)}
-\]
+```
 
 Evaluate predicted return:
 
-\[
+```math
 J(A^{(i)})
-\]
+```
 
 Choose the best.
 
@@ -256,9 +256,9 @@ Iteratively update the action distribution from elite samples.
 
 If dynamics/reward are differentiable:
 
-\[
+```math
 \nabla_AJ
-\]
+```
 
 can optimize the action sequence directly.
 
@@ -268,16 +268,16 @@ can optimize the action sequence directly.
 
 Input:
 
-\[
+```math
 C_t=
 \{vision_t,language,state/proprioception_t,history\}
-\]
+```
 
 Policy:
 
-\[
+```math
 a_t\sim\pi_\theta(a|C_t)
-\]
+```
 
 A VLA is not simply a VLM plus a tool-call button: its action space may be continuous, temporal, and constrained by physical dynamics.
 
@@ -289,25 +289,25 @@ A VLA is not simply a VLM plus a tool-call button: its action space may be conti
 
 Example manipulator:
 
-\[
+```math
 a_t=(\Delta x,\Delta y,\Delta z,\Delta r_x,\Delta r_y,\Delta r_z,g)
-\]
+```
 
 ## Discretized tokens
 
 Each dimension is quantized:
 
-\[
+```math
 a_t\rightarrow(token_1,\ldots,token_m)
-\]
+```
 
 This enables an autoregressive categorical decoder.
 
 ## Action chunks
 
-\[
+```math
 A_t=(a_t,a_{t+1},\ldots,a_{t+K-1})
-\]
+```
 
 This reduces backbone call frequency and may smooth control.
 
@@ -317,17 +317,17 @@ This reduces backbone call frequency and may smooth control.
 
 Larger chunks:
 
-\[
+```math
 K\uparrow
 \Rightarrow
 InferenceFrequency\downarrow
-\]
+```
 
 but:
 
-\[
+```math
 FeedbackFrequency\downarrow
-\]
+```
 
 So there is a trade-off between throughput and closed-loop responsiveness.
 
@@ -339,9 +339,9 @@ In control terms:
 
 # 13. Autoregressive action policy
 
-\[
+```math
 P(A)=\prod_tp(a_t|a_{<t},C)
-\]
+```
 
 Pros:
 
@@ -360,15 +360,15 @@ Cons:
 
 Noisy action trajectory:
 
-\[
+```math
 a_\tau=\alpha_\tau a_0+\sigma_\tau\epsilon
-\]
+```
 
 Observation-conditioned denoising:
 
-\[
+```math
 a_{\tau}\rightarrow a_{\tau-1}\rightarrow\cdots\rightarrow a_0
-\]
+```
 
 Advantage: models multimodal distributions over continuous trajectories.
 
@@ -378,9 +378,9 @@ Cost: multiple network evaluations.
 
 # 15. Flow-matching action policy
 
-\[
+```math
 \frac{da_\tau}{d\tau}=v_\theta(a_\tau,\tau,C)
-\]
+```
 
 Generates action trajectories by integrating a vector field.
 
@@ -392,17 +392,17 @@ WorldFly 2026 is an example of a dual-branch flow-matching mechanism that jointl
 
 Instead of:
 
-\[
+```math
 WorldModel\rightarrow Planner
-\]
+```
 
 we can use a coupled model:
 
-\[
+```math
 (C_t,noise)
 \rightarrow
 (\hat Video_{future},A_{future})
-\]
+```
 
 Future generation acts as “imagination” shared with the policy.
 
@@ -418,21 +418,21 @@ Instruction:
 
 requires:
 
-\[
+```math
 Language\rightarrow Object\ Identity
-\]
+```
 
-\[
+```math
 Vision\rightarrow Object\ Localization
-\]
+```
 
-\[
+```math
 Localization\rightarrow Reachable\ Pose
-\]
+```
 
-\[
+```math
 Pose\rightarrow Action\ Trajectory
-\]
+```
 
 An error at any stage may look like “policy failure.”
 
@@ -444,21 +444,21 @@ Control systems have clocks.
 
 If observation rate is:
 
-\[
+```math
 f_o=30Hz
-\]
+```
 
 and policy rate is:
 
-\[
+```math
 f_\pi=5Hz
-\]
+```
 
 each decision covers approximately:
 
-\[
+```math
 \frac{f_o}{f_\pi}=6
-\]
+```
 
 observation frames.
 
@@ -470,12 +470,12 @@ Total latency must fit the dynamics of the controlled system.
 
 Closed-loop delay:
 
-\[
+```math
 T_{loop}
 =T_{sense}+T_{encode}+T_{policy}+T_{decode}+T_{actuate}
-\]
+```
 
-If \(T_{loop}\) is large relative to the system time constant, the policy acts on stale state.
+If $`T_{loop}`$ is large relative to the system time constant, the policy acts on stale state.
 
 Control mathematics matters more than “tokens/s.”
 
@@ -485,15 +485,15 @@ Control mathematics matters more than “tokens/s.”
 
 Proposed action:
 
-\[
+```math
 a_t^{raw}=\pi(s_t)
-\]
+```
 
 Safety filter:
 
-\[
+```math
 a_t=\Pi_{\mathcal A_{safe}}(a_t^{raw})
-\]
+```
 
 May include:
 
@@ -514,13 +514,13 @@ HITL does not need to approve every action.
 
 It can operate at the supervisory level:
 
-\[
+```math
 Human\rightarrow Goal/Mode/Constraint
-\]
+```
 
-\[
+```math
 Controller\rightarrow LowLevelActions
-\]
+```
 
 This division is more compatible with high-frequency systems.
 
@@ -530,21 +530,21 @@ This division is more compatible with high-frequency systems.
 
 Training in simulation:
 
-\[
+```math
 p_{sim}(s,a)
-\]
+```
 
 Deployment:
 
-\[
+```math
 p_{real}(s,a)
-\]
+```
 
 If:
 
-\[
+```math
 p_{sim}\neq p_{real}
-\]
+```
 
 the policy experiences domain shift.
 
@@ -561,39 +561,39 @@ Techniques:
 
 ## Perception error
 
-\[
+```math
 e_{enc}
-\]
+```
 
 ## Transition error
 
-\[
+```math
 e_{dyn}
-\]
+```
 
 ## Reward/value error
 
-\[
+```math
 e_R,e_V
-\]
+```
 
 ## Planning/search error
 
-\[
+```math
 e_{plan}
-\]
+```
 
 ## Actuation/model mismatch
 
-\[
+```math
 e_{act}
-\]
+```
 
 Result:
 
-\[
+```math
 e_{task}=F(e_{enc},e_{dyn},e_R,e_{plan},e_{act})
-\]
+```
 
 Changing the policy does not automatically fix a bad encoder.
 
@@ -636,17 +636,17 @@ Changing the policy does not automatically fix a bad encoder.
 
 ## Digital agent
 
-\[
+```math
 Action\in\{API,click,key,type,tool\}
-\]
+```
 
 with an environment that is often transactional and observable through software.
 
 ## VLA
 
-\[
+```math
 Action\in\mathbb R^m\text{ or trajectory}
-\]
+```
 
 with a continuous, noisy, partially observable environment that may contain irreversible states.
 
@@ -658,9 +658,9 @@ See [08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET](08_AGENT_ACTION_CONTROL_SYSTEM_DA
 
 The central trend is convergence around:
 
-\[
+```math
 World\ Model + VLA
-\]
+```
 
 into models that **jointly imagine future perception and action**.
 
@@ -674,7 +674,7 @@ The broader engineering insight is:
 
 # 28. Dissection checklist
 
-1. What is the observation \(o_t\)?
+1. What is the observation $`o_t`$?
 2. Is there a latent/belief state?
 3. Does the model learn transition dynamics?
 4. Is the future represented in pixels or latents?

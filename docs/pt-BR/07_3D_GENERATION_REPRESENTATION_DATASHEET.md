@@ -12,12 +12,12 @@ updated: 2026-10-01
 
 ### Mesh explícita
 
-\[
+```math
 \mathcal M=(V,F)
-\]
+```
 
-- \(V\): vértices;
-- \(F\): faces/triângulos.
+- $`V`$: vértices;
+- $`F`$: faces/triângulos.
 
 Pode carregar:
 
@@ -31,21 +31,21 @@ Pode carregar:
 
 Uma função contínua:
 
-\[
+```math
 f_\theta(\mathbf x)\rightarrow \rho,\ SDF,\ occupancy,\ radiance
-\]
+```
 
 Geometria pode ser extraída por isosurface:
 
-\[
+```math
 f(\mathbf x)=\tau
-\]
+```
 
 ### NeRF / radiance field
 
-\[
+```math
 F_\theta(\mathbf x,\mathbf d)\rightarrow(\sigma,\mathbf c)
-\]
+```
 
 Renderização integra densidade e cor ao longo de rays.
 
@@ -53,9 +53,9 @@ Renderização integra densidade e cor ao longo de rays.
 
 Cada primitiva pode ser representada por:
 
-\[
+```math
 G_i=(\mu_i,\Sigma_i,\alpha_i,c_i,\ldots)
-\]
+```
 
 onde posição, covariância/orientação, opacidade e aparência são explicitamente parametrizadas.
 
@@ -63,9 +63,9 @@ onde posição, covariância/orientação, opacidade e aparência são explicita
 
 Estado:
 
-\[
+```math
 Z=\{(p_i,z_i)\}_{i=1}^{N}
-\]
+```
 
 com posições/voxels esparsos + features latentes aprendidas. TRELLIS/SLAT demonstra que um mesmo latent pode ser decodificado em mesh, Gaussian ou radiance representation.
 
@@ -75,15 +75,15 @@ com posições/voxels esparsos + features latentes aprendidas. TRELLIS/SLAT demo
 
 ## 2. Grafo conceitual
 
-\[
+```math
 text/image/multiview\rightarrow condition\ encoder\rightarrow 3D\ latent/structure\rightarrow generator\rightarrow representation\ decoder\rightarrow geometry/material
-\]
+```
 
 Frequentemente shape e appearance são subsistemas separados:
 
-\[
+```math
 Shape\ Generation\neq Texture/Material\ Generation
-\]
+```
 
 Hunyuan3D 2.1 é exemplo explícito: Hunyuan3D-DiT para shape e Hunyuan3D-Paint para textura/material PBR.
 
@@ -106,9 +106,9 @@ Entradas possíveis:
 
 Uma imagem 2D não determina unicamente geometria 3D:
 
-\[
+```math
 P(Shape\mid Image)
-\]
+```
 
 é multimodal.
 
@@ -122,9 +122,9 @@ O modelo preenche superfícies não observadas com prior aprendido. “Janus” 
 
 Em structured latents:
 
-\[
+```math
 \frac{dZ_t}{dt}=v_\theta(Z_t,t,C)
-\]
+```
 
 Integração transforma noise/prior latent em estrutura 3D.
 
@@ -149,11 +149,11 @@ podem existir, mas operam no **latent 3D**, não diretamente em triângulos.
 
 Só é fundamental quando o pipeline possui implicit density/SDF/occupancy a ser convertido em surface.
 
-\[
+```math
 Surface=\{\mathbf x\mid f(\mathbf x)=\tau\}
-\]
+```
 
-Alterar \(\tau\) pode:
+Alterar $`\tau`$ pode:
 
 - inflar/encolher a forma;
 - abrir/fechar cavidades;
@@ -178,15 +178,15 @@ Qualidade depende de:
 
 Mais grid resolution aumenta memória/compute aproximadamente com volume:
 
-\[
+```math
 N_{voxels}\propto N_xN_yN_z
-\]
+```
 
 Dobrar resolução em cada eixo:
 
-\[
+```math
 N\rightarrow8N
-\]
+```
 
 ---
 
@@ -196,9 +196,9 @@ N\rightarrow8N
 
 Não é qualidade por si só.
 
-\[
+```math
 Quality\not\propto TriangleCount
-\]
+```
 
 Milhões de triângulos podem representar ruído superficial; uma remesh boa com menos faces pode preservar melhor forma perceptual.
 
@@ -224,9 +224,9 @@ Para fabricação, desejável:
 
 Uma mesh renderizável pode ser impraticável para FDM/resina.
 
-\[
+```math
 RenderValid\not\Rightarrow ManufacturingValid
-\]
+```
 
 ---
 
@@ -234,15 +234,15 @@ RenderValid\not\Rightarrow ManufacturingValid
 
 Componentes desconectados:
 
-\[
+```math
 \mathcal M=\bigcup_i\mathcal M_i
-\]
+```
 
 Filtrar por connected-component size costuma ser etapa útil:
 
-\[
+```math
 \mathcal M^*=\arg\max_i Volume/Area(\mathcal M_i)
-\]
+```
 
 Mas não remover cegamente componentes pequenos se o objeto tiver peças deliberadamente separadas.
 
@@ -254,9 +254,9 @@ Mas não remover cegamente componentes pequenos se o objeto tiver peças deliber
 
 Imagem 2D mapeada sobre a superfície:
 
-\[
+```math
 (u,v)=\phi(\mathbf x_{surface})
-\]
+```
 
 Resolução de textura afeta memória e aparência, mas não geometria.
 
@@ -275,9 +275,9 @@ Separar mapas:
 
 Textura pode conter iluminação “fotografada”:
 
-\[
+```math
 Color\approx Albedo\times Illumination
-\]
+```
 
 Para relighting correto queremos estimar mais próximo de albedo/material intrínseco.
 
@@ -287,9 +287,9 @@ Para relighting correto queremos estimar mais próximo de albedo/material intrí
 
 Objetivo conceitual:
 
-\[
+```math
 ObservedAppearance\rightarrow MaterialIntrinsic
-\]
+```
 
 Reduz sombras/highlights baked antes de usar o asset em renderer físico.
 
@@ -313,9 +313,9 @@ Limitações para fabricação:
 
 ### Regra
 
-\[
+```math
 PhotorealisticView\not\Rightarrow AccurateGeometry
-\]
+```
 
 ---
 
@@ -327,9 +327,9 @@ Modelos podem gerar coordenadas normalizadas/arbitrárias.
 
 Transformação para unidade física:
 
-\[
+```math
 \mathbf x_{mm}=sR\mathbf x+t
-\]
+```
 
 Antes de impressão:
 
@@ -356,9 +356,9 @@ Engenharia funcional exige:
 - superfícies analíticas;
 - assemblies.
 
-\[
+```math
 GenerativeMesh\neq ParametricCAD
-\]
+```
 
 Usar AI 3D para concept/organic shape; reconstruir ou parametrizar em CAD quando houver requisito funcional.
 
@@ -372,9 +372,9 @@ Só existe conforme o generative core.
 
 Se houver CFG-like:
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
 Não assumir ranges universais como `7–15`.
 
@@ -397,9 +397,9 @@ Não é variável universal.
 
 Pós-processo geométrico explícito:
 
-\[
+```math
 V'=V\cup Mirror(V,plane)
-\]
+```
 
 é diferente de “pedir simetria” ao generative model.
 

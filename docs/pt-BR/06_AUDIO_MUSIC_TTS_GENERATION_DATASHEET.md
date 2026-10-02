@@ -12,27 +12,27 @@ updated: 2026-10-01
 
 ### A. Codec-token autoregression
 
-\[
+```math
 waveform\rightarrow codec\ tokens\rightarrow LM\rightarrow codec\ decoder\rightarrow waveform
-\]
+```
 
 ### B. Latent diffusion/flow
 
-\[
+```math
 waveform\rightarrow AE\ latent\rightarrow diffusion/flow\rightarrow decoder\rightarrow waveform
-\]
+```
 
 ### C. TTS/voice systems
 
-\[
+```math
 text+speaker/style\rightarrow linguistic/acoustic\ representation\rightarrow acoustic\ decoder/vocoder
-\]
+```
 
 Voice conversion adiciona outra classe:
 
-\[
+```math
 source\ speech\rightarrow content/prosody\rightarrow target\ timbre
-\]
+```
 
 Não confundir TTS com VC.
 
@@ -42,21 +42,21 @@ Não confundir TTS com VC.
 
 ## 2. Waveform
 
-\[
+```math
 x\in\mathbb{R}^{channels\times samples}
-\]
+```
 
-Para sample rate \(f_s\) e duração \(D\):
+Para sample rate $`f_s`$ e duração $`D`$:
 
-\[
+```math
 N_{samples}=f_sD
-\]
+```
 
 44.1 kHz stereo por 60 s:
 
-\[
+```math
 44,100\cdot60\cdot2\approx5.29\text{ milhões de samples}
-\]
+```
 
 Gerar diretamente nesse comprimento é caro; por isso codecs/autoencoders comprimem o tempo.
 
@@ -66,21 +66,21 @@ Gerar diretamente nesse comprimento é caro; por isso codecs/autoencoders compri
 
 Frame rate do codec:
 
-\[
+```math
 r_c=\frac{frames}{second}
-\]
+```
 
-Com \(K\) codebooks:
+Com $`K`$ codebooks:
 
-\[
+```math
 tokens/sec\approx r_cK
-\]
+```
 
 Duração:
 
-\[
+```math
 T_{tokens}\approx D\,r_cK
-\]
+```
 
 Isso liga diretamente duração a sequence length.
 
@@ -105,15 +105,15 @@ Qwen3-TTS em 2026 exemplifica dois regimes: tokenizer 25 Hz single-codebook com 
 
 Autoencoder:
 
-\[
+```math
 Z=E(x),\qquad \hat x=D(Z)
-\]
+```
 
 Latent rate:
 
-\[
+```math
 r_l=\frac{N_{latent\ frames}}{D}
-\]
+```
 
 Stable Audio 3 usa um semantic-acoustic autoencoder para reduzir fortemente o comprimento antes da geração.
 
@@ -123,9 +123,9 @@ Stable Audio 3 usa um semantic-acoustic autoencoder para reduzir fortemente o co
 
 ## 6. Próximo token de áudio
 
-\[
+```math
 p(a_{1:T})=\prod_tp(a_t\mid a_{<t},C)
-\]
+```
 
 Aplicam-se:
 
@@ -144,9 +144,9 @@ Top-K não “corta frequências”. Ele corta **tokens discretos do codec/vocab
 
 Para autoregressive codec:
 
-\[
+```math
 Compute\propto T_{tokens}
-\]
+```
 
 KV/cache também cresce com sequence length se a arquitetura for Transformer causal convencional.
 
@@ -156,17 +156,17 @@ KV/cache também cresce com sequence length se a arquitetura for Transformer cau
 
 ## 8. Diffusion
 
-\[
+```math
 z_t=\alpha_tz_0+\sigma_t\epsilon
-\]
+```
 
 Rede prevê noise/velocity/clean latent.
 
 ### Flow
 
-\[
+```math
 \frac{dz_t}{dt}=v_\theta(z_t,t,C)
-\]
+```
 
 Mesmos conceitos de:
 
@@ -186,15 +186,15 @@ Modelos modernos podem evitar gerar sempre uma janela fixa máxima.
 
 Custo depende do comprimento latente:
 
-\[
+```math
 N_l\propto duration
-\]
+```
 
 Se houver attention global:
 
-\[
+```math
 C_{attn}\sim O(N_l^2)
-\]
+```
 
 Logo “VRAM cresce linearmente com duração” é apenas parcialmente verdadeiro: **estado** pode crescer linearmente enquanto attention compute/activations podem crescer superlinearmente.
 
@@ -204,15 +204,15 @@ Logo “VRAM cresce linearmente com duração” é apenas parcialmente verdadei
 
 ## 10. TTS decomposed
 
-\[
+```math
 Text\rightarrow semantic/linguistic\ units\rightarrow acoustic\ representation\rightarrow waveform
-\]
+```
 
 Conditioning adicional:
 
-\[
+```math
 C=\{speaker,style,language,prosody,reference\}
-\]
+```
 
 ---
 
@@ -264,9 +264,9 @@ Voice cloning de timbre e transferência de prosódia são problemas diferentes.
 
 Objetivo idealizado:
 
-\[
+```math
 y=D(content(x),prosody(x),speaker_{target})
-\]
+```
 
 RVC-like systems pertencem aqui.
 
@@ -280,9 +280,9 @@ XTTS-like systems são primariamente TTS/voice cloning, mesmo quando usados em w
 
 Para TTS interativo:
 
-\[
+```math
 Latency_{perceived}\approx T_{first\ audio\ packet}
-\]
+```
 
 Não é igual ao tempo total de síntese.
 
@@ -298,15 +298,15 @@ Qwen3-TTS reporta arquitetura dual-track e decoders preparados para streaming, i
 
 Música/SFX:
 
-\[
+```math
 C_{text}=Encoder(description)
-\]
+```
 
 ### Audio prompt/reference
 
-\[
+```math
 C_{audio}=E_{ref}(waveform)
-\]
+```
 
 Pode controlar:
 
@@ -324,11 +324,11 @@ O mecanismo depende do modelo; “assobiar e trocar instrumento” não é uma p
 
 ## 17. Audio inpainting
 
-Mask temporal \(M\):
+Mask temporal $`M`$:
 
-\[
+```math
 z'=M\odot z_{generated}+(1-M)\odot z_{reference}
-\]
+```
 
 Permite substituir intervalo mantendo contexto anterior/posterior.
 
@@ -336,9 +336,9 @@ Permite substituir intervalo mantendo contexto anterior/posterior.
 
 Conditioning no prefixo:
 
-\[
+```math
 p(audio_{future}\mid audio_{past},C)
-\]
+```
 
 ou processo flow/diffusion parcialmente condicionado.
 
@@ -435,13 +435,13 @@ Relacionados: [10_MULTIMODAL_VLM_OMNI_DATASHEET](10_MULTIMODAL_VLM_OMNI_DATASHEE
 
 ## 22. Pipeline acústico clássico/moderno
 
-\[
+```math
 waveform
 \rightarrow frontend/encoder
 \rightarrow H_{speech}
 \rightarrow recognition\ head/decoder
 \rightarrow text
-\]
+```
 
 Frontend pode usar:
 
@@ -454,13 +454,13 @@ Frontend pode usar:
 
 ## 23. STFT
 
-Para janela \(w[n]\):
+Para janela $`w[n]`$:
 
-\[
+```math
 X(m,k)=\sum_n x[n]w[n-mR]e^{-j2\pi kn/N}
-\]
+```
 
-onde \(R\) é hop size.
+onde $`R`$ é hop size.
 
 A STFT cria representação tempo-frequência.
 
@@ -470,15 +470,15 @@ A STFT cria representação tempo-frequência.
 
 Frequência Hz é mapeada aproximadamente para escala perceptual Mel:
 
-\[
+```math
 m=2595\log_{10}\left(1+\frac{f}{700}\right)
-\]
+```
 
 Log-Mel:
 
-\[
+```math
 F=\log(Mel(|STFT(x)|^2)+\epsilon)
-\]
+```
 
 Muitos ASRs modernos ainda começam com algo equivalente a isso, mesmo quando backbone é Transformer/Conformer.
 
@@ -486,19 +486,19 @@ Muitos ASRs modernos ainda começam com algo equivalente a isso, mesmo quando ba
 
 ## 25. Acoustic frame rate
 
-Se hop \(R\) samples e sample rate \(f_s\):
+Se hop $`R`$ samples e sample rate $`f_s`$:
 
-\[
+```math
 r_f=\frac{f_s}{R}
-\]
+```
 
 frames/s.
 
-Áudio de duração \(D\):
+Áudio de duração $`D`$:
 
-\[
+```math
 T_f\approx D\,r_f
-\]
+```
 
 Long-form speech portanto explode sequence length antes de qualquer LLM.
 
@@ -508,22 +508,22 @@ Long-form speech portanto explode sequence length antes de qualquer LLM.
 
 Combina attention global/contextual com convolução local:
 
-\[
+```math
 H'
 =H+\frac12FFN(H)
-\]
+```
 
-\[
+```math
 H''=H'+MHSA(H')
-\]
+```
 
-\[
+```math
 H'''=H''+Conv(H'')
-\]
+```
 
-\[
+```math
 Y=LayerNorm(H'''+\frac12FFN(H'''))
-\]
+```
 
 A ideia: speech possui dependências globais **e** padrões locais fortes.
 
@@ -533,22 +533,22 @@ A ideia: speech possui dependências globais **e** padrões locais fortes.
 
 ## 27. Connectionist Temporal Classification
 
-Problema: frames acústicos \(T\) não vêm alinhados token a token com transcript \(Y\).
+Problema: frames acústicos $`T`$ não vêm alinhados token a token com transcript $`Y`$.
 
-CTC introduz paths \(\pi\) sobre vocabulário + blank.
+CTC introduz paths $`\pi`$ sobre vocabulário + blank.
 
-Collapse operator \(B\):
+Collapse operator $`B`$:
 
 - remove repetições consecutivas;
 - remove blanks.
 
 Probabilidade:
 
-\[
+```math
 P(Y|X)
 =
 \sum_{\pi\in B^{-1}(Y)}P(\pi|X)
-\]
+```
 
 ---
 
@@ -556,9 +556,9 @@ P(Y|X)
 
 Forma básica assume frames independentes condicionados ao encoder:
 
-\[
+```math
 P(\pi|X)=\prod_tP(\pi_t|H_t)
-\]
+```
 
 Isso facilita decode/alignment, mas limita modeling de dependências entre output tokens.
 
@@ -568,7 +568,7 @@ Language model externo pode ser combinado no beam.
 
 ## 29. CTC blank
 
-Blank \(\varnothing\) representa “nenhum novo token”.
+Blank $`\varnothing`$ representa “nenhum novo token”.
 
 Exemplo paths:
 
@@ -592,25 +592,25 @@ Esse mecanismo resolve diferença entre acoustic frame rate e token rate.
 
 Encoder acústico:
 
-\[
+```math
 h_t=Encoder(X)_t
-\]
+```
 
 Prediction network sobre output anterior:
 
-\[
+```math
 g_u=Pred(y_{<u})
-\]
+```
 
 Joint network:
 
-\[
+```math
 z_{t,u}=Joint(h_t,g_u)
-\]
+```
 
-\[
+```math
 P(k|t,u)=softmax(z_{t,u})
-\]
+```
 
 Isso modela simultaneamente tempo acústico e prefixo textual.
 
@@ -622,9 +622,9 @@ Transducer pode operar incrementalmente sem esperar áudio completo.
 
 Latência depende de:
 
-\[
+```math
 T_{chunk}+T_{lookahead}+T_{encoder}+T_{decode}
-\]
+```
 
 Não medir apenas RTF total.
 
@@ -634,13 +634,13 @@ Não medir apenas RTF total.
 
 ## 32. Encoder–decoder
 
-\[
+```math
 H=Encoder(audio)
-\]
+```
 
-\[
+```math
 P(y_{1:U}|H)=\prod_uP(y_u|y_{<u},H)
-\]
+```
 
 Whisper-like topology é exemplo clássico.
 
@@ -650,11 +650,11 @@ ASR moderno também pode reutilizar um multimodal/omni backbone e gerar transcri
 
 ## 33. Audio compression before LLM
 
-Se speech encoder produz \(T_a\) states e LLM context é caro:
+Se speech encoder produz $`T_a`$ states e LLM context é caro:
 
-\[
+```math
 T_a\downarrow
-\]
+```
 
 vira objetivo crítico.
 
@@ -674,11 +674,11 @@ Speech-XL 2026 explora summarization tokens para condensar long-form speech em K
 
 ## 34. O problema
 
-Dado transcript conhecido \(Y\) e áudio \(X\):
+Dado transcript conhecido $`Y`$ e áudio $`X`$:
 
-\[
+```math
 Align(X,Y)\rightarrow\{(token_i,t_{start},t_{end})\}
-\]
+```
 
 Não é a mesma tarefa que ASR: conteúdo textual já é conhecido.
 
@@ -686,11 +686,11 @@ Não é a mesma tarefa que ASR: conteúdo textual já é conhecido.
 
 ## 35. Alignment error
 
-Para timestamp verdadeiro \(t_i\) e estimado \(\hat t_i\):
+Para timestamp verdadeiro $`t_i`$ e estimado $`\hat t_i`$:
 
-\[
+```math
 e_i=|t_i-\hat t_i|
-\]
+```
 
 Métricas podem usar mean/median/p95.
 
@@ -702,17 +702,17 @@ Qwen3-ForcedAligner 2026 é exemplo de timestamp predictor não autoregressivo b
 
 ## 36. Voice Activity Detection
 
-\[
+```math
 P(speech|frame_t)
-\]
+```
 
 Threshold + hangover rules definem segmentos.
 
 Endpoint latency:
 
-\[
+```math
 T_{endpoint}\approx SilenceThreshold+Processing
-\]
+```
 
 Um ASR perfeito com endpointing ruim parece “lento”.
 
@@ -726,9 +726,9 @@ Pergunta:
 
 Output:
 
-\[
+```math
 \{(speaker_i,t_s,t_e)\}
-\]
+```
 
 Pipeline pode usar:
 
@@ -747,7 +747,7 @@ Diarization error não é WER.
 
 Sinal:
 
-\[
+```math
 Speech=
 Linguistic
 +Speaker
@@ -755,7 +755,7 @@ Linguistic
 +Emotion
 +AcousticScene
 +NonSpeechEvents
-\]
+```
 
 ASR extrai principalmente linguistic content.
 
@@ -778,9 +778,9 @@ O transcript pode ser idêntico enquanto esses estados mudam.
 
 Logo:
 
-\[
+```math
 Transcript\not\equiv Speech\ Understanding
-\]
+```
 
 ---
 
@@ -796,15 +796,15 @@ Input pode conter:
 
 Modelos audio-language expandem:
 
-\[
+```math
 Audio\rightarrow Semantic\ reasoning
-\]
+```
 
 além de:
 
-\[
+```math
 Speech\rightarrow Text
-\]
+```
 
 ---
 
@@ -812,13 +812,13 @@ Speech\rightarrow Text
 
 ## 41. Real-Time Factor
 
-\[
+```math
 RTF=\frac{processing\ time}{audio\ duration}
-\]
+```
 
-\[
+```math
 RTF<1
-\]
+```
 
 significa faster-than-real-time para processamento batch/offline.
 
@@ -828,9 +828,9 @@ Mas streaming UX depende também de latency.
 
 ## 42. Time To First Transcript / partial
 
-\[
+```math
 TTFT_{speech}
-\]
+```
 
 é tempo até primeiro resultado útil.
 
@@ -840,14 +840,14 @@ Um sistema pode ter ótimo RTF e péssima first-partial latency.
 
 ## 43. Chunk size trade-off
 
-Chunk \(C\):
+Chunk $`C`$:
 
-\[
+```math
 C\uparrow
 \Rightarrow
 Context\uparrow,
 Latency\uparrow
-\]
+```
 
 Chunk pequeno reduz latência, mas pode prejudicar phonetic/contextual accuracy e overhead.
 
@@ -857,9 +857,9 @@ Chunk pequeno reduz latência, mas pode prejudicar phonetic/contextual accuracy 
 
 ## 44. Word Error Rate
 
-\[
+```math
 WER=\frac{S+D+I}{N}
-\]
+```
 
 - S: substitutions;
 - D: deletions;
@@ -872,9 +872,9 @@ WER pode exceder 100%.
 
 ## 45. Character Error Rate
 
-\[
+```math
 CER=\frac{S_c+D_c+I_c}{N_c}
-\]
+```
 
 Útil para idiomas/outputs onde tokenização por palavra é menos estável.
 

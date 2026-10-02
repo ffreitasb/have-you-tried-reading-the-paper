@@ -11,11 +11,11 @@ updated: 2026-10-01
 
 A distinção fundamental:
 
-\[
+```math
 \boxed{
 Safety \neq Security \neq Robustness \neq Reliability
 }
-\]
+```
 
 - **Safety**: evitar dano mesmo sem atacante.
 - **Security**: resistir a adversário intencional.
@@ -75,17 +75,17 @@ Cada seta é uma **trust boundary**.
 
 Mesmo sem atacante:
 
-\[
+```math
 P(ModelError)>0
-\]
+```
 
 Com adversário:
 
-\[
+```math
 P(ModelError|AdversarialInput)
 >
 P(ModelError|NominalInput)
-\]
+```
 
 Logo output do modelo deve ser tratado como **untrusted data** até validado para a operação específica.
 
@@ -97,9 +97,9 @@ Em sistemas LLM, dados e instruções compartilham o mesmo canal semântico.
 
 Se:
 
-\[
+```math
 Context = TrustedInstruction + UntrustedContent
-\]
+```
 
 modelo precisa inferir qual texto deve controlar comportamento.
 
@@ -144,12 +144,12 @@ tool output
 
 Pipeline:
 
-\[
+```math
 ExternalContent
 \rightarrow Context
 \rightarrow Model
 \rightarrow Action
-\]
+```
 
 O usuário pode nunca ter visto a instrução adversarial.
 
@@ -185,9 +185,9 @@ Não armazene nele:
 - privileged tokens;
 - secrets de infraestrutura.
 
-\[
+```math
 PromptVisibilityAssumption\neq SecurityBoundary
-\]
+```
 
 ---
 
@@ -211,9 +211,9 @@ Controle deve atuar antes e depois do modelo.
 
 Atacante altera distribuição de treinamento:
 
-\[
+```math
 D' = D \cup D_{poison}
-\]
+```
 
 para induzir:
 
@@ -230,15 +230,15 @@ Pequena fração de dados pode causar efeito desproporcional se exemplos forem e
 
 Deseja-se comportamento normal em distribuição padrão:
 
-\[
+```math
 f(x)=normal
-\]
+```
 
 mas comportamento malicioso sob trigger:
 
-\[
+```math
 f(x\oplus trigger)=malicious
-\]
+```
 
 Triggers podem ser:
 
@@ -257,9 +257,9 @@ PEFT não remove risco.
 
 Um adapter pequeno pode alterar comportamento de forma direcionada:
 
-\[
+```math
 W'=W+\Delta W_{adapter}
-\]
+```
 
 Logo adapter é **código comportamental executável via parâmetros** do ponto de vista de supply chain.
 
@@ -281,15 +281,15 @@ Artefatos possíveis:
 
 Não confundir:
 
-\[
+```math
 ModelFile
-\]
+```
 
 com:
 
-\[
+```math
 SafeToLoad
-\]
+```
 
 ---
 
@@ -316,9 +316,9 @@ Porém:
 - modelo pode ser backdoored;
 - origem/hash importam.
 
-\[
+```math
 NonExecutableFormat\neq TrustedArtifact
-\]
+```
 
 ---
 
@@ -326,10 +326,10 @@ NonExecutableFormat\neq TrustedArtifact
 
 Ao permitir código remoto de repositório de modelo:
 
-\[
+```math
 ModelRepository
 \rightarrow PythonExecution
-\]
+```
 
 A boundary muda completamente.
 
@@ -347,19 +347,19 @@ Custom node frequentemente é Python com acesso ao processo/FS/rede.
 
 Portanto:
 
-\[
+```math
 InstallCustomNode
 \approx
 InstallSoftware
-\]
+```
 
 não:
 
-\[
+```math
 InstallCustomNode
 \approx
 LoadModel
-\]
+```
 
 Threat surface inclui:
 
@@ -395,15 +395,15 @@ Controles:
 
 Atacante modifica corpus:
 
-\[
+```math
 D_{retrieval}'=D\cup Poison
-\]
+```
 
 Se poison rankeia alto:
 
-\[
+```math
 P(Poison\in TopK)\uparrow
-\]
+```
 
 Então contexto contaminado entra no modelo.
 
@@ -429,11 +429,11 @@ Ataques podem explorar:
 
 Similarity não implica trust:
 
-\[
+```math
 HighCosineSimilarity
 \not\Rightarrow
 TrustedDocument
-\]
+```
 
 ---
 
@@ -443,11 +443,11 @@ Filtrar autorização **depois** de recuperar conteúdo pode ser tarde demais.
 
 Idealmente:
 
-\[
+```math
 CandidateSet
 =
 Documents(user\ is\ authorized\ to\ access)
-\]
+```
 
 antes de ranking/context injection.
 
@@ -457,9 +457,9 @@ antes de ranking/context injection.
 
 Agente adiciona ação ao sistema:
 
-\[
+```math
 Observe\rightarrow Decide\rightarrow Act
-\]
+```
 
 Falha deixa de ser apenas texto incorreto.
 
@@ -471,13 +471,13 @@ Pode modificar estado externo.
 
 Risco cresce com três dimensões:
 
-\[
+```math
 Risk
 \propto
 Functionality
 \times Permissions
 \times Autonomy
-\]
+```
 
 Reduzir qualquer fator reduz blast radius.
 
@@ -489,11 +489,11 @@ OWASP formaliza essa classe há várias versões e expandiu abordagem agentic em
 
 Permissões do agente devem satisfazer:
 
-\[
+```math
 Permissions_{agent}
 \subseteq
 Permissions_{minimum\ required}
-\]
+```
 
 Evitar credencial global privilegiada para uma tarefa de leitura restrita.
 
@@ -521,9 +521,9 @@ run_shell(command)
 
 Quanto mais open-ended a interface:
 
-\[
+```math
 AttackSurface\uparrow
-\]
+```
 
 ---
 
@@ -531,15 +531,15 @@ AttackSurface\uparrow
 
 Modelo pode propor:
 
-\[
+```math
 action=(tool,args)
-\]
+```
 
 Mas policy engine deve decidir:
 
-\[
+```math
 Allowed(user,action,state)?
-\]
+```
 
 A autorização não deve depender de “o modelo pareceu confiante”.
 
@@ -551,14 +551,14 @@ HITL deve ser baseado em risco, não usado para todo evento.
 
 Uma função útil:
 
-\[
+```math
 RequireApproval
 =
 I(
 Impact\times Irreversibility\times Uncertainty
 >\tau
 )
-\]
+```
 
 A aprovação precisa mostrar:
 
@@ -600,13 +600,13 @@ Goal state precisa ser protegido/separado do conteúdo não confiável.
 
 Ferramenta legítima + argumentos maliciosos:
 
-\[
+```math
 SafeTool
 +
 UnsafeInvocation
 =
 UnsafeSystem
-\]
+```
 
 Validar parâmetros semanticamente, não apenas schema JSON.
 
@@ -631,11 +631,11 @@ MCP server/tool provider pode mudar depois de aprovado.
 
 Runtime discovery aumenta risco:
 
-\[
+```math
 DynamicComponents
 \rightarrow
 DynamicTrustGraph
-\]
+```
 
 Pin/allowlist, metadata validation e policy enforcement tornam-se necessários.
 
@@ -659,11 +659,11 @@ Cada downstream interpreter reintroduz injection clássica.
 
 Se memória persistente recebe conteúdo adversarial:
 
-\[
+```math
 attack_t
 \rightarrow Memory
 \rightarrow behavior_{t+n}
-\]
+```
 
 Ataque sobrevive à sessão original.
 
@@ -683,9 +683,9 @@ Mensagem entre agentes deve ser tratada como input não confiável.
 
 Assinar/identificar origem ajuda autenticidade, mas não garante semântica correta.
 
-\[
+```math
 AuthenticatedMessage\neq SafeInstruction
-\]
+```
 
 ---
 
@@ -693,14 +693,14 @@ AuthenticatedMessage\neq SafeInstruction
 
 Se agentes dependem entre si:
 
-\[
+```math
 Error_A
 \rightarrow
 State_B
 \rightarrow
 Error_B
 \rightarrow\cdots
-\]
+```
 
 Blast radius aumenta com coupling.
 
@@ -720,11 +720,11 @@ Não é necessário antropomorfizar.
 
 Operacionalmente significa:
 
-\[
+```math
 ObservedPolicy
 \notin
 AllowedPolicyEnvelope
-\]
+```
 
 Independentemente de “intenção” do modelo.
 
@@ -743,7 +743,7 @@ OWASP ACS, lançado em setembro de 2026, enfatiza agentes:
 
 A arquitetura correta é:
 
-\[
+```math
 AgentDecision
 \rightarrow
 PolicyHook
@@ -751,13 +751,13 @@ PolicyHook
 Allow/Transform/Deny
 \rightarrow
 Execution
-\]
+```
 
 não:
 
-\[
+```math
 AgentDecision\rightarrow Execution
-\]
+```
 
 ---
 
@@ -782,15 +782,15 @@ Nunca confundir natural language generation com sanitização.
 
 Grammar/schema garante:
 
-\[
+```math
 y\in\mathcal L(Schema)
-\]
+```
 
 Não garante:
 
-\[
+```math
 SemanticallySafe(y)
-\]
+```
 
 JSON válido ainda pode pedir:
 
@@ -804,9 +804,9 @@ JSON válido ainda pode pedir:
 
 Operação crítica deve preferir comportamento:
 
-\[
+```math
 f(f(s,a),a)=f(s,a)
-\]
+```
 
 quando semanticamente possível.
 
@@ -818,12 +818,12 @@ Retries então deixam de multiplicar efeitos.
 
 Agrupe operações:
 
-\[
+```math
 BEGIN
 \rightarrow actions
 \rightarrow validation
 \rightarrow COMMIT/ROLLBACK
-\]
+```
 
 Para agentes, rollback é um mecanismo de safety/security extremamente valioso.
 
@@ -833,9 +833,9 @@ Para agentes, rollback é um mecanismo de safety/security extremamente valioso.
 
 Retry infinito é failure amplifier.
 
-\[
+```math
 N_{retry}\le N_{max}
-\]
+```
 
 Adicionar:
 
@@ -858,21 +858,21 @@ Atacante ou loop defeituoso pode provocar:
 
 Defina budgets:
 
-\[
+```math
 Tokens\le T_{max}
-\]
+```
 
-\[
+```math
 ToolCalls\le C_{max}
-\]
+```
 
-\[
+```math
 WallTime\le t_{max}
-\]
+```
 
-\[
+```math
 Cost\le \$_{max}
-\]
+```
 
 ---
 
@@ -882,19 +882,19 @@ Inputs patológicos podem amplificar compute/memory.
 
 Exemplo LLM:
 
-\[
+```math
 ContextLength\uparrow
 \Rightarrow
 KV\uparrow
-\]
+```
 
 Exemplo vídeo:
 
-\[
+```math
 T\times H\times W\uparrow
 \Rightarrow
 Compute/Memory\uparrow\uparrow
-\]
+```
 
 Veja [09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET](09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md).
 
@@ -904,21 +904,21 @@ Veja [09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET](09_LOCAL_AI_INFERENCE_RUNTIME_DAT
 
 Perturbação:
 
-\[
+```math
 x'=x+\delta
-\]
+```
 
 com:
 
-\[
+```math
 \|\delta\|\le\epsilon
-\]
+```
 
 Robustez deseja:
 
-\[
+```math
 f(x')\approx f(x)
-\]
+```
 
 para perturbações irrelevantes semanticamente.
 
@@ -926,7 +926,7 @@ para perturbações irrelevantes semanticamente.
 
 # 47. Discrete adversarial space
 
-Em texto, \(\delta\) não é simplesmente ruído contínuo.
+Em texto, $`\delta`$ não é simplesmente ruído contínuo.
 
 Pode ser:
 
@@ -946,21 +946,21 @@ Medida de distância precisa ser semanticamente apropriada.
 
 Ataque pode existir apenas em imagem/áudio enquanto texto parece benigno.
 
-\[
+```math
 Input=(Text,Image)
-\]
+```
 
 com:
 
-\[
+```math
 Text=safe
-\]
+```
 
 mas:
 
-\[
+```math
 Image=adversarial
-\]
+```
 
 VLM security precisa avaliar todas as modalities.
 
@@ -970,21 +970,21 @@ VLM security precisa avaliar todas as modalities.
 
 Treino:
 
-\[
+```math
 x\sim P_{train}
-\]
+```
 
 Deployment:
 
-\[
+```math
 x\sim P_{deploy}
-\]
+```
 
 Se:
 
-\[
+```math
 P_{deploy}\neq P_{train}
-\]
+```
 
 performance pode degradar sem qualquer atacante.
 
@@ -996,9 +996,9 @@ Isso é robustness/reliability, não necessariamente security.
 
 Modelo pode manter accuracy razoável e perder calibration:
 
-\[
+```math
 Confidence\not\approx CorrectnessProbability
-\]
+```
 
 sob domain shift.
 
@@ -1012,12 +1012,12 @@ Hallucination é output não sustentado pelo estado/evidência relevante.
 
 Não é uma vulnerabilidade isolada, mas pode virar exploit quando downstream confia automaticamente.
 
-\[
+```math
 Hallucination
 +ExcessiveAgency
 \rightarrow
 OperationalIncident
-\]
+```
 
 ---
 
@@ -1030,9 +1030,9 @@ Mesmo com docs corretos:
 - synthesis pode errar;
 - documentos podem contradizer.
 
-\[
+```math
 RAG\neq TruthOracle
-\]
+```
 
 ---
 
@@ -1040,9 +1040,9 @@ RAG\neq TruthOracle
 
 Se generator e verifier compartilham erro:
 
-\[
+```math
 P(V accepts\ wrong\ output)
-\]
+```
 
 pode ser alto.
 
@@ -1071,9 +1071,9 @@ Privacidade não é garantida por rodar “IA” isoladamente se logs/context co
 
 Pergunta:
 
-\[
+```math
 Was\ x\in D_{train}?
-\]
+```
 
 Atacante explora diferenças estatísticas de comportamento/confidence.
 
@@ -1117,9 +1117,9 @@ Mas adiciona:
 - exposed ports;
 - weak authentication.
 
-\[
+```math
 Local\neq SecureByDefault
-\]
+```
 
 ---
 
@@ -1196,9 +1196,9 @@ Treat extension installation as software supply-chain event.
 
 Para artefato:
 
-\[
+```math
 h=SHA256(file)
-\]
+```
 
 Pinning por hash permite detectar alteração.
 
@@ -1234,11 +1234,11 @@ Especialmente para modelos, nodes e adapters.
 
 Princípio:
 
-\[
+```math
 Compromise(component)
 \not\Rightarrow
 Compromise(host)
-\]
+```
 
 Use isolamento:
 
@@ -1256,15 +1256,15 @@ Quanto mais agentic/código, maior valor da sandbox.
 
 Se agente não precisa internet:
 
-\[
+```math
 Egress=deny
-\]
+```
 
 Se precisa apenas hosts específicos:
 
-\[
+```math
 Egress\subset Allowlist
-\]
+```
 
 Isso reduz exfiltration blast radius.
 
@@ -1313,9 +1313,9 @@ Defina:
 
 Capture eventos estruturados:
 
-\[
+```math
 Event=(actor,action,target,result,policy,trace_id,time)
-\]
+```
 
 Para agentes, auditabilidade depende de trace completo de ação.
 
@@ -1345,12 +1345,12 @@ rollback/revoke/rebuild.
 
 Defense in depth:
 
-\[
+```math
 Risk_{residual}
 \approx
 Risk_0
 \prod_i(1-E_i)
-\]
+```
 
 apenas como intuição; controles não são independentes na prática.
 
@@ -1360,21 +1360,21 @@ apenas como intuição; controles não são independentes na prática.
 
 Se métrica excede limite:
 
-\[
+```math
 FailureRate>\tau
-\]
+```
 
 ou:
 
-\[
+```math
 Cost>Budget
-\]
+```
 
 então:
 
-\[
+```math
 AgentExecution\rightarrow Stop
-\]
+```
 
 Evita cascata.
 
@@ -1427,15 +1427,15 @@ Veja [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMARK
 
 Benchmark:
 
-\[
+```math
 fixed\ distribution
-\]
+```
 
 Red-team:
 
-\[
+```math
 adaptive\ adversary
-\]
+```
 
 Atacante aprende com falhas do sistema.
 
@@ -1445,10 +1445,10 @@ Ambos são necessários.
 
 # 74. Attack success rate
 
-\[
+```math
 ASR=
 \frac{successful\ attacks}{attempts}
-\]
+```
 
 Sempre reportar junto com:
 
@@ -1466,15 +1466,15 @@ ASR sem contexto é pouco comparável.
 
 Em vez de um ponto, variar perturbação:
 
-\[
+```math
 Q(\epsilon)
-\]
+```
 
 Onde:
 
-\[
+```math
 \epsilon=attack\ strength / noise / shift
-\]
+```
 
 A área/declive da curva é mais informativa que um threshold arbitrário.
 
@@ -1484,14 +1484,14 @@ A área/declive da curva é mais informativa que um threshold arbitrário.
 
 Uma aproximação útil:
 
-\[
+```math
 Risk
 =Likelihood\times Impact
-\]
+```
 
 Para agentes, expandir:
 
-\[
+```math
 Impact
 =f(
 Privilege,
@@ -1499,7 +1499,7 @@ Reach,
 Irreversibility,
 Sensitivity
 )
-\]
+```
 
 Essa função orienta onde exigir HITL ou deterministic checks.
 
@@ -1541,13 +1541,13 @@ NIST AI RMF GenAI Profile trata riscos ao longo do lifecycle, não apenas no mom
 
 Isso é compatível com esta coleção:
 
-\[
+```math
 Data
 \rightarrow Training
 \rightarrow Evaluation
 \rightarrow Deployment
 \rightarrow Monitoring
-\]
+```
 
 Security/robustness precisa atravessar todos.
 
@@ -1588,11 +1588,11 @@ Essas categorias mapeiam diretamente para [08_AGENT_ACTION_CONTROL_SYSTEM_DATASH
 
 Uma regra que vale preservar:
 
-\[
+```math
 SecurityControl
 \not\subseteq
 SystemPrompt
-\]
+```
 
 Prompt pode ajudar comportamento.
 
@@ -1674,17 +1674,17 @@ Toda mudança de modelo/scaffold/runtime roda a suite.
 
 # 86. A equação final
 
-\[
+```math
 \boxed{
 SecureAI
 \neq
 SafeModel
 }
-\]
+```
 
 Mais precisamente:
 
-\[
+```math
 SecureSystem
 =
 f(
@@ -1698,7 +1698,7 @@ Runtime,
 Observability,
 Recovery
 )
-\]
+```
 
 O modelo é apenas um componente dentro do threat surface.
 

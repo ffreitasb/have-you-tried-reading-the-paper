@@ -11,7 +11,7 @@ updated: 2026-10-01
 
 A equação conceitual central:
 
-\[
+```math
 \boxed{
 ObservedScore
 =
@@ -26,13 +26,13 @@ Randomness,
 Environment
 )
 }
-\]
+```
 
 Logo:
 
-\[
+```math
 Score(Model)\quad\text{é geralmente uma abreviação perigosa.}
-\]
+```
 
 Veja também:
 
@@ -52,39 +52,39 @@ Pode ser:
 
 ## 1.1 Checkpoint puro
 
-\[
+```math
 SUT=Weights+Tokenizer
-\]
+```
 
 ## 1.2 Modelo + prompt/template
 
-\[
+```math
 SUT=Model+PromptPolicy
-\]
+```
 
 ## 1.3 Modelo + inferência
 
-\[
+```math
 SUT=Model+Prompt+Sampler
-\]
+```
 
 ## 1.4 Pipeline
 
-\[
+```math
 SUT=Retriever+Reranker+Model
-\]
+```
 
 ## 1.5 Agente
 
-\[
+```math
 SUT=Model+Scaffold+Tools+Environment
-\]
+```
 
 ## 1.6 Produto completo
 
-\[
+```math
 SUT=EverythingTheUserExperiences
-\]
+```
 
 Se o SUT não é explicitado, comparação entre scores pode não ser válida.
 
@@ -94,7 +94,7 @@ Se o SUT não é explicitado, comparação entre scores pode não ser válida.
 
 Pense:
 
-\[
+```math
 Y_{ijk}
 =
 \mu
@@ -102,16 +102,16 @@ Y_{ijk}
 +H_j
 +R_k
 +\epsilon_{ijk}
-\]
+```
 
 onde:
 
-- \(M_i\): efeito do modelo/configuração;
-- \(H_j\): efeito do harness/prompt/scaffold;
-- \(R_k\): efeito de seed/randomness;
-- \(\epsilon\): residual.
+- $`M_i`$: efeito do modelo/configuração;
+- $`H_j`$: efeito do harness/prompt/scaffold;
+- $`R_k`$: efeito de seed/randomness;
+- $`\epsilon`$: residual.
 
-Queremos estimar \(M_i\), mas frequentemente medimos todos juntos.
+Queremos estimar $`M_i`$, mas frequentemente medimos todos juntos.
 
 ---
 
@@ -125,9 +125,9 @@ Define conjunto de tarefas/exemplos/protocolo.
 
 Mapeia resultado para escalar/vetor:
 
-\[
+```math
 Metric(y,\hat y)
-\]
+```
 
 ## Harness
 
@@ -183,9 +183,9 @@ Sem versionamento, um resultado vira anedota histórica.
 
 ## Deterministic
 
-\[
+```math
 score=g(reference,prediction)
-\]
+```
 
 Exemplos:
 
@@ -197,17 +197,17 @@ Exemplos:
 
 ## Judged
 
-\[
+```math
 score=Judge(prompt,response,rubric)
-\]
+```
 
 É outro modelo/ser humano inferindo qualidade.
 
 Isso adiciona nova fonte de erro:
 
-\[
+```math
 Var_{judge}
-\]
+```
 
 Veja [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
@@ -215,10 +215,10 @@ Veja [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md)
 
 # 6. Accuracy
 
-\[
+```math
 Accuracy=
 \frac{\sum_i\mathbf1(\hat y_i=y_i)}{N}
-\]
+```
 
 Simples, mas exige definição inequívoca de “correto”.
 
@@ -228,20 +228,20 @@ Para classes desbalanceadas, accuracy pode ser enganosa.
 
 # 7. Precision, Recall e F1
 
-\[
+```math
 Precision=
 \frac{TP}{TP+FP}
-\]
+```
 
-\[
+```math
 Recall=
 \frac{TP}{TP+FN}
-\]
+```
 
-\[
+```math
 F1=
 2\frac{Precision\cdot Recall}{Precision+Recall}
-\]
+```
 
 Macro e micro averaging respondem perguntas diferentes.
 
@@ -249,10 +249,10 @@ Macro e micro averaging respondem perguntas diferentes.
 
 # 8. Exact Match
 
-\[
+```math
 EM=
 \frac1N\sum_i\mathbf1(normalize(\hat y_i)=normalize(y_i))
-\]
+```
 
 A função `normalize()` é parte da métrica.
 
@@ -262,24 +262,24 @@ Mudá-la muda o benchmark.
 
 # 9. Pass@k
 
-Em code generation, com \(n\) samples e \(c\) corretos:
+Em code generation, com $`n`$ samples e $`c`$ corretos:
 
-\[
+```math
 pass@k
 =
 1-
 \frac{\binom{n-c}{k}}{\binom nk}
-\]
+```
 
 quando condições da estimativa são atendidas.
 
 Pass@1 mede uma realidade diferente de pass@100.
 
-\[
+```math
 SearchBudget\uparrow
 \Rightarrow
 pass@k\uparrow
-\]
+```
 
 sem que o modelo tenha mudado.
 
@@ -289,46 +289,46 @@ sem que o modelo tenha mudado.
 
 ## Recall@K
 
-\[
+```math
 Recall@K
 =
 \frac{RelevantRetrieved@K}{TotalRelevant}
-\]
+```
 
 ## Precision@K
 
-\[
+```math
 Precision@K
 =
 \frac{RelevantRetrieved@K}{K}
-\]
+```
 
 ## MRR
 
-\[
+```math
 MRR
 =
 \frac1N
 \sum_i
 \frac1{rank_i}
-\]
+```
 
 ## DCG
 
-\[
+```math
 DCG@K
 =
 \sum_{i=1}^{K}
 \frac{2^{rel_i}-1}{\log_2(i+1)}
-\]
+```
 
 ## NDCG
 
-\[
+```math
 NDCG@K
 =
 \frac{DCG@K}{IDCG@K}
-\]
+```
 
 Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -338,22 +338,22 @@ Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER
 
 Para sequência:
 
-\[
+```math
 PPL=
 \exp\left(
 -\frac1T
 \sum_t
 \log p(x_t|x_{<t})
 \right)
-\]
+```
 
 É útil para modelagem probabilística, mas:
 
-\[
+```math
 LowerPPL
 \not\Rightarrow
 BetterInstructionFollowing
-\]
+```
 
 necessariamente.
 
@@ -363,18 +363,18 @@ Comparar PPL entre tokenizers diferentes exige extremo cuidado.
 
 # 12. Calibration
 
-Se modelo diz probabilidade \(p\), queremos:
+Se modelo diz probabilidade $`p`$, queremos:
 
-\[
+```math
 P(correct|confidence=p)\approx p
-\]
+```
 
 ## Brier score
 
-\[
+```math
 BS=
 \frac1N\sum_i(p_i-y_i)^2
-\]
+```
 
 ## ECE
 
@@ -388,16 +388,16 @@ Calibration é distinta de accuracy.
 
 ## Word Error Rate
 
-\[
+```math
 WER=
 \frac{S+D+I}{N}
-\]
+```
 
 onde:
 
-- \(S\): substitutions;
-- \(D\): deletions;
-- \(I\): insertions.
+- $`S`$: substitutions;
+- $`D`$: deletions;
+- $`I`$: insertions.
 
 Veja [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md).
 
@@ -407,32 +407,32 @@ Veja [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DAT
 
 ## MAE
 
-\[
+```math
 MAE=
 \frac1N\sum_i|y_i-\hat y_i|
-\]
+```
 
 ## RMSE
 
-\[
+```math
 RMSE=
 \sqrt{
 \frac1N\sum_i(y_i-\hat y_i)^2
 }
-\]
+```
 
 ## MAPE caveat
 
-\[
+```math
 MAPE=
 \frac{100}{N}
 \sum_i
 \left|
 \frac{y_i-\hat y_i}{y_i}
 \right|
-\]
+```
 
-explode ou fica instável quando \(y_i\approx0\).
+explode ou fica instável quando $`y_i\approx0`$.
 
 Probabilistic forecasts exigem métricas próprias de distribuição/quantis.
 
@@ -456,17 +456,17 @@ Dimensões distintas:
 
 Logo:
 
-\[
+```math
 Quality
 \in
 \mathbb R^d
-\]
+```
 
 não necessariamente:
 
-\[
+```math
 Quality\in\mathbb R
-\]
+```
 
 Um único scalar ranking esconde trade-offs.
 
@@ -486,9 +486,9 @@ Pode incluir:
 
 Para fabricação:
 
-\[
+```math
 Printable\neq VisuallyPlausible
-\]
+```
 
 Veja [07_3D_GENERATION_REPRESENTATION_DATASHEET](07_3D_GENERATION_REPRESENTATION_DATASHEET.md).
 
@@ -498,33 +498,33 @@ Veja [07_3D_GENERATION_REPRESENTATION_DATASHEET](07_3D_GENERATION_REPRESENTATION
 
 Agentes precisam métricas além do texto final:
 
-\[
+```math
 SuccessRate
-\]
+```
 
-\[
+```math
 StepsToSuccess
-\]
+```
 
-\[
+```math
 ToolCalls
-\]
+```
 
-\[
+```math
 Cost
-\]
+```
 
-\[
+```math
 UnsafeActions
-\]
+```
 
-\[
+```math
 RecoveryRate
-\]
+```
 
-\[
+```math
 StateValidity
-\]
+```
 
 Uma resposta bonita pode acompanhar uma trajetória operacional péssima.
 
@@ -543,10 +543,10 @@ Precisamos separar:
 
 World-model error pode acumular:
 
-\[
+```math
 \epsilon_{t+H}
 =f(\epsilon_t,H,dynamics)
-\]
+```
 
 Veja [13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET](13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md).
 
@@ -556,15 +556,15 @@ Veja [13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET](13_WORLD_MODEL_VLA_EMBODIED_AI_D
 
 Um score observado é amostra:
 
-\[
+```math
 \hat\mu
-\]
+```
 
 Queremos estimar:
 
-\[
+```math
 \mu
-\]
+```
 
 com incerteza.
 
@@ -574,16 +574,16 @@ com incerteza.
 
 Para média:
 
-\[
+```math
 SE=
 \frac{s}{\sqrt N}
-\]
+```
 
-Crescer \(N\) reduz incerteza aproximadamente como:
+Crescer $`N`$ reduz incerteza aproximadamente como:
 
-\[
+```math
 1/\sqrt N
-\]
+```
 
 Não linearmente com N.
 
@@ -593,13 +593,13 @@ Não linearmente com N.
 
 Forma assintótica simples:
 
-\[
+```math
 CI
 \approx
 \hat\mu
 \pm
 z_{\alpha/2}SE
-\]
+```
 
 Para muitos benchmarks, bootstrap é mais flexível.
 
@@ -609,12 +609,12 @@ Para muitos benchmarks, bootstrap é mais flexível.
 
 1. amostrar exemplos com reposição;
 2. recalcular métrica;
-3. repetir \(B\) vezes;
+3. repetir $`B`$ vezes;
 4. obter distribuição empírica.
 
-\[
+```math
 \{\hat\theta_1^*,\ldots,\hat\theta_B^*\}
-\]
+```
 
 Útil para métricas sem fórmula simples de variância.
 
@@ -624,15 +624,15 @@ Para muitos benchmarks, bootstrap é mais flexível.
 
 Se modelos A e B respondem aos **mesmos itens**, use diferença pareada:
 
-\[
+```math
 d_i=s_i(A)-s_i(B)
-\]
+```
 
 Então estude:
 
-\[
+```math
 \bar d
-\]
+```
 
 Isso remove parte da variação devido à dificuldade entre itens.
 
@@ -644,16 +644,16 @@ Isso remove parte da variação devido à dificuldade entre itens.
 
 Para classificação binária, conte discordâncias:
 
-- A certo / B errado: \(b\)
-- A errado / B certo: \(c\)
+- A certo / B errado: $`b`$
+- A errado / B certo: $`c`$
 
-A evidência de diferença vem de \(b\) versus \(c\), não de acertos totais isolados.
+A evidência de diferença vem de $`b`$ versus $`c`$, não de acertos totais isolados.
 
 ---
 
 # 25. Permutation test
 
-Sob hipótese nula de troca de labels/configurações, permute pares e calcule distribuição de \(\Delta\).
+Sob hipótese nula de troca de labels/configurações, permute pares e calcule distribuição de $`\Delta`$.
 
 É útil quando não queremos assumir normalidade.
 
@@ -665,9 +665,9 @@ Significância estatística não implica relevância prática.
 
 Pergunte:
 
-\[
+```math
 |\Delta|\quad\text{é grande o suficiente para justificar custo/risco?}
-\]
+```
 
 Exemplo:
 
@@ -679,9 +679,9 @@ Exemplo:
 
 Se testar centenas de configurações, algum “ganhador” aparece por acaso.
 
-\[
+```math
 P(false\ positive)\uparrow
-\]
+```
 
 com número de hipóteses.
 
@@ -698,27 +698,27 @@ Use:
 
 Para stochastic generation:
 
-\[
+```math
 Y_{m,s}
-\]
+```
 
-onde \(s\) é seed.
+onde $`s`$ é seed.
 
 Calcule:
 
-\[
+```math
 Var_s(Y|m)
-\]
+```
 
 antes de interpretar diferença entre modelos.
 
 Se:
 
-\[
+```math
 |\Delta_{models}|
 <
 \sigma_{seed}
-\]
+```
 
 um único run é evidência fraca.
 
@@ -728,9 +728,9 @@ um único run é evidência fraca.
 
 Em benchmark com tasks, examples e seeds:
 
-\[
+```math
 Y_{task,item,seed}
-\]
+```
 
 podemos decompor variância em múltiplos níveis.
 
@@ -773,9 +773,9 @@ Usuário não experimenta “a média” apenas.
 
 Em latency:
 
-\[
+```math
 p50,p95,p99
-\]
+```
 
 Em safety/reliability:
 
@@ -783,9 +783,9 @@ worst-case e failure-tail podem dominar risco.
 
 Para agents:
 
-\[
+```math
 P(catastrophic\ failure)
-\]
+```
 
 pode ser mais importante que mean success rate.
 
@@ -819,9 +819,9 @@ Mesmo sem leakage literal, score deixa de ser estimativa neutra de generalizaç�
 
 Se quase todos os modelos relevantes estão perto do teto:
 
-\[
+```math
 Var_{models}(score)\rightarrow0
-\]
+```
 
 benchmark perde poder discriminativo.
 
@@ -829,9 +829,9 @@ Pesquisa de 2026 analisando 60 benchmarks encontrou saturação em uma parcela g
 
 A lição:
 
-\[
+```math
 BenchmarkHalfLife<\infty
-\]
+```
 
 ---
 
@@ -848,9 +848,9 @@ LiveBench exemplifica:
 
 Mas atualização também significa:
 
-\[
+```math
 Score_{2025}\not\equiv Score_{2026}
-\]
+```
 
 sem versionamento do dataset.
 
@@ -867,9 +867,9 @@ Private test data reduz exposição direta, mas não elimina:
 
 Portanto:
 
-\[
+```math
 Private\neq ContaminationProof
-\]
+```
 
 ---
 
@@ -877,10 +877,10 @@ Private\neq ContaminationProof
 
 Judge:
 
-\[
+```math
 J(prompt,response,rubric)
 \rightarrow score/verdict
-\]
+```
 
 Problemas comuns:
 
@@ -905,9 +905,9 @@ Para pairwise judge:
 
 Se:
 
-\[
+```math
 J(A,B)\neq reverse(J(B,A))
-\]
+```
 
 há inconsistência/position sensitivity.
 
@@ -917,11 +917,11 @@ há inconsistência/position sensitivity.
 
 Em vez de score monolítico:
 
-\[
+```math
 Quality
 =
 (w_1q_1,\ldots,w_kq_k)
-\]
+```
 
 Dimensões possíveis:
 
@@ -956,7 +956,7 @@ Métricas de agreement ajudam a quantificar consistência.
 
 Coding-agent benchmark mede frequentemente:
 
-\[
+```math
 Model
 +
 AgentLoop
@@ -968,7 +968,7 @@ Prompt
 Search
 +
 RetryBudget
-\]
+```
 
 não apenas o model checkpoint.
 
@@ -999,15 +999,15 @@ Um benchmark sem harness versionado não é plenamente reproduzível.
 
 Se configuração A usa:
 
-\[
+```math
 N_A=1
-\]
+```
 
 sample e B usa:
 
-\[
+```math
 N_B=64
-\]
+```
 
 + verifier,
 
@@ -1015,15 +1015,15 @@ não estamos comparando apenas modelos.
 
 Estamos comparando:
 
-\[
+```math
 Model\times SearchBudget
-\]
+```
 
 Reportar:
 
-\[
+```math
 Quality(Cost)
-\]
+```
 
 é mais honesto.
 
@@ -1033,15 +1033,15 @@ Quality(Cost)
 
 Gere:
 
-\[
+```math
 y_1,\ldots,y_N
-\]
+```
 
 Selecione:
 
-\[
+```math
 y^*=\arg\max_i V(y_i)
-\]
+```
 
 Score cresce com:
 
@@ -1059,11 +1059,11 @@ Atribuir todo ganho ao generator é erro causal.
 
 Time To First Token.
 
-Se request inicia em \(t_0\) e primeiro token chega em \(t_1\):
+Se request inicia em $`t_0`$ e primeiro token chega em $`t_1`$:
 
-\[
+```math
 TTFT=t_1-t_0
-\]
+```
 
 ## Inter-token latency / TPOT
 
@@ -1071,17 +1071,17 @@ Tempo médio por token depois do primeiro.
 
 ## Generation TPS
 
-\[
+```math
 TPS=
 \frac{N_{generated}}{T_{decode}}
-\]
+```
 
 ## Throughput
 
-\[
+```math
 Throughput=
 \frac{TotalTokens}{WallClock}
-\]
+```
 
 TPS single-user e throughput server são objetivos diferentes.
 
@@ -1091,15 +1091,15 @@ TPS single-user e throughput server são objetivos diferentes.
 
 Nunca misturar:
 
-\[
+```math
 PromptTPS
-\]
+```
 
 com:
 
-\[
+```math
 DecodeTPS
-\]
+```
 
 Veja [09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET](09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md).
 
@@ -1127,17 +1127,17 @@ Um número “VRAM usada” sem fase de execução é ambíguo.
 
 Quando disponível:
 
-\[
+```math
 EnergyPerToken
 =
 \frac{\int P(t)dt}{N_{tokens}}
-\]
+```
 
 Ou:
 
-\[
+```math
 J/request
-\]
+```
 
 Para local inference, performance/W pode alterar decisão de hardware tanto quanto TPS.
 
@@ -1147,18 +1147,18 @@ Para local inference, performance/W pode alterar decisão de hardware tanto quan
 
 Em vez de procurar “melhor modelo”, construa vetor:
 
-\[
+```math
 z=
 (Quality,Latency,Memory,Cost,Context)
-\]
+```
 
 Modelo é Pareto-dominado se existe outro melhor ou igual em todas as dimensões e estritamente melhor em pelo menos uma.
 
 Para uma RTX 2060 12 GB:
 
-\[
+```math
 VRAM\le12GB
-\]
+```
 
 é constraint real, não coluna decorativa.
 
@@ -1168,21 +1168,21 @@ VRAM\le12GB
 
 Métricas úteis:
 
-\[
+```math
 Quality/GB
-\]
+```
 
-\[
+```math
 Quality/Joule
-\]
+```
 
-\[
+```math
 Quality/Second
-\]
+```
 
-\[
+```math
 Quality/TokenBudget
-\]
+```
 
 especialmente para comparar quantizações e model sizes.
 
@@ -1210,15 +1210,15 @@ Ao comparar Q4 vs Q5:
 
 A pergunta é:
 
-\[
+```math
 \frac{\Delta Quality}{\Delta Memory}
-\]
+```
 
 e:
 
-\[
+```math
 \frac{\Delta Quality}{\Delta Throughput}
-\]
+```
 
 ---
 
@@ -1248,17 +1248,17 @@ Capture:
 
 Amostra deve cobrir distribuição alvo:
 
-\[
+```math
 D_{eval}\sim D_{deployment}
-\]
+```
 
 na medida do possível.
 
 Se benchmark é academia e deployment é atendimento B2B em português:
 
-\[
+```math
 ExternalValidity\downarrow
-\]
+```
 
 mesmo com score excelente.
 
@@ -1280,15 +1280,15 @@ Particione por:
 
 Pode ocorrer:
 
-\[
+```math
 Mean_A>Mean_B
-\]
+```
 
 mas:
 
-\[
+```math
 A<B
-\]
+```
 
 no slice crítico para produção.
 
@@ -1344,9 +1344,9 @@ Avaliação normal mede distribuição nominal.
 
 Adversarial eval mede vizinhança hostil:
 
-\[
+```math
 x' = x+\delta
-\]
+```
 
 ou inputs deliberadamente construídos para falhar.
 
@@ -1360,9 +1360,9 @@ Mesmo sem treinar pesos:
 
 se você olha o test set repetidamente e ajusta prompt/configuração:
 
-\[
+```math
 TestSet\rightarrow DevelopmentSignal
-\]
+```
 
 Então deixou de ser test set puro.
 
@@ -1377,11 +1377,11 @@ Mantenha:
 
 Equipe pode otimizar KPI até perder validade externa.
 
-\[
+```math
 Leaderboard\uparrow
 \not\Rightarrow
 RealWorldUtility\uparrow
-\]
+```
 
 Esse é Goodhart aplicado à avaliação.
 
@@ -1464,21 +1464,21 @@ Pontos particularmente relevantes em outubro de 2026:
 
 Defina antes:
 
-\[
+```math
 Accept\ A
 \quad\text{if}\quad
 \Delta Q>\delta_{min}
-\]
+```
 
 sujeito a:
 
-\[
+```math
 Memory<M_{max}
-\]
+```
 
-\[
+```math
 Latency<L_{max}
-\]
+```
 
 Isso reduz post-hoc rationalization.
 
@@ -1507,7 +1507,7 @@ Essa bateria deve ser mais valiosa para decisão local que uma posição isolada
 
 # 65. A equação final
 
-\[
+```math
 \boxed{
 Evidence
 =
@@ -1519,7 +1519,7 @@ Protocol
 +
 Reproducibility
 }
-\]
+```
 
 Sem uncertainty, temos número.
 

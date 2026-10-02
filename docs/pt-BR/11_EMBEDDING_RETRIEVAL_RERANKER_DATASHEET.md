@@ -14,7 +14,7 @@ Relacionados: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UN
 
 # 1. Pipeline canônico
 
-\[
+```math
 Query
 \xrightarrow{Encoder}
 z_q
@@ -23,7 +23,7 @@ z_q
 \xrightarrow{Reranker}
 \{d'_1,\ldots,d'_k\}
 \rightarrow Generator/Decision
-\]
+```
 
 RAG é esse **pipeline**, não um tipo único de modelo.
 
@@ -33,29 +33,29 @@ RAG é esse **pipeline**, não um tipo único de modelo.
 
 Encoder:
 
-\[
+```math
 f_\theta(x)=z\in\mathbb R^d
-\]
+```
 
 Para normalização L2:
 
-\[
+```math
 \hat z=\frac{z}{\|z\|_2}
-\]
+```
 
 Cosine similarity:
 
-\[
+```math
 s_{cos}(q,d)
 =
 \frac{q^Td}{\|q\|\|d\|}
-\]
+```
 
 Se ambos normalizados:
 
-\[
+```math
 s_{cos}=q^Td
-\]
+```
 
 Logo cosine vira dot product.
 
@@ -63,15 +63,15 @@ Logo cosine vira dot product.
 
 # 3. Euclidean distance
 
-\[
+```math
 d_E(q,d)=\|q-d\|_2
-\]
+```
 
 Para vetores normalizados:
 
-\[
+```math
 \|q-d\|_2^2=2-2q^Td
-\]
+```
 
 Portanto cosine/dot/L2 podem induzir o mesmo ranking em condições específicas, mas **não universalmente**.
 
@@ -81,29 +81,29 @@ Portanto cosine/dot/L2 podem induzir o mesmo ranking em condições específicas
 
 Transformer produz:
 
-\[
+```math
 H=(h_1,\ldots,h_T)
-\]
+```
 
-Precisamos obter \(z\).
+Precisamos obter $`z`$.
 
 ## CLS pooling
 
-\[
+```math
 z=h_{CLS}
-\]
+```
 
 ## Mean pooling
 
-\[
+```math
 z=\frac{1}{T}\sum_th_t
-\]
+```
 
 ## Weighted/attention pooling
 
-\[
+```math
 z=\sum_t\alpha_th_t
-\]
+```
 
 Pooling é parte do modelo; não deve ser trocado arbitrariamente sem respeitar o training recipe.
 
@@ -111,23 +111,23 @@ Pooling é parte do modelo; não deve ser trocado arbitrariamente sem respeitar 
 
 # 5. Contrastive objective
 
-Com positivo \(d^+\):
+Com positivo $`d^+`$:
 
-\[
+```math
 \mathcal L
 =
 -\log
 \frac{\exp(sim(q,d^+)/\tau)}
 {\exp(sim(q,d^+)/\tau)+\sum_j\exp(sim(q,d_j^-)/\tau)}
-\]
+```
 
-\(\tau\) é **contrastive temperature**.
+$`\tau`$ é **contrastive temperature**.
 
 ### Não confundir
 
-\[
+```math
 \tau_{contrastive}\neq T_{sampling}
-\]
+```
 
 Uma atua na loss de representação; outra no decode categórico.
 
@@ -137,15 +137,15 @@ Uma atua na loss de representação; outra no decode categórico.
 
 Negativo aleatório pode ser fácil:
 
-\[
+```math
 s(q,d^-_{random})\ll s(q,d^+)
-\]
+```
 
 Hard negative:
 
-\[
+```math
 s(q,d^-_{hard})\approx s(q,d^+)
-\]
+```
 
 Eles forçam fronteiras mais finas, mas falsos negativos podem ensinar a afastar itens semanticamente válidos.
 
@@ -157,25 +157,25 @@ Eles forçam fronteiras mais finas, mas falsos negativos podem ensinar a afastar
 
 Mesma natureza:
 
-\[
+```math
 Document\leftrightarrow Document
-\]
+```
 
 ### Asymmetric
 
-\[
+```math
 Query\rightarrow Passage
-\]
+```
 
 Alguns modelos usam prompts/instructions diferentes:
 
-\[
+```math
 z_q=f("query:"+q)
-\]
+```
 
-\[
+```math
 z_d=f("passage:"+d)
-\]
+```
 
 Ignorar esse recipe pode degradar retrieval mesmo com pesos corretos.
 
@@ -185,21 +185,21 @@ Ignorar esse recipe pode degradar retrieval mesmo com pesos corretos.
 
 Treino permite truncar embedding:
 
-\[
+```math
 z^{(d_1)}\subset z^{(d_2)}\subset\cdots\subset z^{(D)}
-\]
+```
 
 com dimensões menores preservando boa parte da geometria.
 
 Trade-off:
 
-\[
+```math
 Dimension\downarrow
 \Rightarrow
 IndexMemory\downarrow,
 SearchBW\downarrow,
 Quality\downarrow\ potential
-\]
+```
 
 Útil para escolher custo sem retreinar.
 
@@ -209,17 +209,17 @@ Quality\downarrow\ potential
 
 Em vez de espaços separados:
 
-\[
+```math
 f_t(text),\quad f_v(image),\quad f_{vid}(video)
-\]
+```
 
 podem ser treinados para ocupar espaço comum:
 
-\[
+```math
 s(f_t(q),f_v(image^+))
 >
 s(f_t(q),f_v(image^-))
-\]
+```
 
 Qwen3-VL-Embedding em 2026 é exemplo de text/image/document-image/video retrieval com representação unificada e dimensões Matryoshka.
 
@@ -229,13 +229,13 @@ Qwen3-VL-Embedding em 2026 é exemplo de text/image/document-image/video retriev
 
 Bag-of-words probabilístico clássico — BM25:
 
-\[
+```math
 score(q,d)=
 \sum_{t\in q}
 IDF(t)
 \frac{f(t,d)(k_1+1)}
 {f(t,d)+k_1(1-b+b|d|/avgdl)}
-\]
+```
 
 Dense retrieval não elimina BM25.
 
@@ -247,9 +247,9 @@ Dense captura semântica; sparse preserva matching lexical exato.
 
 Modelo neural pode produzir pesos esparsos no vocabulário:
 
-\[
+```math
 z\in\mathbb R^{|V|},\quad \|z\|_0\ll|V|
-\]
+```
 
 Combina interpretabilidade/índice invertido com expansão semântica aprendida.
 
@@ -259,15 +259,15 @@ Combina interpretabilidade/índice invertido com expansão semântica aprendida.
 
 Combine scores:
 
-\[
+```math
 s=\alpha s_{dense}+\beta s_{sparse}
-\]
+```
 
 ou combine ranks via Reciprocal Rank Fusion:
 
-\[
+```math
 RRF(d)=\sum_m\frac{1}{k+rank_m(d)}
-\]
+```
 
 RRF evita calibrar escalas de scores diretamente.
 
@@ -277,29 +277,29 @@ RRF evita calibrar escalas de scores diretamente.
 
 Em vez de um vetor por documento:
 
-\[
+```math
 D=(d_1,\ldots,d_n)
-\]
+```
 
 mantemos embeddings por token/subvector.
 
 ColBERT-like MaxSim:
 
-\[
+```math
 score(Q,D)=
 \sum_{q_i\in Q}
 \max_{d_j\in D}q_i^Td_j
-\]
+```
 
 É um meio-termo entre bi-encoder e cross-encoder.
 
 Trade-off:
 
-\[
+```math
 Quality\uparrow
 \leftrightarrow
 IndexSize/Compute\uparrow
-\]
+```
 
 ---
 
@@ -307,21 +307,21 @@ IndexSize/Compute\uparrow
 
 ## Bi-encoder
 
-\[
+```math
 z_q=f(q),\quad z_d=f(d)
-\]
+```
 
-\[
+```math
 score=z_q^Tz_d
-\]
+```
 
 Documentos podem ser pré-computados.
 
 ## Cross-encoder
 
-\[
+```math
 score=f_\theta([q;d])
-\]
+```
 
 Tokens interagem dentro da mesma rede.
 
@@ -329,21 +329,21 @@ Tokens interagem dentro da mesma rede.
 
 Bi-encoder:
 
-\[
+```math
 O(1)\ embedding/query + ANN
-\]
+```
 
-Cross-encoder para \(K\) candidatos:
+Cross-encoder para $`K`$ candidatos:
 
-\[
+```math
 O(K\cdot Forward(q,d_i))
-\]
+```
 
 Por isso o padrão:
 
-\[
+```math
 1000\ retrieved\rightarrow 50\ reranked\rightarrow 5\ context
-\]
+```
 
 ---
 
@@ -359,9 +359,9 @@ Pode ser:
 
 ### Binary logit
 
-\[
+```math
 p(relevant|q,d)=\sigma(z)
-\]
+```
 
 Score bruto não é automaticamente probabilidade calibrada.
 
@@ -369,11 +369,11 @@ Score bruto não é automaticamente probabilidade calibrada.
 
 # 16. Approximate Nearest Neighbor — ANN
 
-Busca exata sobre \(N\) vetores de dimensão \(d\):
+Busca exata sobre $`N`$ vetores de dimensão $`d`$:
 
-\[
+```math
 O(Nd)
-\]
+```
 
 ANN troca exatidão por latência/memória.
 
@@ -391,19 +391,19 @@ Variáveis práticas:
 
 Tendência:
 
-\[
+```math
 efSearch\uparrow
 \Rightarrow
 Recall\uparrow,
 Latency\uparrow
-\]
+```
 
-\[
+```math
 M\uparrow
 \Rightarrow
 Memory\uparrow,
 GraphConnectivity\uparrow
-\]
+```
 
 Curvas são dataset-dependent.
 
@@ -411,30 +411,30 @@ Curvas são dataset-dependent.
 
 # 18. IVF
 
-Treine \(n_{list}\) centroides:
+Treine $`n_{list}`$ centroides:
 
-\[
+```math
 \{c_1,\ldots,c_{nlist}\}
-\]
+```
 
 Cada vetor é atribuído a uma célula.
 
 Na busca, examinar `nprobe` células.
 
-\[
+```math
 nprobe\uparrow
 \Rightarrow Recall\uparrow,Latency\uparrow
-\]
+```
 
 ---
 
 # 19. Product Quantization — PQ
 
-Divida vetor em \(m\) subvetores:
+Divida vetor em $`m`$ subvetores:
 
-\[
+```math
 z=[z^{(1)},\ldots,z^{(m)}]
-\]
+```
 
 Quantize cada subespaço por codebook.
 
@@ -448,11 +448,11 @@ Não confundir PQ do índice com quantização de weights do encoder.
 
 Documento:
 
-\[
+```math
 D\rightarrow\{c_1,\ldots,c_n\}
-\]
+```
 
-Chunk length \(L\) e overlap \(O\) mudam o corpus efetivo.
+Chunk length $`L`$ e overlap $`O`$ mudam o corpus efetivo.
 
 ### Muito curto
 
@@ -467,9 +467,9 @@ Chunk length \(L\) e overlap \(O\) mudam o corpus efetivo.
 
 Logo:
 
-\[
+```math
 RetrievalQuality=f(model,chunking,index,query)
-\]
+```
 
 não apenas do embedding model.
 
@@ -479,17 +479,17 @@ não apenas do embedding model.
 
 Problema:
 
-\[
+```math
 Embedding(c_i)
-\]
+```
 
 pode não saber título/documento pai.
 
 Solução pipeline:
 
-\[
+```math
 Embedding(metadata+summary+chunk)
-\]
+```
 
 ou hierarchical retrieval.
 
@@ -501,37 +501,37 @@ Isso aumenta semantic specificity, mas pode introduzir informação não present
 
 ## Recall@K
 
-\[
+```math
 Recall@K=
 \frac{|Relevant\cap TopK|}{|Relevant|}
-\]
+```
 
 ## Precision@K
 
-\[
+```math
 Precision@K=
 \frac{|Relevant\cap TopK|}{K}
-\]
+```
 
 ## Reciprocal Rank
 
-\[
+```math
 RR=\frac{1}{rank_{first\ relevant}}
-\]
+```
 
 ## MRR
 
-\[
+```math
 MRR=\frac1N\sum_iRR_i
-\]
+```
 
 ## DCG
 
-\[
+```math
 DCG@K=
 \sum_{i=1}^{K}
 \frac{2^{rel_i}-1}{\log_2(i+1)}
-\]
+```
 
 nDCG normaliza pelo ranking ideal.
 
@@ -553,9 +553,9 @@ Não existe regra universal:
 
 Calibre no seu corpus:
 
-\[
+```math
 Threshold^*=argmax\ Metric(Threshold)
-\]
+```
 
 ---
 
@@ -565,16 +565,16 @@ Erro final pode ser:
 
 ### Retrieval miss
 
-\[
+```math
 Relevant\notin TopK
-\]
+```
 
 ### Reranker miss
 
-\[
+```math
 Relevant\in TopK,
 Relevant\notin Topk_{reranked}
-\]
+```
 
 ### Context packing miss
 
@@ -592,21 +592,21 @@ Separar essas classes antes de “trocar o LLM”.
 
 Dense FP32 aproximado:
 
-\[
+```math
 M_{vectors}=N\cdot d\cdot4\ bytes
-\]
+```
 
 FP16:
 
-\[
+```math
 M=N\cdot d\cdot2
-\]
+```
 
 mais overhead:
 
-\[
+```math
 M_{index}=M_{vectors}+M_{graph/codebooks}+metadata
-\]
+```
 
 1M vetores × 1024 dims × FP32 ≈ 4.096 GB **antes** do índice/metadata.
 
@@ -641,7 +641,7 @@ Qwen3-VL-Embedding/Reranker mostra a convergência de retrieval multimodal:
 
 A tendência relevante é menos “qual modelo ganhou benchmark” e mais:
 
-\[
+```math
 Retrieval\ pipeline
 =
 Representation
@@ -649,7 +649,7 @@ Representation
 ApproximateSearch
 +
 FineRanking
-\]
+```
 
 ---
 

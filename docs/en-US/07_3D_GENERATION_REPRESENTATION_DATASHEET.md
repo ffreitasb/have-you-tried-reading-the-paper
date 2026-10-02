@@ -12,12 +12,12 @@ updated: 2026-10-01
 
 ### Explicit mesh
 
-\[
+```math
 \mathcal M=(V,F)
-\]
+```
 
-- \(V\): vertices;
-- \(F\): faces/triangles.
+- $`V`$: vertices;
+- $`F`$: faces/triangles.
 
 It may carry:
 
@@ -31,21 +31,21 @@ It may carry:
 
 A continuous function:
 
-\[
+```math
 f_\theta(\mathbf x)\rightarrow \rho,\ SDF,\ occupancy,\ radiance
-\]
+```
 
 Geometry may be extracted as an isosurface:
 
-\[
+```math
 f(\mathbf x)=\tau
-\]
+```
 
 ### NeRF / radiance field
 
-\[
+```math
 F_\theta(\mathbf x,\mathbf d)\rightarrow(\sigma,\mathbf c)
-\]
+```
 
 Rendering integrates density and color along rays.
 
@@ -53,9 +53,9 @@ Rendering integrates density and color along rays.
 
 Each primitive may be represented as:
 
-\[
+```math
 G_i=(\mu_i,\Sigma_i,\alpha_i,c_i,\ldots)
-\]
+```
 
 where position, covariance/orientation, opacity, and appearance are explicitly parameterized.
 
@@ -63,9 +63,9 @@ where position, covariance/orientation, opacity, and appearance are explicitly p
 
 State:
 
-\[
+```math
 Z=\{(p_i,z_i)\}_{i=1}^{N}
-\]
+```
 
 with sparse positions/voxels + learned latent features. TRELLIS/SLAT demonstrates that a single latent can be decoded into mesh, Gaussian, or radiance representations.
 
@@ -75,15 +75,15 @@ with sparse positions/voxels + learned latent features. TRELLIS/SLAT demonstrate
 
 ## 2. Conceptual graph
 
-\[
+```math
 text/image/multiview\rightarrow condition\ encoder\rightarrow 3D\ latent/structure\rightarrow generator\rightarrow representation\ decoder\rightarrow geometry/material
-\]
+```
 
 Shape and appearance are often separate subsystems:
 
-\[
+```math
 Shape\ Generation\neq Texture/Material\ Generation
-\]
+```
 
 Hunyuan3D 2.1 is an explicit example: Hunyuan3D-DiT for shape and Hunyuan3D-Paint for PBR texture/material generation.
 
@@ -106,9 +106,9 @@ Possible inputs:
 
 A single 2D image does not uniquely determine 3D geometry:
 
-\[
+```math
 P(Shape\mid Image)
-\]
+```
 
 is multimodal.
 
@@ -122,9 +122,9 @@ The model fills unobserved surfaces from a learned prior. “Janus” and backsi
 
 For structured latents:
 
-\[
+```math
 \frac{dZ_t}{dt}=v_\theta(Z_t,t,C)
-\]
+```
 
 Integration transforms noise/prior latent into 3D structure.
 
@@ -149,11 +149,11 @@ may exist, but they operate in the **3D latent**, not directly on triangles.
 
 This is fundamental only when the pipeline has an implicit density/SDF/occupancy field that must be converted into a surface.
 
-\[
+```math
 Surface=\{\mathbf x\mid f(\mathbf x)=\tau\}
-\]
+```
 
-Changing \(\tau\) may:
+Changing $`\tau`$ may:
 
 - inflate/shrink the shape;
 - open/close cavities;
@@ -178,15 +178,15 @@ Quality depends on:
 
 Higher grid resolution increases memory/compute approximately with volume:
 
-\[
+```math
 N_{voxels}\propto N_xN_yN_z
-\]
+```
 
 Doubling resolution on each axis:
 
-\[
+```math
 N\rightarrow8N
-\]
+```
 
 ---
 
@@ -196,9 +196,9 @@ N\rightarrow8N
 
 Poly count is not quality by itself.
 
-\[
+```math
 Quality\not\propto TriangleCount
-\]
+```
 
 Millions of triangles may represent surface noise; a good remesh with fewer faces may preserve perceptual shape better.
 
@@ -224,9 +224,9 @@ For manufacturing, desirable properties include:
 
 A renderable mesh may still be unusable for FDM/resin printing.
 
-\[
+```math
 RenderValid\not\Rightarrow ManufacturingValid
-\]
+```
 
 ---
 
@@ -234,15 +234,15 @@ RenderValid\not\Rightarrow ManufacturingValid
 
 Disconnected components:
 
-\[
+```math
 \mathcal M=\bigcup_i\mathcal M_i
-\]
+```
 
 Filtering by connected-component size is often useful:
 
-\[
+```math
 \mathcal M^*=\arg\max_i Volume/Area(\mathcal M_i)
-\]
+```
 
 But do not blindly remove small components if the object intentionally contains separate parts.
 
@@ -254,9 +254,9 @@ But do not blindly remove small components if the object intentionally contains 
 
 A 2D image mapped over the surface:
 
-\[
+```math
 (u,v)=\phi(\mathbf x_{surface})
-\]
+```
 
 Texture resolution affects memory and appearance, but not geometry.
 
@@ -275,9 +275,9 @@ Separate maps:
 
 Texture may contain “photographed-in” illumination:
 
-\[
+```math
 Color\approx Albedo\times Illumination
-\]
+```
 
 For correct relighting, we want an estimate closer to intrinsic albedo/material.
 
@@ -287,9 +287,9 @@ For correct relighting, we want an estimate closer to intrinsic albedo/material.
 
 Conceptual objective:
 
-\[
+```math
 ObservedAppearance\rightarrow MaterialIntrinsic
-\]
+```
 
 Reduces baked shadows/highlights before using the asset in a physically based renderer.
 
@@ -313,9 +313,9 @@ Limitations for manufacturing:
 
 ### Rule
 
-\[
+```math
 PhotorealisticView\not\Rightarrow AccurateGeometry
-\]
+```
 
 ---
 
@@ -327,9 +327,9 @@ Models may generate normalized/arbitrary coordinates.
 
 Transform to physical units:
 
-\[
+```math
 \mathbf x_{mm}=sR\mathbf x+t
-\]
+```
 
 Before printing:
 
@@ -356,9 +356,9 @@ Functional engineering requires:
 - analytic surfaces;
 - assemblies.
 
-\[
+```math
 GenerativeMesh\neq ParametricCAD
-\]
+```
 
 Use AI 3D for concepts/organic shapes; rebuild or parameterize in CAD when functional requirements exist.
 
@@ -372,9 +372,9 @@ It exists only according to the generative core.
 
 If CFG-like guidance is used:
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
 Do not assume universal ranges such as `7–15`.
 
@@ -397,9 +397,9 @@ It is not a universal variable.
 
 Explicit geometric postprocessing:
 
-\[
+```math
 V'=V\cup Mirror(V,plane)
-\]
+```
 
 is different from “asking for symmetry” from the generative model.
 

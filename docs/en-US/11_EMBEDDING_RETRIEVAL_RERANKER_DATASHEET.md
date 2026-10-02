@@ -14,7 +14,7 @@ Related: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UNIFIED
 
 # 1. Canonical pipeline
 
-\[
+```math
 Query
 \xrightarrow{Encoder}
 z_q
@@ -23,7 +23,7 @@ z_q
 \xrightarrow{Reranker}
 \{d'_1,\ldots,d'_k\}
 \rightarrow Generator/Decision
-\]
+```
 
 RAG is this **pipeline**, not a single model type.
 
@@ -33,29 +33,29 @@ RAG is this **pipeline**, not a single model type.
 
 Encoder:
 
-\[
+```math
 f_\theta(x)=z\in\mathbb R^d
-\]
+```
 
 For L2 normalization:
 
-\[
+```math
 \hat z=\frac{z}{\|z\|_2}
-\]
+```
 
 Cosine similarity:
 
-\[
+```math
 s_{cos}(q,d)
 =
 \frac{q^Td}{\|q\|\|d\|}
-\]
+```
 
 If both are normalized:
 
-\[
+```math
 s_{cos}=q^Td
-\]
+```
 
 So cosine becomes dot product.
 
@@ -63,15 +63,15 @@ So cosine becomes dot product.
 
 # 3. Euclidean distance
 
-\[
+```math
 d_E(q,d)=\|q-d\|_2
-\]
+```
 
 For normalized vectors:
 
-\[
+```math
 \|q-d\|_2^2=2-2q^Td
-\]
+```
 
 Therefore cosine/dot/L2 can induce the same ranking under specific conditions, but **not universally**.
 
@@ -81,29 +81,29 @@ Therefore cosine/dot/L2 can induce the same ranking under specific conditions, b
 
 A Transformer produces:
 
-\[
+```math
 H=(h_1,\ldots,h_T)
-\]
+```
 
-We need to obtain \(z\).
+We need to obtain $`z`$.
 
 ## CLS pooling
 
-\[
+```math
 z=h_{CLS}
-\]
+```
 
 ## Mean pooling
 
-\[
+```math
 z=\frac{1}{T}\sum_th_t
-\]
+```
 
 ## Weighted/attention pooling
 
-\[
+```math
 z=\sum_t\alpha_th_t
-\]
+```
 
 Pooling is part of the model recipe; it should not be swapped arbitrarily without respecting training.
 
@@ -111,23 +111,23 @@ Pooling is part of the model recipe; it should not be swapped arbitrarily withou
 
 # 5. Contrastive objective
 
-With positive \(d^+\):
+With positive $`d^+`$:
 
-\[
+```math
 \mathcal L
 =
 -\log
 \frac{\exp(sim(q,d^+)/\tau)}
 {\exp(sim(q,d^+)/\tau)+\sum_j\exp(sim(q,d_j^-)/\tau)}
-\]
+```
 
-\(\tau\) is **contrastive temperature**.
+$`\tau`$ is **contrastive temperature**.
 
 ### Do not confuse
 
-\[
+```math
 \tau_{contrastive}\neq T_{sampling}
-\]
+```
 
 One acts on representation learning; the other on categorical decoding.
 
@@ -137,15 +137,15 @@ One acts on representation learning; the other on categorical decoding.
 
 A random negative may be easy:
 
-\[
+```math
 s(q,d^-_{random})\ll s(q,d^+)
-\]
+```
 
 A hard negative:
 
-\[
+```math
 s(q,d^-_{hard})\approx s(q,d^+)
-\]
+```
 
 forces finer decision boundaries, but false negatives can train the model to push away semantically valid items.
 
@@ -157,25 +157,25 @@ forces finer decision boundaries, but false negatives can train the model to pus
 
 Same kind of object:
 
-\[
+```math
 Document\leftrightarrow Document
-\]
+```
 
 ### Asymmetric
 
-\[
+```math
 Query\rightarrow Passage
-\]
+```
 
 Some models use different prompts/instructions:
 
-\[
+```math
 z_q=f("query:"+q)
-\]
+```
 
-\[
+```math
 z_d=f("passage:"+d)
-\]
+```
 
 Ignoring this recipe can degrade retrieval even with the correct weights.
 
@@ -185,21 +185,21 @@ Ignoring this recipe can degrade retrieval even with the correct weights.
 
 Training allows the embedding to be truncated:
 
-\[
+```math
 z^{(d_1)}\subset z^{(d_2)}\subset\cdots\subset z^{(D)}
-\]
+```
 
 with smaller dimensions preserving much of the geometry.
 
 Trade-off:
 
-\[
+```math
 Dimension\downarrow
 \Rightarrow
 IndexMemory\downarrow,
 SearchBW\downarrow,
 Quality\downarrow\ potential
-\]
+```
 
 Useful for changing cost without retraining.
 
@@ -209,17 +209,17 @@ Useful for changing cost without retraining.
 
 Instead of separate spaces:
 
-\[
+```math
 f_t(text),\quad f_v(image),\quad f_{vid}(video)
-\]
+```
 
 models can be trained to occupy one shared space:
 
-\[
+```math
 s(f_t(q),f_v(image^+))
 >
 s(f_t(q),f_v(image^-))
-\]
+```
 
 Qwen3-VL-Embedding in 2026 is an example of text/image/document-image/video retrieval with unified representations and Matryoshka dimensions.
 
@@ -229,13 +229,13 @@ Qwen3-VL-Embedding in 2026 is an example of text/image/document-image/video retr
 
 Classic probabilistic bag-of-words — BM25:
 
-\[
+```math
 score(q,d)=
 \sum_{t\in q}
 IDF(t)
 \frac{f(t,d)(k_1+1)}
 {f(t,d)+k_1(1-b+b|d|/avgdl)}
-\]
+```
 
 Dense retrieval does not make BM25 obsolete.
 
@@ -247,9 +247,9 @@ Dense captures semantics; sparse preserves exact lexical matching.
 
 A neural model may produce sparse vocabulary weights:
 
-\[
+```math
 z\in\mathbb R^{|V|},\quad \|z\|_0\ll|V|
-\]
+```
 
 This combines interpretability/inverted indexes with learned semantic expansion.
 
@@ -259,15 +259,15 @@ This combines interpretability/inverted indexes with learned semantic expansion.
 
 Combine scores:
 
-\[
+```math
 s=\alpha s_{dense}+\beta s_{sparse}
-\]
+```
 
 or combine ranks with Reciprocal Rank Fusion:
 
-\[
+```math
 RRF(d)=\sum_m\frac{1}{k+rank_m(d)}
-\]
+```
 
 RRF avoids directly calibrating score scales.
 
@@ -277,29 +277,29 @@ RRF avoids directly calibrating score scales.
 
 Instead of one vector per document:
 
-\[
+```math
 D=(d_1,\ldots,d_n)
-\]
+```
 
 keep token/subvector embeddings.
 
 ColBERT-like MaxSim:
 
-\[
+```math
 score(Q,D)=
 \sum_{q_i\in Q}
 \max_{d_j\in D}q_i^Td_j
-\]
+```
 
 This is a middle ground between bi-encoders and cross-encoders.
 
 Trade-off:
 
-\[
+```math
 Quality\uparrow
 \leftrightarrow
 IndexSize/Compute\uparrow
-\]
+```
 
 ---
 
@@ -307,21 +307,21 @@ IndexSize/Compute\uparrow
 
 ## Bi-encoder
 
-\[
+```math
 z_q=f(q),\quad z_d=f(d)
-\]
+```
 
-\[
+```math
 score=z_q^Tz_d
-\]
+```
 
 Documents can be precomputed.
 
 ## Cross-encoder
 
-\[
+```math
 score=f_\theta([q;d])
-\]
+```
 
 Tokens interact inside the same network.
 
@@ -329,21 +329,21 @@ Tokens interact inside the same network.
 
 Bi-encoder:
 
-\[
+```math
 O(1)\ embedding/query + ANN
-\]
+```
 
-Cross-encoder for \(K\) candidates:
+Cross-encoder for $`K`$ candidates:
 
-\[
+```math
 O(K\cdot Forward(q,d_i))
-\]
+```
 
 Hence the common pattern:
 
-\[
+```math
 1000\ retrieved\rightarrow 50\ reranked\rightarrow 5\ context
-\]
+```
 
 ---
 
@@ -359,9 +359,9 @@ It may be:
 
 ### Binary logit
 
-\[
+```math
 p(relevant|q,d)=\sigma(z)
-\]
+```
 
 A raw score is not automatically a calibrated probability.
 
@@ -369,11 +369,11 @@ A raw score is not automatically a calibrated probability.
 
 # 16. Approximate Nearest Neighbor — ANN
 
-Exact search over \(N\) vectors of dimension \(d\):
+Exact search over $`N`$ vectors of dimension $`d`$:
 
-\[
+```math
 O(Nd)
-\]
+```
 
 ANN trades exactness for latency/memory.
 
@@ -391,19 +391,19 @@ Practical variables:
 
 Trend:
 
-\[
+```math
 efSearch\uparrow
 \Rightarrow
 Recall\uparrow,
 Latency\uparrow
-\]
+```
 
-\[
+```math
 M\uparrow
 \Rightarrow
 Memory\uparrow,
 GraphConnectivity\uparrow
-\]
+```
 
 The actual curves are dataset-dependent.
 
@@ -411,30 +411,30 @@ The actual curves are dataset-dependent.
 
 # 18. IVF
 
-Train \(n_{list}\) centroids:
+Train $`n_{list}`$ centroids:
 
-\[
+```math
 \{c_1,\ldots,c_{nlist}\}
-\]
+```
 
 Each vector is assigned to a cell.
 
 At query time, inspect `nprobe` cells.
 
-\[
+```math
 nprobe\uparrow
 \Rightarrow Recall\uparrow,Latency\uparrow
-\]
+```
 
 ---
 
 # 19. Product Quantization — PQ
 
-Split the vector into \(m\) subvectors:
+Split the vector into $`m`$ subvectors:
 
-\[
+```math
 z=[z^{(1)},\ldots,z^{(m)}]
-\]
+```
 
 Quantize each subspace with a codebook.
 
@@ -448,11 +448,11 @@ Do not confuse index PQ with encoder-weight quantization.
 
 Document:
 
-\[
+```math
 D\rightarrow\{c_1,\ldots,c_n\}
-\]
+```
 
-Chunk length \(L\) and overlap \(O\) change the effective corpus.
+Chunk length $`L`$ and overlap $`O`$ change the effective corpus.
 
 ### Too short
 
@@ -467,9 +467,9 @@ Chunk length \(L\) and overlap \(O\) change the effective corpus.
 
 Therefore:
 
-\[
+```math
 RetrievalQuality=f(model,chunking,index,query)
-\]
+```
 
 not just the embedding model.
 
@@ -479,17 +479,17 @@ not just the embedding model.
 
 Problem:
 
-\[
+```math
 Embedding(c_i)
-\]
+```
 
 may not know the title or parent document.
 
 Pipeline solution:
 
-\[
+```math
 Embedding(metadata+summary+chunk)
-\]
+```
 
 or hierarchical retrieval.
 
@@ -501,37 +501,37 @@ This increases semantic specificity, but may inject information that is not pres
 
 ## Recall@K
 
-\[
+```math
 Recall@K=
 \frac{|Relevant\cap TopK|}{|Relevant|}
-\]
+```
 
 ## Precision@K
 
-\[
+```math
 Precision@K=
 \frac{|Relevant\cap TopK|}{K}
-\]
+```
 
 ## Reciprocal Rank
 
-\[
+```math
 RR=\frac{1}{rank_{first\ relevant}}
-\]
+```
 
 ## MRR
 
-\[
+```math
 MRR=\frac1N\sum_iRR_i
-\]
+```
 
 ## DCG
 
-\[
+```math
 DCG@K=
 \sum_{i=1}^{K}
 \frac{2^{rel_i}-1}{\log_2(i+1)}
-\]
+```
 
 nDCG normalizes by the ideal ranking.
 
@@ -553,9 +553,9 @@ There is no universal rule such as:
 
 Calibrate on your own corpus:
 
-\[
+```math
 Threshold^*=argmax\ Metric(Threshold)
-\]
+```
 
 ---
 
@@ -565,16 +565,16 @@ Final error may be:
 
 ### Retrieval miss
 
-\[
+```math
 Relevant\notin TopK
-\]
+```
 
 ### Reranker miss
 
-\[
+```math
 Relevant\in TopK,
 Relevant\notin Topk_{reranked}
-\]
+```
 
 ### Context-packing miss
 
@@ -592,21 +592,21 @@ Separate these classes before “changing the LLM.”
 
 Approximate dense FP32 storage:
 
-\[
+```math
 M_{vectors}=N\cdot d\cdot4\ bytes
-\]
+```
 
 FP16:
 
-\[
+```math
 M=N\cdot d\cdot2
-\]
+```
 
 plus overhead:
 
-\[
+```math
 M_{index}=M_{vectors}+M_{graph/codebooks}+metadata
-\]
+```
 
 1M vectors × 1024 dims × FP32 ≈ 4.096 GB **before** index/metadata overhead.
 
@@ -641,7 +641,7 @@ Qwen3-VL-Embedding/Reranker illustrates the convergence of multimodal retrieval:
 
 The relevant trend is less “which model won a benchmark?” and more:
 
-\[
+```math
 Retrieval\ pipeline
 =
 Representation
@@ -649,7 +649,7 @@ Representation
 ApproximateSearch
 +
 FineRanking
-\]
+```
 
 ---
 

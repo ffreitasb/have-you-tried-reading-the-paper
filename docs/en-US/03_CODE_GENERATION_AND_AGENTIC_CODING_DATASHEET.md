@@ -12,19 +12,19 @@ updated: 2026-10-01
 
 ### A. Completion engine
 
-\[
+```math
 p(code_t\mid code_{<t},context)
-\]
+```
 
 ### B. Coding agent
 
-\[
+```math
 a_t\sim\pi(a\mid repo_t,conversation_t,tool_t,test_t)
-\]
+```
 
-\[
+```math
 repo_{t+1}=Environment(repo_t,a_t)
-\]
+```
 
 Final quality depends on the entire loop, not just the probability of the next token.
 
@@ -34,9 +34,9 @@ Final quality depends on the entire loop, not just the probability of the next t
 
 ## 2. Left-to-right completion
 
-\[
+```math
 P(x_{1:T})=\prod_tP(x_t\mid x_{<t})
-\]
+```
 
 Suitable for:
 
@@ -51,9 +51,9 @@ Suitable for:
 
 Problem:
 
-\[
+```math
 P(M\mid Prefix,Suffix)
-\]
+```
 
 Serializations vary by tokenizer/model, but conceptually there are three regions:
 
@@ -93,9 +93,9 @@ May justify higher entropy to propose alternatives.
 
 ### Rule
 
-\[
+```math
 Correctness\not\equiv low\ temperature
-\]
+```
 
 A distribution concentrated on the wrong answer is still wrong.
 
@@ -126,9 +126,9 @@ Having 128k tokens available does not mean you should stuff the entire repositor
 
 Selection problem:
 
-\[
+```math
 S^*=\arg\max_S Utility(S\mid task),\quad |S|\le budget
-\]
+```
 
 Sources:
 
@@ -160,9 +160,9 @@ Lexical search only finds similar text. Better coding agents combine:
 
 Conceptual representation:
 
-\[
+```math
 Repo\rightarrow Graph(V_{symbols/files},E_{imports/calls/refs})
-\]
+```
 
 Task context is a relevant subnetwork of that graph.
 
@@ -174,21 +174,21 @@ Task context is a relevant subnetwork of that graph.
 
 ### Full rewrite
 
-\[
+```math
 file' = LLM(file,instruction)
-\]
+```
 
 Risk: large collateral changes.
 
 ### Patch/diff
 
-\[
+```math
 \Delta=LLM(context,instruction)
-\]
+```
 
-\[
+```math
 file'=apply(file,\Delta)
-\]
+```
 
 More economical and auditable, but the patch must match the current file state.
 
@@ -198,9 +198,9 @@ More economical and auditable, but the patch must match the current file state.
 
 Better still when the action is represented as an operation:
 
-\[
+```math
 a=(file,start,end,replacement)
-\]
+```
 
 or an AST transformation.
 
@@ -215,27 +215,27 @@ This separates:
 
 ## 10. The real loop
 
-\[
+```math
 Observe\rightarrow Select\ Context\rightarrow Plan/Policy\rightarrow Act\rightarrow Execute\rightarrow Observe
-\]
+```
 
 State:
 
-\[
+```math
 s_t=(repo_t,terminal_t,test_t,conversation_t,tool_t)
-\]
+```
 
 Action:
 
-\[
+```math
 a_t\in\{read,search,patch,run,test,git,\ldots\}
-\]
+```
 
 Transition:
 
-\[
+```math
 s_{t+1}=E(s_t,a_t)
-\]
+```
 
 ---
 
@@ -243,9 +243,9 @@ s_{t+1}=E(s_t,a_t)
 
 Compilers/tests are **partial oracles**.
 
-\[
+```math
 feedback=f(code')
-\]
+```
 
 Examples:
 
@@ -259,9 +259,9 @@ Examples:
 
 The agent can iterate:
 
-\[
+```math
 a_{t+1}=\pi(s_t,feedback_t)
-\]
+```
 
 This is qualitatively different from one-shot code generation.
 
@@ -271,9 +271,9 @@ This is qualitatively different from one-shot code generation.
 
 Coding is especially suitable for RL/agentic training because many tasks expose verifiable signals:
 
-\[
+```math
 r\in\{test\ pass,compile,benchmark,judge\}
-\]
+```
 
 Qwen3-Coder-Next is a 2026 example of agentic training with verifiable tasks and executable environments.
 
@@ -291,11 +291,11 @@ Qwen3-Coder-Next is a 2026 example of agentic training with verifiable tasks and
 6. **Spec/semantic validity**
 7. **Security/non-functional validity**
 
-Passing level \(n\) does not guarantee \(n+1\).
+Passing level $`n`$ does not guarantee $`n+1`$.
 
-\[
+```math
 SyntaxCorrect\not\Rightarrow SemanticallyCorrect
-\]
+```
 
 ---
 
@@ -305,9 +305,9 @@ Tool calls should use schema/constrained decoding whenever possible.
 
 But:
 
-\[
+```math
 JSONValid\not\Rightarrow ToolCallCorrect
-\]
+```
 
 So validation should happen in two phases:
 
@@ -331,9 +331,9 @@ A bad autocomplete emits bad text. A bad coding agent can:
 
 ### Recommended control
 
-\[
+```math
 permission(a_t)\le granted\ capability
-\]
+```
 
 Principles:
 
@@ -353,9 +353,9 @@ Files inside the repository itself may contain malicious or accidental instructi
 
 Keep separate:
 
-\[
+```math
 Data\neq Instruction
-\]
+```
 
 A comment in a README should not automatically inherit system-prompt authority.
 
@@ -365,15 +365,15 @@ A comment in a README should not automatically inherit system-prompt authority.
 
 ## 17. A fixed seed is not enough
 
-\[
+```math
 R=f(weights,tokenizer,template,repo\ state,tool\ outputs,sampler,seed,backend,hardware)
-\]
+```
 
 With agents, the environment itself changes:
 
-\[
+```math
 Environment_t\neq Environment_{t+1}
-\]
+```
 
 - package versions;
 - network responses;
@@ -391,9 +391,9 @@ Reproducing an agentic trajectory requires an environment snapshot, not just a s
 
 Approximate total cost:
 
-\[
+```math
 Cost=C_{prefill}(repo\ context)+\sum_t C_{decode}(t)+\sum_j C_{tools,j}
-\]
+```
 
 Long-running agents may spend more context reprocessing history than generating code.
 

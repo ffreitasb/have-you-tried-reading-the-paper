@@ -11,7 +11,7 @@ updated: 2026-10-01
 
 The central conceptual equation is:
 
-\[
+```math
 \boxed{
 ObservedScore
 =
@@ -26,13 +26,13 @@ Randomness,
 Environment
 )
 }
-\]
+```
 
 Therefore:
 
-\[
+```math
 Score(Model)\quad\text{is usually a dangerous shorthand.}
-\]
+```
 
 See also:
 
@@ -52,39 +52,39 @@ It may be:
 
 ## 1.1 Raw checkpoint
 
-\[
+```math
 SUT=Weights+Tokenizer
-\]
+```
 
 ## 1.2 Model + prompt/template
 
-\[
+```math
 SUT=Model+PromptPolicy
-\]
+```
 
 ## 1.3 Model + inference configuration
 
-\[
+```math
 SUT=Model+Prompt+Sampler
-\]
+```
 
 ## 1.4 Pipeline
 
-\[
+```math
 SUT=Retriever+Reranker+Model
-\]
+```
 
 ## 1.5 Agent
 
-\[
+```math
 SUT=Model+Scaffold+Tools+Environment
-\]
+```
 
 ## 1.6 Complete product
 
-\[
+```math
 SUT=EverythingTheUserExperiences
-\]
+```
 
 If the SUT is not explicit, score comparisons may be invalid.
 
@@ -94,7 +94,7 @@ If the SUT is not explicit, score comparisons may be invalid.
 
 Think in terms of:
 
-\[
+```math
 Y_{ijk}
 =
 \mu
@@ -102,16 +102,16 @@ Y_{ijk}
 +H_j
 +R_k
 +\epsilon_{ijk}
-\]
+```
 
 where:
 
-- \(M_i\): model/configuration effect;
-- \(H_j\): harness/prompt/scaffold effect;
-- \(R_k\): seed/randomness effect;
-- \(\epsilon\): residual.
+- $`M_i`$: model/configuration effect;
+- $`H_j`$: harness/prompt/scaffold effect;
+- $`R_k`$: seed/randomness effect;
+- $`\epsilon`$: residual.
 
-We want to estimate \(M_i\), but we often measure all of them at once.
+We want to estimate $`M_i`$, but we often measure all of them at once.
 
 ---
 
@@ -125,9 +125,9 @@ Defines the set of tasks/examples/protocol.
 
 Maps an outcome to a scalar/vector:
 
-\[
+```math
 Metric(y,\hat y)
-\]
+```
 
 ## Harness
 
@@ -183,9 +183,9 @@ Without versioning, a result becomes historical anecdote.
 
 ## Deterministic
 
-\[
+```math
 score=g(reference,prediction)
-\]
+```
 
 Examples:
 
@@ -197,17 +197,17 @@ Examples:
 
 ## Judged
 
-\[
+```math
 score=Judge(prompt,response,rubric)
-\]
+```
 
 Another model or a human infers quality.
 
 This adds another source of error:
 
-\[
+```math
 Var_{judge}
-\]
+```
 
 See [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
@@ -215,10 +215,10 @@ See [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
 # 6. Accuracy
 
-\[
+```math
 Accuracy=
 \frac{\sum_i\mathbf1(\hat y_i=y_i)}{N}
-\]
+```
 
 Simple, but it requires an unambiguous definition of “correct.”
 
@@ -228,20 +228,20 @@ For imbalanced classes, accuracy can be misleading.
 
 # 7. Precision, Recall, and F1
 
-\[
+```math
 Precision=
 \frac{TP}{TP+FP}
-\]
+```
 
-\[
+```math
 Recall=
 \frac{TP}{TP+FN}
-\]
+```
 
-\[
+```math
 F1=
 2\frac{Precision\cdot Recall}{Precision+Recall}
-\]
+```
 
 Macro and micro averaging answer different questions.
 
@@ -249,10 +249,10 @@ Macro and micro averaging answer different questions.
 
 # 8. Exact Match
 
-\[
+```math
 EM=
 \frac1N\sum_i\mathbf1(normalize(\hat y_i)=normalize(y_i))
-\]
+```
 
 The `normalize()` function is part of the metric.
 
@@ -262,24 +262,24 @@ Change it and you change the benchmark.
 
 # 9. Pass@k
 
-In code generation, with \(n\) samples and \(c\) correct ones:
+In code generation, with $`n`$ samples and $`c`$ correct ones:
 
-\[
+```math
 pass@k
 =
 1-
 \frac{\binom{n-c}{k}}{\binom nk}
-\]
+```
 
 when the estimator's assumptions hold.
 
 Pass@1 measures a different operational reality from pass@100.
 
-\[
+```math
 SearchBudget\uparrow
 \Rightarrow
 pass@k\uparrow
-\]
+```
 
 without the model itself changing.
 
@@ -289,46 +289,46 @@ without the model itself changing.
 
 ## Recall@K
 
-\[
+```math
 Recall@K
 =
 \frac{RelevantRetrieved@K}{TotalRelevant}
-\]
+```
 
 ## Precision@K
 
-\[
+```math
 Precision@K
 =
 \frac{RelevantRetrieved@K}{K}
-\]
+```
 
 ## MRR
 
-\[
+```math
 MRR
 =
 \frac1N
 \sum_i
 \frac1{rank_i}
-\]
+```
 
 ## DCG
 
-\[
+```math
 DCG@K
 =
 \sum_{i=1}^{K}
 \frac{2^{rel_i}-1}{\log_2(i+1)}
-\]
+```
 
 ## NDCG
 
-\[
+```math
 NDCG@K
 =
 \frac{DCG@K}{IDCG@K}
-\]
+```
 
 See [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -338,22 +338,22 @@ See [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_
 
 For a sequence:
 
-\[
+```math
 PPL=
 \exp\left(
 -\frac1T
 \sum_t
 \log p(x_t|x_{<t})
 \right)
-\]
+```
 
 Useful for probabilistic language modeling, but:
 
-\[
+```math
 LowerPPL
 \not\Rightarrow
 BetterInstructionFollowing
-\]
+```
 
 necessarily.
 
@@ -363,18 +363,18 @@ Comparing perplexity across different tokenizers requires extreme care.
 
 # 12. Calibration
 
-If a model reports probability \(p\), ideally:
+If a model reports probability $`p`$, ideally:
 
-\[
+```math
 P(correct|confidence=p)\approx p
-\]
+```
 
 ## Brier score
 
-\[
+```math
 BS=
 \frac1N\sum_i(p_i-y_i)^2
-\]
+```
 
 ## ECE
 
@@ -388,16 +388,16 @@ Calibration is distinct from accuracy.
 
 ## Word Error Rate
 
-\[
+```math
 WER=
 \frac{S+D+I}{N}
-\]
+```
 
 where:
 
-- \(S\): substitutions;
-- \(D\): deletions;
-- \(I\): insertions.
+- $`S`$: substitutions;
+- $`D`$: deletions;
+- $`I`$: insertions.
 
 See [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md).
 
@@ -407,32 +407,32 @@ See [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DATA
 
 ## MAE
 
-\[
+```math
 MAE=
 \frac1N\sum_i|y_i-\hat y_i|
-\]
+```
 
 ## RMSE
 
-\[
+```math
 RMSE=
 \sqrt{
 \frac1N\sum_i(y_i-\hat y_i)^2
 }
-\]
+```
 
 ## MAPE caveat
 
-\[
+```math
 MAPE=
 \frac{100}{N}
 \sum_i
 \left|
 \frac{y_i-\hat y_i}{y_i}
 \right|
-\]
+```
 
-It explodes or becomes unstable when \(y_i\approx0\).
+It explodes or becomes unstable when $`y_i\approx0`$.
 
 Probabilistic forecasts require distribution- or quantile-aware metrics.
 
@@ -456,17 +456,17 @@ Distinct dimensions include:
 
 Therefore:
 
-\[
+```math
 Quality
 \in
 \mathbb R^d
-\]
+```
 
 not necessarily:
 
-\[
+```math
 Quality\in\mathbb R
-\]
+```
 
 A single scalar ranking hides trade-offs.
 
@@ -486,9 +486,9 @@ May include:
 
 For manufacturing:
 
-\[
+```math
 Printable\neq VisuallyPlausible
-\]
+```
 
 See [07_3D_GENERATION_REPRESENTATION_DATASHEET](07_3D_GENERATION_REPRESENTATION_DATASHEET.md).
 
@@ -498,33 +498,33 @@ See [07_3D_GENERATION_REPRESENTATION_DATASHEET](07_3D_GENERATION_REPRESENTATION_
 
 Agents require metrics beyond the final text:
 
-\[
+```math
 SuccessRate
-\]
+```
 
-\[
+```math
 StepsToSuccess
-\]
+```
 
-\[
+```math
 ToolCalls
-\]
+```
 
-\[
+```math
 Cost
-\]
+```
 
-\[
+```math
 UnsafeActions
-\]
+```
 
-\[
+```math
 RecoveryRate
-\]
+```
 
-\[
+```math
 StateValidity
-\]
+```
 
 A polished answer can still accompany a terrible operational trajectory.
 
@@ -543,10 +543,10 @@ Separate:
 
 World-model error can accumulate:
 
-\[
+```math
 \epsilon_{t+H}
 =f(\epsilon_t,H,dynamics)
-\]
+```
 
 See [13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET](13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md).
 
@@ -556,15 +556,15 @@ See [13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET](13_WORLD_MODEL_VLA_EMBODIED_AI_DA
 
 An observed score is a sample:
 
-\[
+```math
 \hat\mu
-\]
+```
 
 We want to estimate:
 
-\[
+```math
 \mu
-\]
+```
 
 with uncertainty.
 
@@ -573,18 +573,18 @@ with uncertainty.
 
 For a mean:
 
-\[
+```math
 SE=
 \frac{s}{\sqrt N}
-\]
+```
 
-Increasing \(N\) reduces uncertainty approximately as:
+Increasing $`N`$ reduces uncertainty approximately as:
 
-\[
+```math
 1/\sqrt N
-\]
+```
 
-not linearly with \(N\).
+not linearly with $`N`$.
 
 ---
 
@@ -592,13 +592,13 @@ not linearly with \(N\).
 
 A simple asymptotic form:
 
-\[
+```math
 CI
 \approx
 \hat\mu
 \pm
 z_{\alpha/2}SE
-\]
+```
 
 For many benchmarks, bootstrap is more flexible.
 
@@ -608,12 +608,12 @@ For many benchmarks, bootstrap is more flexible.
 
 1. sample examples with replacement;
 2. recompute the metric;
-3. repeat \(B\) times;
+3. repeat $`B`$ times;
 4. obtain an empirical distribution.
 
-\[
+```math
 \{\hat\theta_1^*,\ldots,\hat\theta_B^*\}
-\]
+```
 
 Useful for metrics without a simple analytical variance formula.
 
@@ -623,15 +623,15 @@ Useful for metrics without a simple analytical variance formula.
 
 If models A and B answer the **same items**, use paired differences:
 
-\[
+```math
 d_i=s_i(A)-s_i(B)
-\]
+```
 
 Then study:
 
-\[
+```math
 \bar d
-\]
+```
 
 This removes some variation caused by item difficulty.
 
@@ -643,16 +643,16 @@ It is generally better than treating the two means as independent samples.
 
 For binary classification, count discordant outcomes:
 
-- A correct / B wrong: \(b\)
-- A wrong / B correct: \(c\)
+- A correct / B wrong: $`b`$
+- A wrong / B correct: $`c`$
 
-Evidence for a difference comes from \(b\) versus \(c\), not from isolated total accuracies.
+Evidence for a difference comes from $`b`$ versus $`c`$, not from isolated total accuracies.
 
 ---
 
 # 25. Permutation test
 
-Under the null hypothesis that labels/configurations are exchangeable, permute the paired assignments and compute the distribution of \(\Delta\).
+Under the null hypothesis that labels/configurations are exchangeable, permute the paired assignments and compute the distribution of $`\Delta`$.
 
 Useful when we do not want to assume normality.
 
@@ -664,9 +664,9 @@ Statistical significance does not imply practical significance.
 
 Ask:
 
-\[
+```math
 |\Delta|\quad\text{is it large enough to justify the cost/risk?}
-\]
+```
 
 Example:
 
@@ -678,9 +678,9 @@ Example:
 
 If you test hundreds of configurations, some “winner” will emerge by chance.
 
-\[
+```math
 P(false\ positive)\uparrow
-\]
+```
 
 with the number of hypotheses.
 
@@ -697,27 +697,27 @@ Use:
 
 For stochastic generation:
 
-\[
+```math
 Y_{m,s}
-\]
+```
 
-where \(s\) is the seed.
+where $`s`$ is the seed.
 
 Estimate:
 
-\[
+```math
 Var_s(Y|m)
-\]
+```
 
 before interpreting differences between models.
 
 If:
 
-\[
+```math
 |\Delta_{models}|
 <
 \sigma_{seed}
-\]
+```
 
 a single run is weak evidence.
 
@@ -727,9 +727,9 @@ a single run is weak evidence.
 
 In a benchmark with tasks, examples, and seeds:
 
-\[
+```math
 Y_{task,item,seed}
-\]
+```
 
 variance can be decomposed across multiple levels.
 
@@ -772,17 +772,17 @@ Users do not experience only “the mean.”
 
 For latency:
 
-\[
+```math
 p50,p95,p99
-\]
+```
 
 For safety/reliability, worst-case and failure-tail behavior can dominate risk.
 
 For agents:
 
-\[
+```math
 P(catastrophic\ failure)
-\]
+```
 
 may matter more than mean success rate.
 
@@ -816,9 +816,9 @@ Even without literal leakage, the score stops being a neutral estimate of genera
 
 If nearly all relevant models are close to the ceiling:
 
-\[
+```math
 Var_{models}(score)\rightarrow0
-\]
+```
 
 the benchmark loses discriminative power.
 
@@ -826,9 +826,9 @@ A 2026 study analyzing 60 benchmarks found saturation across a large and growing
 
 The lesson:
 
-\[
+```math
 BenchmarkHalfLife<\infty
-\]
+```
 
 ---
 
@@ -845,9 +845,9 @@ LiveBench exemplifies:
 
 But updating also means:
 
-\[
+```math
 Score_{2025}\not\equiv Score_{2026}
-\]
+```
 
 unless the dataset version is tracked.
 
@@ -864,9 +864,9 @@ Private test data reduces direct exposure, but does not eliminate:
 
 Therefore:
 
-\[
+```math
 Private\neq ContaminationProof
-\]
+```
 
 ---
 
@@ -874,10 +874,10 @@ Private\neq ContaminationProof
 
 Judge:
 
-\[
+```math
 J(prompt,response,rubric)
 \rightarrow score/verdict
-\]
+```
 
 Common problems:
 
@@ -902,9 +902,9 @@ For a pairwise judge:
 
 If:
 
-\[
+```math
 J(A,B)\neq reverse(J(B,A))
-\]
+```
 
 there is inconsistency/position sensitivity.
 
@@ -914,11 +914,11 @@ there is inconsistency/position sensitivity.
 
 Instead of a monolithic score:
 
-\[
+```math
 Quality
 =
 (w_1q_1,\ldots,w_kq_k)
-\]
+```
 
 Possible dimensions:
 
@@ -953,7 +953,7 @@ Agreement metrics help quantify consistency.
 
 A coding-agent benchmark often measures:
 
-\[
+```math
 Model
 +
 AgentLoop
@@ -965,7 +965,7 @@ Prompt
 Search
 +
 RetryBudget
-\]
+```
 
 not only the model checkpoint.
 
@@ -996,15 +996,15 @@ A benchmark without a versioned harness is not fully reproducible.
 
 If configuration A uses:
 
-\[
+```math
 N_A=1
-\]
+```
 
 sample while B uses:
 
-\[
+```math
 N_B=64
-\]
+```
 
 plus a verifier,
 
@@ -1012,15 +1012,15 @@ we are not comparing only models.
 
 We are comparing:
 
-\[
+```math
 Model\times SearchBudget
-\]
+```
 
 Reporting:
 
-\[
+```math
 Quality(Cost)
-\]
+```
 
 is more honest.
 
@@ -1030,15 +1030,15 @@ is more honest.
 
 Generate:
 
-\[
+```math
 y_1,\ldots,y_N
-\]
+```
 
 Select:
 
-\[
+```math
 y^*=\arg\max_i V(y_i)
-\]
+```
 
 Score increases with:
 
@@ -1056,11 +1056,11 @@ Attributing the entire gain to the generator is a causal error.
 
 Time To First Token.
 
-If a request starts at \(t_0\) and the first token arrives at \(t_1\):
+If a request starts at $`t_0`$ and the first token arrives at $`t_1`$:
 
-\[
+```math
 TTFT=t_1-t_0
-\]
+```
 
 ## Inter-token latency / TPOT
 
@@ -1068,17 +1068,17 @@ Average time per token after the first token.
 
 ## Generation TPS
 
-\[
+```math
 TPS=
 \frac{N_{generated}}{T_{decode}}
-\]
+```
 
 ## Throughput
 
-\[
+```math
 Throughput=
 \frac{TotalTokens}{WallClock}
-\]
+```
 
 Single-user TPS and server throughput optimize different things.
 
@@ -1088,15 +1088,15 @@ Single-user TPS and server throughput optimize different things.
 
 Never conflate:
 
-\[
+```math
 PromptTPS
-\]
+```
 
 with:
 
-\[
+```math
 DecodeTPS
-\]
+```
 
 See [09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET](09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md).
 
@@ -1123,17 +1123,17 @@ A single “VRAM used” number is ambiguous without an execution phase.
 
 When available:
 
-\[
+```math
 EnergyPerToken
 =
 \frac{\int P(t)dt}{N_{tokens}}
-\]
+```
 
 or:
 
-\[
+```math
 J/request
-\]
+```
 
 For local inference, performance per watt can affect hardware decisions as much as TPS.
 
@@ -1143,18 +1143,18 @@ For local inference, performance per watt can affect hardware decisions as much 
 
 Instead of searching for the “best model,” construct a vector:
 
-\[
+```math
 z=
 (Quality,Latency,Memory,Cost,Context)
-\]
+```
 
 A model is Pareto-dominated if another model is at least as good in every dimension and strictly better in at least one.
 
 For an RTX 2060 12 GB:
 
-\[
+```math
 VRAM\le12GB
-\]
+```
 
 is a real constraint, not a decorative leaderboard column.
 
@@ -1164,21 +1164,21 @@ is a real constraint, not a decorative leaderboard column.
 
 Useful metrics include:
 
-\[
+```math
 Quality/GB
-\]
+```
 
-\[
+```math
 Quality/Joule
-\]
+```
 
-\[
+```math
 Quality/Second
-\]
+```
 
-\[
+```math
 Quality/TokenBudget
-\]
+```
 
 especially when comparing quantizations and model sizes.
 
@@ -1206,15 +1206,15 @@ When comparing Q4 versus Q5:
 
 The questions are:
 
-\[
+```math
 \frac{\Delta Quality}{\Delta Memory}
-\]
+```
 
 and:
 
-\[
+```math
 \frac{\Delta Quality}{\Delta Throughput}
-\]
+```
 
 ---
 
@@ -1244,17 +1244,17 @@ Capture:
 
 The sample should represent the target distribution:
 
-\[
+```math
 D_{eval}\sim D_{deployment}
-\]
+```
 
 as closely as practical.
 
 If the benchmark is academic while deployment is Portuguese-language B2B customer service:
 
-\[
+```math
 ExternalValidity\downarrow
-\]
+```
 
 even with an excellent score.
 
@@ -1276,15 +1276,15 @@ Partition by:
 
 It is possible that:
 
-\[
+```math
 Mean_A>Mean_B
-\]
+```
 
 while:
 
-\[
+```math
 A<B
-\]
+```
 
 on the slice that actually matters in production.
 
@@ -1340,9 +1340,9 @@ Normal evaluation measures the nominal distribution.
 
 Adversarial evaluation measures a hostile neighborhood:
 
-\[
+```math
 x' = x+\delta
-\]
+```
 
 or inputs deliberately constructed to trigger failure.
 
@@ -1356,9 +1356,9 @@ Even without training model weights:
 
 if you repeatedly inspect the test set and adjust prompts/configuration:
 
-\[
+```math
 TestSet\rightarrow DevelopmentSignal
-\]
+```
 
 then it is no longer a clean test set.
 
@@ -1373,11 +1373,11 @@ Maintain:
 
 A team can optimize the KPI until it loses external validity.
 
-\[
+```math
 Leaderboard\uparrow
 \not\Rightarrow
 RealWorldUtility\uparrow
-\]
+```
 
 This is Goodhart applied to evaluation.
 
@@ -1460,21 +1460,21 @@ Points particularly relevant in October 2026:
 
 Define in advance:
 
-\[
+```math
 Accept\ A
 \quad\text{if}\quad
 \Delta Q>\delta_{min}
-\]
+```
 
 subject to:
 
-\[
+```math
 Memory<M_{max}
-\]
+```
 
-\[
+```math
 Latency<L_{max}
-\]
+```
 
 This reduces post-hoc rationalization.
 
@@ -1503,7 +1503,7 @@ For local decisions, this battery should be more valuable than an isolated posit
 
 # 65. The final equation
 
-\[
+```math
 \boxed{
 Evidence
 =
@@ -1515,7 +1515,7 @@ Protocol
 +
 Reproducibility
 }
-\]
+```
 
 Without uncertainty, we have a number.
 

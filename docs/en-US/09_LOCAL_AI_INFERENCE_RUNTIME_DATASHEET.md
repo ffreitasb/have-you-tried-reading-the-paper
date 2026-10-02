@@ -10,15 +10,15 @@ updated: 2026-10-01
 
 ## 1. The main physical equation
 
-\[
+```math
 M_{runtime}=M_W+M_{KV}+M_A+M_{workspace}+M_{graph}+M_{backend}
-\]
+```
 
 Therefore:
 
-\[
+```math
 \boxed{required\ VRAM\neq GGUF\ file\ size}
-\]
+```
 
 ---
 
@@ -26,27 +26,27 @@ Therefore:
 
 First approximation:
 
-\[
+```math
 M_W\approx\frac{N_p\cdot bpw}{8}
-\]
+```
 
 where:
 
-- \(N_p\): parameters;
+- $`N_p`$: parameters;
 - `bpw`: effective bits per weight.
 
 Real quantizations have metadata, scales, block overhead, and often mixed types; use **effective bpw**, not the label “Q4” as if it meant exactly 4.000 bits/weight.
 
 ### Four independent quantization targets
 
-\[
+```math
 Q_W,\quad Q_{KV},\quad Q_A,\quad Q_{emb/out}
-\]
+```
 
-- \(Q_W\): weights;
-- \(Q_{KV}\): key/value cache;
-- \(Q_A\): activations/intermediates;
-- \(Q_{emb/out}\): embeddings/output head.
+- $`Q_W`$: weights;
+- $`Q_{KV}`$: key/value cache;
+- $`Q_A`$: activations/intermediates;
+- $`Q_{emb/out}`$: embeddings/output head.
 
 Quantizing weights does **not** imply quantized KV.
 
@@ -56,29 +56,29 @@ Quantizing weights does **not** imply quantized KV.
 
 For a conventional GQA/MHA Transformer:
 
-\[
+```math
 M_{KV}\approx2\,L\,T\,n_{kv}\,d_h\,b\,B
-\]
+```
 
 - 2 = K + V;
-- \(L\): layers;
-- \(T\): cached tokens;
-- \(n_{kv}\): KV heads;
-- \(d_h\): head dimension;
-- \(b\): bytes per element;
-- \(B\): sequences/batch.
+- $`L`$: layers;
+- $`T`$: cached tokens;
+- $`n_{kv}`$: KV heads;
+- $`d_h`$: head dimension;
+- $`b`$: bytes per element;
+- $`B`$: sequences/batch.
 
 Marginal cost per token:
 
-\[
+```math
 \frac{\partial M_{KV}}{\partial T}=2Ln_{kv}d_hbB
-\]
+```
 
 Marginal cost per 1k tokens:
 
-\[
+```math
 \Delta M_{1k}=1000\cdot2Ln_{kv}d_hbB
-\]
+```
 
 This is one of the most useful numbers in any local-model datasheet.
 
@@ -90,17 +90,17 @@ Models using Multi-head Latent Attention compress K/V state into a smaller laten
 
 ## 4. Context scaling: memory and compute are different problems
 
-Increasing \(T\):
+Increasing $`T`$:
 
-- KV grows approximately as \(O(T)\);
-- full-attention prefill has an \(O(T^2)\) component;
-- decode queries a growing cache and therefore tends to become more expensive per token as \(T\) grows.
+- KV grows approximately as $`O(T)`$;
+- full-attention prefill has an $`O(T^2)`$ component;
+- decode queries a growing cache and therefore tends to become more expensive per token as $`T`$ grows.
 
 Therefore:
 
-\[
+```math
 Context\uparrow\Rightarrow RAM/VRAM\uparrow,\ prefill\ latency\uparrow,\ decode\ latency\uparrow
-\]
+```
 
 even when the weights are unchanged.
 
@@ -114,25 +114,25 @@ Processes prompt/context in parallel chunks.
 
 Classical self-attention:
 
-\[
+```math
 C_{attn,prefill}\sim O(T^2d)
-\]
+```
 
 ### Decode
 
 Produces one token per step while querying the existing KV cache:
 
-\[
+```math
 C_{attn,decode/token}\sim O(Td)
-\]
+```
 
 In addition, each token requires substantial weight reads. In quantized local inference, decode is often strongly **memory-bandwidth bound**.
 
 Consequence:
 
-\[
+```math
 TPS_{prompt}\neq TPS_{decode}
-\]
+```
 
 Always measure both.
 
@@ -142,9 +142,9 @@ Always measure both.
 
 Performance is bounded by:
 
-\[
+```math
 Perf\le\min(PeakFLOPS,\ Bandwidth\times ArithmeticIntensity)
-\]
+```
 
 If inference must reread many bytes for relatively few operations per byte, more TFLOPS do not remove the bottleneck.
 
@@ -170,9 +170,9 @@ Separate:
 
 Simplified transfer cost:
 
-\[
+```math
 t_{transfer}\approx\frac{bytes}{BW_{link}}+latency
-\]
+```
 
 ### Thunderbolt / eGPU
 
@@ -201,9 +201,9 @@ Evaluate:
 
 ### Trade-off
 
-\[
+```math
 Memory\downarrow\leftrightarrow QuantizationError\uparrow
-\]
+```
 
 but the curve depends heavily on architecture, tensor, and method.
 
@@ -217,9 +217,9 @@ Current `llama.cpp` exposes independent K and V types, including `f32`, `f16`, `
 
 This changes the equation to:
 
-\[
+```math
 M_{KV}\propto b_{KV}
-\]
+```
 
 Moving from FP16 to roughly 8-bit approaches a 2× reduction in the dominant cache component; ~4–5-bit can reduce it further, subject to overhead and accuracy impact.
 
@@ -229,27 +229,27 @@ Moving from FP16 to roughly 8-bit approaches a 2× reduction in the dominant cac
 
 ### MHA
 
-\[
+```math
 n_{kv}=n_q
-\]
+```
 
 ### GQA
 
-\[
+```math
 n_{kv}<n_q
-\]
+```
 
 ### MQA
 
-\[
+```math
 n_{kv}=1
-\]
+```
 
 Direct consequence:
 
-\[
+```math
 M_{KV}\propto n_{kv}
-\]
+```
 
 MLA goes further by compressing K/V into learned latents.
 
@@ -259,27 +259,27 @@ MLA goes further by compressing K/V into learned latents.
 
 For top-k routed MoE:
 
-\[
+```math
 y=\sum_{i\in TopK(g(x))}g_i(x)E_i(x)
-\]
+```
 
 Always define:
 
-- \(N_{total}\): stored parameters;
-- \(N_{active}\): parameters used per token;
-- \(k\): experts routed per token.
+- $`N_{total}`$: stored parameters;
+- $`N_{active}`$: parameters used per token;
+- $`k`$: experts routed per token.
 
 ### Local-inference insight
 
-\[
+```math
 Compute/token\sim N_{active}
-\]
+```
 
 but:
 
-\[
+```math
 Weight\ storage\sim N_{total}
-\]
+```
 
 That is why an MoE can be compute-efficient while still being impossible to fit in VRAM.
 
@@ -305,21 +305,21 @@ Diffusion/video systems may have activation peaks far larger than an LLM with a 
 
 ## 13. FlashAttention and efficient attention
 
-Naive attention materializes a \(T\times T\) matrix.
+Naive attention materializes a $`T\times T`$ matrix.
 
 FlashAttention and related kernels reduce I/O and avoid materializing the full intermediate matrix, dramatically changing temporary memory and performance without changing the ideal semantics of attention.
 
 Do not confuse:
 
-\[
+```math
 algorithmic\ complexity
-\]
+```
 
 with
 
-\[
+```math
 practical\ memory\ traffic
-\]
+```
 
 ---
 
@@ -329,9 +329,9 @@ A draft model proposes multiple tokens; the target verifies them.
 
 Ideally, if several tokens are accepted per target forward pass:
 
-\[
+```math
 throughput\uparrow
-\]
+```
 
 without changing the target distribution when the algorithm is exact.
 
@@ -354,9 +354,9 @@ If a prefix is identical, backends can reuse compute/cache.
 
 Approximate savings:
 
-\[
+```math
 T_{saved}\approx T_{prefill(prefix)}
-\]
+```
 
 Useful for:
 
@@ -373,33 +373,33 @@ Serialization/template stability matters: small changes can invalidate the cache
 
 For a spatial latent:
 
-\[
+```math
 X\in\mathbb{R}^{B\times C\times H_l\times W_l}
-\]
+```
 
 With patchification:
 
-\[
+```math
 N\approx\frac{H_l}{p_h}\frac{W_l}{p_w}
-\]
+```
 
 Naive global attention:
 
-\[
+```math
 O(N^2)
-\]
+```
 
 ### Video
 
-\[
+```math
 N\approx T_pH_pW_p
-\]
+```
 
 therefore:
 
-\[
+```math
 O((T_pH_pW_p)^2)
-\]
+```
 
 before factorization/windowing/sparsity optimizations.
 
@@ -426,15 +426,15 @@ It is useful capacity, but its bandwidth/latency is not equivalent to dedicated 
 
 Explicitly model:
 
-\[
+```math
 VRAM_{fast}=12GB
-\]
+```
 
 versus
 
-\[
+```math
 RAM_{host}=48GB
-\]
+```
 
 as memory pools with different physical properties, not as “60 GB of VRAM.”
 
@@ -442,10 +442,10 @@ as memory pools with different physical properties, not as “60 GB of VRAM.”
 
 ## 18. Local-model feasibility checklist
 
-1. Obtain \(N_p\) and the real quantization.
-2. Estimate \(M_W\).
+1. Obtain $`N_p`$ and the real quantization.
+2. Estimate $`M_W`$.
 3. Identify attention architecture: MHA/GQA/MQA/MLA.
-4. Compute \(M_{KV}\) at the target context.
+4. Compute $`M_{KV}`$ at the target context.
 5. Reserve activation/workspace/backend overhead.
 6. Determine how much can remain in fast VRAM.
 7. Model offload and link cost.
@@ -489,25 +489,25 @@ This demonstrates why “temperature + top-p” is no longer an adequate descrip
 
 For a shared backbone:
 
-\[
+```math
 T_{effective}
 =
 T_{text}+T_{vision}+T_{audio}+T_{video}+T_{special}
-\]
+```
 
 If all modalities enter the same KV state:
 
-\[
+```math
 M_{KV}\propto T_{effective}
-\]
+```
 
 “1 image” is not a physical unit of cost.
 
 The relevant unit is:
 
-\[
+```math
 N_{vision\ states}
-\]
+```
 
 ---
 
@@ -515,7 +515,7 @@ N_{vision\ states}
 
 A VLM may require:
 
-\[
+```math
 M_{total}
 =
 M_{LLM}
@@ -523,7 +523,7 @@ M_{LLM}
 +M_{projector}
 +M_{KV}
 +M_{workspace}
-\]
+```
 
 Some runtimes keep the encoder resident; others load/offload it.
 
@@ -539,15 +539,15 @@ Impact:
 
 Idealized patchification:
 
-\[
+```math
 N_v\approx\frac{H}{P_h}\frac{W}{P_w}
-\]
+```
 
-After merge factor \(m\):
+After merge factor $`m`$:
 
-\[
+```math
 N'_v\approx\frac{N_v}{m}
-\]
+```
 
 So resolution can affect both prefill and KV/context occupancy.
 
@@ -555,17 +555,17 @@ So resolution can affect both prefill and KV/context occupancy.
 
 ## 23. Video-token cost
 
-\[
+```math
 N_{video}\approx
 F\cdot N_{tokens/frame}
-\]
+```
 
-or after temporal compression \(c_t\):
+or after temporal compression $`c_t`$:
 
-\[
+```math
 N_{video}\approx
 \frac{F}{c_t}N_{spatial}
-\]
+```
 
 Long video is often limited by **state budget**, not weight size.
 
@@ -573,13 +573,13 @@ Long video is often limited by **state budget**, not weight size.
 
 ## 24. Audio-state cost
 
-If the encoder produces \(r_a\) states/s:
+If the encoder produces $`r_a`$ states/s:
 
-\[
+```math
 N_a=r_aD
-\]
+```
 
-Long-form speech needs lower \(r_a\), compressed states, or streaming/windowing.
+Long-form speech needs lower $`r_a`$, compressed states, or streaming/windowing.
 
 ---
 
@@ -587,11 +587,11 @@ Long-form speech needs lower \(r_a\), compressed states, or streaming/windowing.
 
 ## 25. Embedding compute
 
-For batch \(B\), length \(T\):
+For batch $`B`$, length $`T`$:
 
-\[
+```math
 C_{embed}=B\cdot F_{encoder}(T)
-\]
+```
 
 Document embeddings are typically offline; query embeddings are online.
 
@@ -603,19 +603,19 @@ Keep those costs separate during sizing.
 
 Dense vectors:
 
-\[
+```math
 M_{vec}=N\cdot d\cdot b
-\]
+```
 
 Example:
 
-- \(N=10^6\);
-- \(d=1024\);
+- $`N=10^6`$;
+- $`d=1024`$;
 - FP32 = 4 bytes.
 
-\[
+```math
 M_{vec}\approx4.096GB
-\]
+```
 
 before graph/IVF/PQ/metadata overhead.
 
@@ -640,25 +640,25 @@ It may be more efficient to keep the index in CPU RAM and reserve VRAM for the r
 
 ## 28. Reranker economics
 
-With \(K\) candidates:
+With $`K`$ candidates:
 
-\[
+```math
 C_{rerank}\approx K\cdot C_{cross-encoder}
-\]
+```
 
 Batching improves utilization:
 
-\[
+```math
 Throughput_{batch}\uparrow
-\]
+```
 
 but increases latency/peak VRAM.
 
 Pipeline sizing should measure:
 
-\[
+```math
 T_{RAG}=T_{embed}+T_{ANN}+T_{rerank}+T_{LLM}
-\]
+```
 
 not just LLM TPS.
 
@@ -670,9 +670,9 @@ not just LLM TPS.
 
 After prefill:
 
-\[
+```math
 T_{AR}\approx N_{out}\cdot t_{decode}
-\]
+```
 
 KV preserves the prefix.
 
@@ -682,20 +682,20 @@ Batch-1 decode tends to be bandwidth-bound.
 
 ## 30. Iterative / diffusion-text economics
 
-If \(K\) refinement passes operate over \(N\) positions:
+If $`K`$ refinement passes operate over $`N`$ positions:
 
-\[
+```math
 T_{iter}\approx K\cdot t_{pass}(N)
-\]
+```
 
 Speedup over AR depends on:
 
-\[
+```math
 S
 \approx
 \frac{N_{out}t_{decode}}
 {K\,t_{pass}(N)}
-\]
+```
 
 If a full-sequence pass is too expensive, logical parallelism does not translate into wall-clock gain.
 
@@ -705,15 +705,15 @@ If a full-sequence pass is too expensive, logical parallelism does not translate
 
 AR:
 
-\[
+```math
 prefix\ immutable\Rightarrow KV\ reusable
-\]
+```
 
 Iterative refinement:
 
-\[
+```math
 old\ positions\ change\Rightarrow hidden/KV\ may\ invalidate
-\]
+```
 
 Specific backends may exploit block caches/partial recomputation, but do not assume equivalence with causal KV.
 
@@ -745,16 +745,16 @@ A diffusion LM may be extraordinary in the second regime and less advantageous i
 
 ## 33. RTF
 
-\[
+```math
 RTF=\frac{compute\ time}{audio\ duration}
-\]
+```
 
 But user-facing latency is:
 
-\[
+```math
 T_{user}
 =T_{chunk}+T_{lookahead}+T_{encode}+T_{decode}+T_{endpoint}
-\]
+```
 
 RTF < 1 does not guarantee low latency.
 
@@ -764,15 +764,15 @@ RTF < 1 does not guarantee low latency.
 
 Complete voice pipeline:
 
-\[
+```math
 Mic\rightarrow ASR/AudioEncoder\rightarrow Reasoning\rightarrow TTS/Talker\rightarrow Speaker
-\]
+```
 
 End-to-end latency:
 
-\[
+```math
 T_{E2E}=\sum_iT_i-overlap
-\]
+```
 
 Pipelining allows stages to overlap, but creates multiple simultaneously resident states.
 
@@ -784,15 +784,15 @@ Pipelining allows stages to overlap, but creates multiple simultaneously residen
 
 Node states:
 
-\[
+```math
 M_V=|V|d_vb
-\]
+```
 
 Edge states:
 
-\[
+```math
 M_E=|E|d_eb
-\]
+```
 
 Neighborhood sampling can trade coverage for bounded memory.
 
@@ -802,15 +802,15 @@ Neighborhood sampling can trade coverage for bounded memory.
 
 Point tokens:
 
-\[
+```math
 N=T
-\]
+```
 
-Patch size \(P\):
+Patch size $`P`$:
 
-\[
+```math
 N\approx T/P
-\]
+```
 
 Patching reduces attention and memory, but sacrifices local resolution.
 
@@ -820,9 +820,9 @@ Patching reduces attention and memory, but sacrifices local resolution.
 
 Cost grows with:
 
-\[
+```math
 N_{rows}\times N_{features}
-\]
+```
 
 after the model's representation/tokenization step.
 
@@ -836,27 +836,27 @@ In-context supervised inference can be compute-heavy even without any fine-tunin
 
 Model:
 
-\[
+```math
 M_{fast}=12GB\ GDDR\ CUDA
-\]
+```
 
-\[
+```math
 M_{host}=48GB\ DDR5
-\]
+```
 
 with link:
 
-\[
+```math
 BW_{TB4}\ll BW_{VRAM}
-\]
+```
 
 The iGPU/unified allocation also shares system bandwidth.
 
 Do not write:
 
-\[
+```math
 12+48=60GB\ VRAM
-\]
+```
 
 because that destroys the most important variable: **where the bytes live for each token/pass**.
 
@@ -879,15 +879,15 @@ Priority for fast VRAM:
 
 Even with few experts active per token:
 
-\[
+```math
 Storage\sim N_{total}
-\]
+```
 
 If experts must cross TB4 dynamically:
 
-\[
+```math
 Traffic/token\uparrow
-\]
+```
 
 can erase the sparse-compute advantage.
 
@@ -899,7 +899,7 @@ Local MoE requires analyzing **expert residency**, not just active parameters.
 
 For any model/pipeline:
 
-\[
+```math
 M_{peak}
 =
 M_{weights,resident}
@@ -907,21 +907,21 @@ M_{weights,resident}
 +M_{activations}
 +M_{workspace}
 +M_{other\ models}
-\]
+```
 
 Then estimate:
 
-\[
+```math
 Traffic_{critical}/step
-\]
+```
 
-\[
+```math
 Compute/step
-\]
+```
 
-\[
+```math
 N_{steps}
-\]
+```
 
 This works for:
 

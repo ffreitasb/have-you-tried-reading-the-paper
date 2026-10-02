@@ -10,15 +10,15 @@ updated: 2026-10-01
 
 ## 1. Canonical computational graph
 
-\[
+```math
 text\rightarrow tokenizer\rightarrow embeddings\rightarrow blocks_{1:L}\rightarrow norm\rightarrow LM\ head\rightarrow logits\rightarrow logit\ processing\rightarrow sampler\rightarrow token
-\]
+```
 
 With cache:
 
-\[
+```math
 (K,V)_{1:L,1:t-1}\rightarrow attention_t\rightarrow (K,V)_{1:L,1:t}
-\]
+```
 
 The interface usually exposes only the **logits → sampler** stage. Everything else determines most of the model's capability and cost.
 
@@ -28,15 +28,15 @@ The interface usually exposes only the **logits → sampler** stage. Everything 
 
 ## 2. Tokenizer
 
-\[
+```math
 s\xrightarrow{Tokenizer}(x_1,x_2,\dots,x_T)
-\]
+```
 
 ### Fundamental variables
 
 | Variable | Tag | What it controls |
 |---|---|---|
-| Vocabulary size \(V\) | `MODEL` | dimensionality of the output distribution |
+| Vocabulary size $`V`$ | `MODEL` | dimensionality of the output distribution |
 | Tokenization algorithm | `MODEL` | sequence granularity |
 | Special tokens | `MODEL` | BOS/EOS/FIM/chat control |
 | Chat template | `MODEL/PIPE` | actual serialization of the conversation |
@@ -45,9 +45,9 @@ s\xrightarrow{Tokenizer}(x_1,x_2,\dots,x_T)
 
 For the same semantic information:
 
-\[
+```math
 T\downarrow\Rightarrow prefill\downarrow,\ KV\downarrow
-\]
+```
 
 but a larger vocabulary increases LM-head/embedding cost and changes the statistical geometry of the tokens.
 
@@ -61,15 +61,15 @@ A correct model with the **wrong chat template** can look stupid, repetitive, or
 
 Simplified initial input:
 
-\[
+```math
 h_t^{(0)}=E[x_t]
-\]
+```
 
 The residual stream passes through the blocks:
 
-\[
+```math
 h^{(l+1)}=h^{(l)}+Attention(Norm(h^{(l)}))+FFN/MoE(\cdot)
-\]
+```
 
 The exact architecture may be pre-norm or post-norm, use RMSNorm or LayerNorm, and employ different residual arrangements.
 
@@ -83,9 +83,9 @@ Rotary Position Embeddings apply position-dependent rotations to Q/K.
 
 Conceptually:
 
-\[
+```math
 q'_t=R(t)q_t,\qquad k'_t=R(t)k_t
-\]
+```
 
 Attention then becomes position-sensitive through the rotated inner product.
 
@@ -100,9 +100,9 @@ Attention then becomes position-sensitive through the rotated inner product.
 
 ### Rule
 
-\[
+```math
 context\ extension\neq context\ training
-\]
+```
 
 Being able to allocate 128k tokens does not prove the model preserves equivalent quality at 128k.
 
@@ -112,25 +112,25 @@ Being able to allocate 128k tokens does not prove the model preserves equivalent
 
 For each layer:
 
-\[
+```math
 Q=XW_Q,\qquad K=XW_K,\qquad V=XW_V
-\]
+```
 
-\[
+```math
 A(Q,K,V)=softmax\left(\frac{QK^\top}{\sqrt{d_h}}+M\right)V
-\]
+```
 
-where \(M\) contains the causal mask and any additional biases.
+where $`M`$ contains the causal mask and any additional biases.
 
 ### Typical shapes
 
-\[
+```math
 Q\in\mathbb{R}^{B\times n_q\times T\times d_h}
-\]
+```
 
-\[
+```math
 K,V\in\mathbb{R}^{B\times n_{kv}\times T\times d_h}
-\]
+```
 
 ---
 
@@ -138,29 +138,29 @@ K,V\in\mathbb{R}^{B\times n_{kv}\times T\times d_h}
 
 ### Multi-Head Attention
 
-\[
+```math
 n_{kv}=n_q
-\]
+```
 
 ### Grouped-Query Attention
 
-\[
+```math
 n_{kv}<n_q
-\]
+```
 
 Multiple query heads share K/V.
 
 ### Multi-Query Attention
 
-\[
+```math
 n_{kv}=1
-\]
+```
 
 ### Direct effect
 
-\[
+```math
 M_{KV}\propto n_{kv}
-\]
+```
 
 Among other things, GQA/MQA are mechanisms for reducing persistent state during decode.
 
@@ -172,9 +172,9 @@ Instead of storing full K/V tensors per head, the architecture compresses states
 
 Conceptually:
 
-\[
+```math
 h_t\rightarrow c_t^{KV}\ll (K_t,V_t)_{full}
-\]
+```
 
 This reduces KV-cache pressure. DeepSeek-V3 is an important reference for this family.
 
@@ -188,9 +188,9 @@ Do not automatically apply the GQA KV formula to MLA models without checking the
 
 A common gated formulation:
 
-\[
+```math
 FFN(x)=W_2\left(\phi(W_gx)\odot W_1x\right)
-\]
+```
 
 In modern Transformers, FFNs account for a large fraction of both parameters and memory traffic.
 
@@ -200,41 +200,41 @@ In modern Transformers, FFNs account for a large fraction of both parameters and
 
 Router:
 
-\[
+```math
 g(x)=softmax(W_rx)
-\]
+```
 
 Selection:
 
-\[
+```math
 S=TopK(g(x))
-\]
+```
 
 Output:
 
-\[
+```math
 y=\sum_{i\in S}g_i(x)E_i(x)
-\]
+```
 
 ### Three mandatory numbers
 
 | Metric | Meaning |
 |---|---|
-| \(N_{total}\) | stored parameters |
-| \(N_{active}\) | parameters actually executed per token |
-| \(k\) | experts selected per token |
+| $`N_{total}`$ | stored parameters |
+| $`N_{active}`$ | parameters actually executed per token |
+| $`k`$ | experts selected per token |
 
 ### Operational rule
 
-\[
+```math
 compute/token\sim N_{active}
-\]
+```
 
 but:
 
-\[
+```math
 storage\sim N_{total}
-\]
+```
 
 An MoE can be computationally “3B active” while still requiring storage equivalent to tens of billions of parameters.
 
@@ -246,27 +246,27 @@ An MoE can be computationally “3B active” while still requiring storage equi
 
 Final state:
 
-\[
+```math
 h_t\in\mathbb{R}^{d}
-\]
+```
 
 Logits:
 
-\[
+```math
 z=W_{vocab}h_t+b
-\]
+```
 
-\[
+```math
 z\in\mathbb{R}^{V}
-\]
+```
 
 Before sampling, these are **not yet probabilities**.
 
 Softmax:
 
-\[
+```math
 p_i=\frac{e^{z_i}}{\sum_j e^{z_j}}
-\]
+```
 
 ---
 
@@ -274,16 +274,16 @@ p_i=\frac{e^{z_i}}{\sum_j e^{z_j}}
 
 ## 11. Temperature
 
-\[
+```math
 p_i(T)=\frac{e^{z_i/T}}{\sum_j e^{z_j/T}}
-\]
+```
 
 | Region | Mathematical effect |
 |---|---|
-| \(T<1\) | more concentrated distribution |
-| \(T=1\) | original distribution |
-| \(T>1\) | flatter distribution |
-| \(T\to0\) | approaches argmax/greedy |
+| $`T<1`$ | more concentrated distribution |
+| $`T=1`$ | original distribution |
+| $`T>1`$ | flatter distribution |
+| $`T\to0`$ | approaches argmax/greedy |
 
 **Temperature does not mean creativity.** Creativity is an emergent correlate of changing the distribution.
 
@@ -293,9 +293,9 @@ p_i(T)=\frac{e^{z_i/T}}{\sum_j e^{z_j/T}}
 
 Keeps only:
 
-\[
+```math
 S=TopK(z,K)
-\]
+```
 
 and masks the rest.
 
@@ -309,11 +309,11 @@ A `K=40` is equally rigid under a flat distribution and an extremely concentrate
 
 ## 13. Top-P / Nucleus
 
-Sort probabilities in descending order and choose the smallest set \(S\) such that:
+Sort probabilities in descending order and choose the smallest set $`S`$ such that:
 
-\[
+```math
 \sum_{i\in S}p_i\ge P
-\]
+```
 
 The support cardinality changes dynamically.
 
@@ -323,21 +323,21 @@ The support cardinality changes dynamically.
 
 Criterion:
 
-\[
+```math
 p_i\ge p_{min}\cdot p_{max}
-\]
+```
 
-If \(p_{max}=0.8\) and `min_p=0.05`:
+If $`p_{max}=0.8`$ and `min_p=0.05`:
 
-\[
+```math
 p_i\ge0.04
-\]
+```
 
 In logit terms, before additional transformations:
 
-\[
+```math
 z_i-z_{max}\gtrsim\ln(p_{min})
-\]
+```
 
 The cutoff adapts to the model's confidence.
 
@@ -347,13 +347,13 @@ The cutoff adapts to the model's confidence.
 
 Typical sampling favors tokens whose surprisal lies near the local entropy:
 
-\[
+```math
 I(x_i)=-\log p_i
-\]
+```
 
-\[
+```math
 H(p)=-\sum_i p_i\log p_i
-\]
+```
 
 Tokens that are too predictable or too improbable may be removed if they are “atypical” relative to the distribution.
 
@@ -377,15 +377,15 @@ Treat it as `BACKEND/INF`, not as a universal property of LLMs.
 
 Conceptual OpenAI-style form:
 
-\[
+```math
 z_i'=z_i-\alpha\cdot 1[c_i>0]-\beta\cdot c_i
-\]
+```
 
 where:
 
-- \(\alpha\): presence penalty;
-- \(\beta\): frequency penalty;
-- \(c_i\): token count over the relevant history.
+- $`\alpha`$: presence penalty;
+- $`\beta`$: frequency penalty;
+- $`c_i`$: token count over the relevant history.
 
 ---
 
@@ -412,9 +412,9 @@ DRY penalizes repetition of increasingly long sequences/n-grams. Conceptually, i
 
 It is particularly useful when:
 
-\[
+```math
 repetition\ problem\neq repeated\ individual\ tokens
-\]
+```
 
 RP and long-form narrative benefit because stylistic loops often recur as entire phrases.
 
@@ -426,9 +426,9 @@ Modern `llama.cpp` implements a feedback sampler that maintains an EMA of the or
 
 Conceptually:
 
-\[
+```math
 \bar p_t=\lambda\bar p_{t-1}+(1-\lambda)p(x_t)
-\]
+```
 
 The sampler tries to select tokens near an adaptive target.
 
@@ -442,13 +442,13 @@ A feedback-oriented controller designed to keep surprisal/perplexity near a targ
 
 Principle:
 
-\[
+```math
 error_t=\tau-surprisal_t
-\]
+```
 
-\[
+```math
 control_{t+1}=control_t+\eta\cdot error_t
-\]
+```
 
 Exact implementation depends on the version. Classify it as an **adaptive controller**, not merely “automatic temperature.”
 
@@ -460,21 +460,21 @@ Exact implementation depends on the version. Classify it as an **adaptive contro
 
 At each step there is a set of lexically/syntactically valid tokens:
 
-\[
+```math
 V_t^{valid}\subseteq V
-\]
+```
 
 The sampler is constrained:
 
-\[
+```math
 p_t'(x)=0\quad\forall x\notin V_t^{valid}
-\]
+```
 
 ### Important
 
-\[
+```math
 syntax\ validity\neq semantic\ correctness
-\]
+```
 
 Perfect JSON can still contain a fabricated argument or the wrong action.
 
@@ -486,17 +486,17 @@ Perfect JSON can still contain a fabricated argument or the wrong action.
 
 For GQA/MHA:
 
-\[
+```math
 M_{KV}\approx2LTn_{kv}d_hbB
-\]
+```
 
 It scales linearly with stored context.
 
 ### “How much does +1k tokens cost?”
 
-\[
+```math
 \Delta M_{KV,1k}=2000Ln_{kv}d_hbB
-\]
+```
 
 Do this calculation before choosing a context size.
 
@@ -512,9 +512,9 @@ Processes the full prompt and builds the KV cache.
 
 Repeats:
 
-\[
+```math
 h_t\rightarrow logits_t\rightarrow token_{t+1}\rightarrow KV_{t+1}
-\]
+```
 
 Latency per token grows with state size and architecture.
 
@@ -537,9 +537,9 @@ Do not conflate the four.
 
 In models that externalize or internalize additional reasoning steps, a larger budget means more sequential inference:
 
-\[
+```math
 Cost\propto T_{generated}
-\]
+```
 
 This is not a new form of attention mathematics; it is mainly a change in generation/training policy and token/computation budget.
 
@@ -678,9 +678,9 @@ Related: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UNIFIED
 
 ## 35. Autoregressive factorization — baseline
 
-\[
+```math
 p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{<t})
-\]
+```
 
 Inference:
 
@@ -688,7 +688,7 @@ Inference:
 x1 -> x2 -> x3 -> ... -> xT
 ```
 
-Position \(t+1\) does not exist before \(t\) has been decided.
+Position $`t+1`$ does not exist before $`t`$ has been decided.
 
 ### Implications
 
@@ -701,11 +701,11 @@ Position \(t+1\) does not exist before \(t\) has been decided.
 
 ## 36. Masked language modeling
 
-Define mask \(M\subset\{1,\ldots,T\}\):
+Define mask $`M\subset\{1,\ldots,T\}`$:
 
-\[
+```math
 \mathcal L=-\sum_{i\in M}\log p(x_i|x_{\setminus M})
-\]
+```
 
 Unlike causal AR, a position can use context **from both sides**.
 
@@ -723,23 +723,23 @@ fill the highest-confidence positions, remask/refine, and repeat.
 
 Corrupted text state:
 
-\[
+```math
 x_t\sim q(x_t|x_0,t)
-\]
+```
 
 The network learns a reverse transition:
 
-\[
+```math
 p_\theta(x_{t-1}|x_t,C)
-\]
+```
 
 Trajectory:
 
-\[
+```math
 x_T\rightarrow x_{T-1}\rightarrow\cdots\rightarrow x_0
-\]
+```
 
-Here \(t\) is **noise/refinement time**, not textual position.
+Here $`t`$ is **noise/refinement time**, not textual position.
 
 ---
 
@@ -747,19 +747,19 @@ Here \(t\) is **noise/refinement time**, not textual position.
 
 If multiple positions are updated in one pass:
 
-\[
+```math
 \{x_i\}_{i\in U_k}
 \leftarrow
 f_\theta(x^{(k)})
-\]
+```
 
-where \(U_k\) is the set of positions updated at iteration \(k\).
+where $`U_k`$ is the set of positions updated at iteration $`k`$.
 
 This breaks the identity:
 
-\[
+```math
 1\ network\ forward = 1\ output\ token
-\]
+```
 
 that dominates causal LLMs.
 
@@ -769,15 +769,15 @@ that dominates causal LLMs.
 
 Each position has a confidence:
 
-\[
+```math
 c_i=\max_v p(x_i=v|x^{(k)})
-\]
+```
 
 Choose the top positions:
 
-\[
+```math
 U_k=TopK(c_i,K_k)
-\]
+```
 
 The most confident positions are fixed first; uncertain ones remain masked.
 
@@ -791,9 +791,9 @@ A high-confidence error committed early can contaminate later refinement.
 
 A decision can be revised:
 
-\[
+```math
 x_i^{(k)}\rightarrow MASK\rightarrow x_i^{(k+1)}
-\]
+```
 
 This is structurally different from pure AR, where an emitted token is normally irreversible without an external restart/edit loop.
 
@@ -805,9 +805,9 @@ Remasking enables **self-correction inside the decode topology itself**.
 
 A compromise between AR and full-sequence iterative generation:
 
-\[
+```math
 Block_1\rightarrow Block_2\rightarrow\cdots
-\]
+```
 
 Within each block, multiple tokens can be refined in parallel.
 
@@ -821,9 +821,9 @@ AR does not need to know final length in advance; EOS decides.
 
 Full-mask generation often needs to define/allocate a length:
 
-\[
+```math
 T_{target}
-\]
+```
 
 Possible strategies:
 
@@ -840,15 +840,15 @@ So “how many tokens should we generate?” becomes part of the state topology 
 
 Causal AR:
 
-\[
+```math
 KV_t=KV_{t-1}+KV(x_t)
-\]
+```
 
 If earlier positions change during iterative refinement:
 
-\[
+```math
 x_i^{(k)}\neq x_i^{(k-1)}
-\]
+```
 
 derived states may need to be recomputed/invalidated.
 
@@ -860,13 +860,13 @@ This is central when comparing real-world speed.
 
 ## 44. Complexity model: AR
 
-For \(T_{out}\) tokens:
+For $`T_{out}`$ tokens:
 
-\[
+```math
 Latency_{AR}
 \approx
 T_{out}\cdot t_{decode-pass}
-\]
+```
 
 with small passes and incremental KV.
 
@@ -874,27 +874,27 @@ with small passes and incremental KV.
 
 ## 45. Complexity model: iterative parallel
 
-For \(K\) refinement steps:
+For $`K`$ refinement steps:
 
-\[
+```math
 Latency_{iter}
 \approx
 K\cdot t_{sequence/block-pass}
-\]
+```
 
 The advantage appears when:
 
-\[
+```math
 K\ll T_{out}
-\]
+```
 
 **and** the cost of each parallel pass does not erase the savings.
 
 Therefore:
 
-\[
+```math
 Parallel\ tokens\neq free\ speedup
-\]
+```
 
 ---
 
@@ -940,9 +940,9 @@ Each implementation must be mapped to its actual equation.
 
 Under ideal refinement:
 
-\[
+```math
 H(X^{(k+1)})<H(X^{(k)})
-\]
+```
 
 on average, as uncertainty is removed.
 
@@ -956,9 +956,9 @@ This is analogous to annealing, but the concrete implementation matters.
 
 Because the full sequence can be revisited:
 
-\[
+```math
 Edit\ subset\ M
-\]
+```
 
 it is natural to preserve surrounding context and regenerate internal regions.
 
@@ -972,15 +972,15 @@ Text is discrete.
 
 Typical image latent:
 
-\[
+```math
 x_t\in\mathbb R^d
-\]
+```
 
 Text:
 
-\[
+```math
 x_t\in\{1,\ldots,V\}^T
-\]
+```
 
 The corruption/reverse process must respect the discrete state or use specific embeddings/relaxations.
 
@@ -994,16 +994,16 @@ Mercury/Mercury Coder demonstrated commercial-scale diffusion language models pa
 
 The most important conceptual point:
 
-\[
+```math
 Transformer\not\Rightarrow AR
-\]
+```
 
 And the physical point:
 
-\[
+```math
 Speedup
 =f(parallel\ updates,iterations,sequence\ pass\ cost,hardware)
-\]
+```
 
 not merely “tokens per pass.”
 
@@ -1015,7 +1015,7 @@ not merely “tokens per pass.”
 
 In most cases:
 
-\[
+```math
 ReasoningModel
 =
 BaseModel
@@ -1025,7 +1025,7 @@ PostTraining
 InferencePolicy
 +
 ComputeBudget
-\]
+```
 
 Do not create a separate ontology just because the output contains a reasoning trace.
 
@@ -1033,17 +1033,17 @@ Do not create a separate ontology just because the output contains a reasoning t
 
 ## 53. Reasoning budget
 
-If the model generates \(T_r\) intermediate tokens and \(T_a\) answer tokens:
+If the model generates $`T_r`$ intermediate tokens and $`T_a`$ answer tokens:
 
-\[
+```math
 T_{total}=T_r+T_a
-\]
+```
 
 Runtime:
 
-\[
+```math
 KV,latency,energy\propto T_{total}
-\]
+```
 
 Test-time compute buys search/reflection, not new parametric capacity.
 
@@ -1053,15 +1053,15 @@ Test-time compute buys search/reflection, not new parametric capacity.
 
 An alternative to one long chain:
 
-\[
+```math
 N\ candidates\rightarrow verifier\rightarrow select
-\]
+```
 
 or iterative search:
 
-\[
+```math
 Generate\rightarrow Evaluate\rightarrow Expand/Prune
-\]
+```
 
 See [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 

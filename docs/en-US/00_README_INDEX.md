@@ -13,7 +13,7 @@ This collection is not an encyclopedia of brands or checkpoints.
 
 Its growth rule is:
 
-\[
+```math
 \boxed{
 NewDatasheet
 \iff
@@ -25,7 +25,7 @@ NewDatasheet
 \lor
 \Delta StateDynamics
 }
-\]
+```
 
 So `MoE`, `LoRA`, `RAG`, `reasoning model`, `quantization`, `speculative decoding`, `MCP`, or a new sampler do not automatically become new “model types.” They belong in whichever file contains the mathematics they actually change.
 
@@ -76,7 +76,7 @@ Security / Monitoring / Feedback
 
 For almost any modern system, trace:
 
-\[
+```math
 \boxed{
 Representation
 \rightarrow
@@ -92,7 +92,7 @@ Output
 \rightarrow
 Physical\ Cost
 }
-\]
+```
 
 Ask, in this order:
 
@@ -190,9 +190,9 @@ FOUNDATION MODEL ENGINEERING
 
 Describes any model along orthogonal axes:
 
-\[
+```math
 M=(R,O,B,C,I,S,D,\Omega)
-\]
+```
 
 Use it when you first need to understand **what kind of system you are looking at before studying its knobs**.
 
@@ -406,9 +406,9 @@ Covers:
 
 Covers:
 
-\[
+```math
 P(s_{t+1}|s_t,a_t)
-\]
+```
 
 plus:
 
@@ -638,9 +638,9 @@ Read `CONVENTIONS` once you start modifying the collection.
 
 ## 8.1 Backbone ≠ objective
 
-\[
+```math
 Transformer\neq Autoregression
-\]
+```
 
 A Transformer can parameterize:
 
@@ -658,20 +658,20 @@ A Transformer can parameterize:
 
 ## 8.2 Seed ≠ determinism
 
-\[
+```math
 Reproducibility
 =f(weights,inputs,seed,dtype,kernel,backend,hardware,parallelism,version)
-\]
+```
 
 ---
 
 ## 8.3 Capacity ≠ search budget
 
-\[
+```math
 ModelCapacity
 \neq
 TestTimeCompute
-\]
+```
 
 More samples/steps/rollouts can improve output without changing the weights.
 
@@ -679,9 +679,9 @@ More samples/steps/rollouts can improve output without changing the weights.
 
 ## 8.4 Quality is often vector-valued
 
-\[
+```math
 Q=(correctness,latency,memory,safety,cost,style,\ldots)
-\]
+```
 
 A single scalar can hide trade-offs.
 
@@ -691,27 +691,27 @@ A single scalar can hide trade-offs.
 
 Do not assume:
 
-\[
+```math
 MoreSteps\Rightarrow Better
-\]
+```
 
-\[
+```math
 MoreCFG\Rightarrow Better
-\]
+```
 
-\[
+```math
 MoreContext\Rightarrow Better
-\]
+```
 
-\[
+```math
 LargerModel\Rightarrow BetterForMyConstraint
-\]
+```
 
 ---
 
 # 9. The full cycle covered by the collection
 
-\[
+```math
 \boxed{
 PERCEIVE
 \rightarrow
@@ -727,11 +727,11 @@ ACT
 \rightarrow
 PREDICT\ WORLD
 }
-\]
+```
 
 wrapped by:
 
-\[
+```math
 \boxed{
 TRAIN
 \leftrightarrow
@@ -739,7 +739,7 @@ EVALUATE
 \leftrightarrow
 SECURE/MONITOR
 }
-\]
+```
 
 That is why the collection stopped being merely a “GUT of generative AI” and became a **Foundation Model Engineering** reference.
 
@@ -761,9 +761,9 @@ Ask instead:
 
 If the answer is only item 5:
 
-\[
+```math
 \boxed{UpdateExistingDatasheet}
-\]
+```
 
 Do not create a new category.
 

@@ -56,6 +56,8 @@ REQUIRED = (
     ".github/workflows/repository-integrity.yml",
     ".github/workflows/external-links.yml",
     "scripts/validate_repository.py", "scripts/requirements-validation.txt",
+    "scripts/math-preservation.json", "scripts/math_rendering.py",
+    "scripts/verify_math_rendering.py", "scripts/requirements-rendering.txt",
 )
 LOCAL_STATE = {".claude-flow", ".repowise", ".kilo", ".claude", ".venv", "__pycache__", "validation-output"}
 TEXT_SUFFIXES = {".md", ".cff", ".json", ".yaml", ".yml", ".py", ".txt"}
@@ -360,6 +362,8 @@ def validate(root: Path) -> tuple[list[str], int]:
         errors.append("LICENSE: missing CC BY-SA 4.0 legal text")
     if (root / "CITATION.cff").is_file():
         check_metadata(root, errors)
+    from math_rendering import check_corpus
+    errors.extend(check_corpus(root))
     return errors, link_count
 
 

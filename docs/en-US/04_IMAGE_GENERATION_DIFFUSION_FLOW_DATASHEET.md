@@ -10,15 +10,15 @@ updated: 2026-10-01
 
 ## 1. Canonical graph
 
-\[
+```math
 prompt/reference\rightarrow condition\ encoder\rightarrow latent\ state\rightarrow denoiser/vector\ field\rightarrow solver\ loop\rightarrow AE/VAE\ decoder\rightarrow pixels
-\]
+```
 
 Typical pipeline:
 
-\[
+```math
 C\rightarrow x_T\rightarrow f_\theta(x_t,t,C)\rightarrow x_{t-1}\rightarrow\cdots\rightarrow x_0\rightarrow D(x_0)
-\]
+```
 
 ---
 
@@ -28,37 +28,37 @@ C\rightarrow x_T\rightarrow f_\theta(x_t,t,C)\rightarrow x_{t-1}\rightarrow\cdot
 
 Pixel space:
 
-\[
+```math
 X\in\mathbb{R}^{B\times 3\times H\times W}
-\]
+```
 
 Latent space:
 
-\[
+```math
 Z=E(X)\in\mathbb{R}^{B\times C_l\times H_l\times W_l}
-\]
+```
 
-With spatial compression factor \(f\):
+With spatial compression factor $`f`$:
 
-\[
+```math
 H_l\approx H/f,\qquad W_l\approx W/f
-\]
+```
 
-Modern generation almost always saves compute by working in \(Z\), not directly in pixels.
+Modern generation almost always saves compute by working in $`Z`$, not directly in pixels.
 
 ### Consequence
 
 Resolution increases the number of latent positions:
 
-\[
+```math
 N_l\propto H_lW_l
-\]
+```
 
 For a Transformer using global attention over patches:
 
-\[
+```math
 C_{attn}\sim O(N^2)
-\]
+```
 
 ---
 
@@ -66,15 +66,15 @@ C_{attn}\sim O(N^2)
 
 Encoder:
 
-\[
+```math
 X\rightarrow Z
-\]
+```
 
 Decoder:
 
-\[
+```math
 \hat X=D(Z)
-\]
+```
 
 The decoder imposes a fidelity ceiling independent of the denoiser.
 
@@ -96,16 +96,16 @@ A “washed-out image” does not automatically prove the VAE is wrong; the caus
 
 Simplified forward process:
 
-\[
+```math
 x_t=\alpha_t x_0+\sigma_t\epsilon,\qquad \epsilon\sim\mathcal N(0,I)
-\]
+```
 
 The network may predict:
 
-- \(\epsilon\): noise prediction;
-- \(x_0\): clean sample;
-- \(v\): velocity parameterization;
-- score \(\nabla_x\log p_t(x)\).
+- $`\epsilon`$: noise prediction;
+- $`x_0`$: clean sample;
+- $`v`$: velocity parameterization;
+- score $`\nabla_x\log p_t(x)`$.
 
 These parameterizations are not just UI labels; they change numerical scale and solver behavior.
 
@@ -115,17 +115,17 @@ These parameterizations are not just UI labels; they change numerical scale and 
 
 Continuous trajectory:
 
-\[
+```math
 \frac{dx_t}{dt}=v_\theta(x_t,t,C)
-\]
+```
 
 Inference = integrate a learned vector field.
 
 Euler discretization:
 
-\[
+```math
 x_{n+1}=x_n+\Delta t\,v_\theta(x_n,t_n,C)
-\]
+```
 
 Heun uses prediction + correction and has lower local error.
 
@@ -154,9 +154,9 @@ Still relevant for SD1.x/SDXL and derivatives.
 
 Latents are patchified:
 
-\[
+```math
 Z\rightarrow tokens\in\mathbb{R}^{N\times d}
-\]
+```
 
 The Transformer processes those tokens with attention/MLPs.
 
@@ -174,9 +174,9 @@ Qwen-Image-2.0 exemplifies modern unified generation+editing in 2026.
 
 ## 8. Prompt embedding
 
-\[
+```math
 C_{text}=Encoder(prompt)
-\]
+```
 
 The prompt does not push pixels directly; it changes activations, attention, and/or modulation inside the model operator.
 
@@ -197,19 +197,19 @@ Syntax such as `(word:1.5)` is a **pipeline/UI convention**, not a universal law
 
 Classic CFG:
 
-\[
+```math
 f_c=f_\theta(x_t,t,C_{pos})
-\]
+```
 
-\[
+```math
 f_u=f_\theta(x_t,t,C_{neg/uncond})
-\]
+```
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
-The “negative prompt” is therefore an alternative condition used to construct \(f_u\), not a universal magical repulsion vector.
+The “negative prompt” is therefore an alternative condition used to construct $`f_u`$, not a universal magical repulsion vector.
 
 ---
 
@@ -232,15 +232,15 @@ There is no single universal “img2img mechanism.”
 
 ## 11. Classifier-Free Guidance
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
 ### Geometric interpretation
 
-\[
+```math
 \Delta f=f_c-f_u
-\]
+```
 
 CFG amplifies displacement in the differential direction induced by conditioning.
 
@@ -248,9 +248,9 @@ CFG amplifies displacement in the differential direction induced by conditioning
 
 In general:
 
-\[
+```math
 Alignment(s)\uparrow
-\]
+```
 
 up to a certain regime, while quality/diversity may decline under excessive guidance.
 
@@ -277,15 +277,15 @@ So “CFG Scale” is now just one member of the broader family of **guidance op
 
 Defines evaluation points:
 
-\[
+```math
 t_0>t_1>\cdots>t_N
-\]
+```
 
 or:
 
-\[
+```math
 \sigma_0>\sigma_1>\cdots>\sigma_N
-\]
+```
 
 This is the **discretization grid**.
 
@@ -303,9 +303,9 @@ Conceptual examples:
 
 Defines the integration rule:
 
-\[
+```math
 x_{n+1}=\Phi(x_n,f_\theta,t_n,t_{n+1})
-\]
+```
 
 ### Euler
 
@@ -321,9 +321,9 @@ Use multiple evaluations or previous states to achieve higher order/efficiency.
 
 ### Rule
 
-\[
+```math
 \boxed{Scheduler\neq Sampler/Solver}
-\]
+```
 
 They may appear side by side in ComfyUI, but they are conceptually different objects.
 
@@ -333,17 +333,17 @@ They may appear side by side in ComfyUI, but they are conceptually different obj
 
 `Steps` is the number of discretization steps. Actual cost depends on network evaluations:
 
-\[
+```math
 NFE=\text{number of }f_\theta\text{ forward passes}
-\]
+```
 
 A method with two evaluations per step may cost roughly 2× the denoiser work of a one-evaluation method.
 
 ### Quality
 
-\[
+```math
 Q(N)\not\text{ is monotonically increasing for every model}
-\]
+```
 
 Distilled/few-step models operate at a different optimum.
 
@@ -355,15 +355,15 @@ Distilled/few-step models operate at a different optimum.
 
 An image is encoded:
 
-\[
+```math
 z_0=E(image)
-\]
+```
 
-Noise is added up to some level \(t_s\):
+Noise is added up to some level $`t_s`$:
 
-\[
+```math
 z_{t_s}=\alpha_{t_s}z_0+\sigma_{t_s}\epsilon
-\]
+```
 
 The reverse process then begins there.
 
@@ -379,11 +379,11 @@ Denoising strength is therefore better understood as **how much of the original 
 
 ## 17. Inpainting
 
-Mask \(M\):
+Mask $`M`$:
 
-\[
+```math
 x_t'=M\odot x_t^{generated}+(1-M)\odot x_t^{reference}
-\]
+```
 
 Implementations may incorporate the mask/latent in more sophisticated ways, but the core idea is to constrain degrees of freedom spatially.
 
@@ -414,9 +414,9 @@ Hires fix is a **pipeline strategy**, not a fundamental parameter.
 
 Flow:
 
-\[
+```math
 low/medium\ res\ generation\rightarrow upscale\rightarrow img2img/refine
-\]
+```
 
 It is useful when the model composes better at lower resolution or when quadratic attention cost makes native high-resolution generation expensive.
 
@@ -428,15 +428,15 @@ It is useful when the model composes better at lower resolution or when quadrati
 
 The seed usually initializes noise:
 
-\[
+```math
 x_T\sim\mathcal N(0,I;seed)
-\]
+```
 
 But output also depends on:
 
-\[
+```math
 R=f(weights,VAE,text\ encoder,prompt,schedule,solver,steps,guidance,dtype,kernel,backend)
-\]
+```
 
 Same seed with a different pipeline ≠ same image.
 
@@ -446,17 +446,17 @@ Same seed with a different pipeline ≠ same image.
 
 ## 21. Latent token count
 
-If latent \(H_l\times W_l\) is patchified with \(p_h\times p_w\):
+If latent $`H_l\times W_l`$ is patchified with $`p_h\times p_w`$:
 
-\[
+```math
 N=\frac{H_lW_l}{p_hp_w}
-\]
+```
 
 Full attention:
 
-\[
+```math
 O(N^2d)
-\]
+```
 
 Doubling both H and W quadruples token count and may multiply the quadratic attention component by ~16× before optimizations.
 
@@ -466,15 +466,15 @@ Doubling both H and W quadruples token count and may multiply the quadratic atte
 
 Classic CFG may require two predictions:
 
-\[
+```math
 f_c,\ f_u
-\]
+```
 
 Without special batching/fusion:
 
-\[
+```math
 Cost_{CFG}\approx2\times Cost_{conditional\ pass}
-\]
+```
 
 Additional guiders may add extra forward passes.
 
@@ -499,8 +499,8 @@ Additional guiders may add extra forward passes.
 
 | Concept | ComfyUI |
 |---|---|
-| \(f_\theta\) | model/UNet/DiT loader |
-| \(C\) | text/image encoders + conditioning nodes |
+| $`f_\theta`$ | model/UNet/DiT loader |
+| $`C`$ | text/image encoders + conditioning nodes |
 | initial state | Empty Latent / encoded image / noise |
 | solver | sampler selection |
 | schedule | scheduler/sigmas |

@@ -10,15 +10,15 @@ updated: 2026-10-01
 
 ## 1. Grafo canônico
 
-\[
+```math
 prompt/reference\rightarrow condition\ encoder\rightarrow latent\ state\rightarrow denoiser/vector\ field\rightarrow solver\ loop\rightarrow AE/VAE\ decoder\rightarrow pixels
-\]
+```
 
 Pipeline típico:
 
-\[
+```math
 C\rightarrow x_T\rightarrow f_\theta(x_t,t,C)\rightarrow x_{t-1}\rightarrow\cdots\rightarrow x_0\rightarrow D(x_0)
-\]
+```
 
 ---
 
@@ -28,37 +28,37 @@ C\rightarrow x_T\rightarrow f_\theta(x_t,t,C)\rightarrow x_{t-1}\rightarrow\cdot
 
 Pixel space:
 
-\[
+```math
 X\in\mathbb{R}^{B\times 3\times H\times W}
-\]
+```
 
 Latent space:
 
-\[
+```math
 Z=E(X)\in\mathbb{R}^{B\times C_l\times H_l\times W_l}
-\]
+```
 
-Com fator de compressão espacial \(f\):
+Com fator de compressão espacial $`f`$:
 
-\[
+```math
 H_l\approx H/f,\qquad W_l\approx W/f
-\]
+```
 
-A geração moderna quase sempre economiza compute trabalhando em \(Z\), não diretamente em pixels.
+A geração moderna quase sempre economiza compute trabalhando em $`Z`$, não diretamente em pixels.
 
 ### Consequência
 
 Resolution aumenta número de latent positions:
 
-\[
+```math
 N_l\propto H_lW_l
-\]
+```
 
 Em Transformer com atenção global sobre patches:
 
-\[
+```math
 C_{attn}\sim O(N^2)
-\]
+```
 
 ---
 
@@ -66,15 +66,15 @@ C_{attn}\sim O(N^2)
 
 Encoder:
 
-\[
+```math
 X\rightarrow Z
-\]
+```
 
 Decoder:
 
-\[
+```math
 \hat X=D(Z)
-\]
+```
 
 O decoder impõe um teto de fidelidade independente do denoiser.
 
@@ -96,16 +96,16 @@ O decoder impõe um teto de fidelidade independente do denoiser.
 
 Forward simplificado:
 
-\[
+```math
 x_t=\alpha_t x_0+\sigma_t\epsilon,\qquad \epsilon\sim\mathcal N(0,I)
-\]
+```
 
 A rede pode prever:
 
-- \(\epsilon\): noise prediction;
-- \(x_0\): clean sample;
-- \(v\): velocity parametrization;
-- score \(\nabla_x\log p_t(x)\).
+- $`\epsilon`$: noise prediction;
+- $`x_0`$: clean sample;
+- $`v`$: velocity parametrization;
+- score $`\nabla_x\log p_t(x)`$.
 
 Essas parametrizações não são apenas nomes de UI; mudam escala numérica e comportamento do solver.
 
@@ -115,17 +115,17 @@ Essas parametrizações não são apenas nomes de UI; mudam escala numérica e c
 
 Trajetória contínua:
 
-\[
+```math
 \frac{dx_t}{dt}=v_\theta(x_t,t,C)
-\]
+```
 
 Inferência = integrar um campo vetorial aprendido.
 
 Discretização Euler:
 
-\[
+```math
 x_{n+1}=x_n+\Delta t\,v_\theta(x_n,t_n,C)
-\]
+```
 
 Heun usa previsão + correção e tem erro local menor.
 
@@ -154,9 +154,9 @@ Ainda relevante para SD1.x/SDXL e derivados.
 
 Latentes são patchificados:
 
-\[
+```math
 Z\rightarrow tokens\in\mathbb{R}^{N\times d}
-\]
+```
 
 O Transformer processa esses tokens com attention/MLP.
 
@@ -174,9 +174,9 @@ Qwen-Image-2.0 exemplifica geração+edição multimodal moderna em 2026.
 
 ## 8. Prompt embedding
 
-\[
+```math
 C_{text}=Encoder(prompt)
-\]
+```
 
 O prompt não empurra diretamente pixels; modifica activations/attention/modulation do model operator.
 
@@ -197,19 +197,19 @@ Sintaxe `(word:1.5)` é uma **convenção de pipeline/UI**, não lei universal.
 
 CFG clássico:
 
-\[
+```math
 f_c=f_\theta(x_t,t,C_{pos})
-\]
+```
 
-\[
+```math
 f_u=f_\theta(x_t,t,C_{neg/uncond})
-\]
+```
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
-O “negative prompt” é portanto uma condição alternativa usada para construir \(f_u\), não um vetor mágico de repulsão universal.
+O “negative prompt” é portanto uma condição alternativa usada para construir $`f_u`$, não um vetor mágico de repulsão universal.
 
 ---
 
@@ -232,15 +232,15 @@ Não existe um único “img2img mechanism”.
 
 ## 11. Classifier-Free Guidance
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
 ### Interpretação geométrica
 
-\[
+```math
 \Delta f=f_c-f_u
-\]
+```
 
 CFG aumenta o deslocamento na direção diferencial induzida pelo conditioning.
 
@@ -248,9 +248,9 @@ CFG aumenta o deslocamento na direção diferencial induzida pelo conditioning.
 
 Em geral:
 
-\[
+```math
 Alignment(s)\uparrow
-\]
+```
 
 até certo regime, enquanto qualidade/diversidade podem cair com guidance excessivo.
 
@@ -277,15 +277,15 @@ Portanto “CFG Scale” virou apenas um membro da família **guidance operators
 
 Define pontos de avaliação:
 
-\[
+```math
 t_0>t_1>\cdots>t_N
-\]
+```
 
 ou:
 
-\[
+```math
 \sigma_0>\sigma_1>\cdots>\sigma_N
-\]
+```
 
 É a **malha de discretização**.
 
@@ -303,9 +303,9 @@ Exemplos conceituais:
 
 Define a regra de integração:
 
-\[
+```math
 x_{n+1}=\Phi(x_n,f_\theta,t_n,t_{n+1})
-\]
+```
 
 ### Euler
 
@@ -321,9 +321,9 @@ Usam múltiplas avaliações/estados anteriores para maior ordem/eficiência.
 
 ### Regra
 
-\[
+```math
 \boxed{Scheduler\neq Sampler/Solver}
-\]
+```
 
 No ComfyUI podem aparecer próximos, mas são objetos conceitualmente diferentes.
 
@@ -333,17 +333,17 @@ No ComfyUI podem aparecer próximos, mas são objetos conceitualmente diferentes
 
 `Steps` é número de passos da malha. Custo real depende de avaliações da rede:
 
-\[
+```math
 NFE=\text{number of }f_\theta\text{ forward passes}
-\]
+```
 
 Um método com duas avaliações/step pode custar aproximadamente 2× o denoiser de um método com uma.
 
 ### Qualidade
 
-\[
+```math
 Q(N)\not\text{ é monotonicamente crescente em todos os modelos}
-\]
+```
 
 Modelos distilled/few-step possuem outro ponto de operação.
 
@@ -355,15 +355,15 @@ Modelos distilled/few-step possuem outro ponto de operação.
 
 Uma imagem é codificada:
 
-\[
+```math
 z_0=E(image)
-\]
+```
 
-Noise é adicionado até um nível \(t_s\):
+Noise é adicionado até um nível $`t_s`$:
 
-\[
+```math
 z_{t_s}=\alpha_{t_s}z_0+\sigma_{t_s}\epsilon
-\]
+```
 
 Então o processo reverso começa dali.
 
@@ -379,11 +379,11 @@ Denoising strength é portanto melhor entendido como **quanto da trajetória ori
 
 ## 17. Inpainting
 
-Máscara \(M\):
+Máscara $`M`$:
 
-\[
+```math
 x_t'=M\odot x_t^{generated}+(1-M)\odot x_t^{reference}
-\]
+```
 
 Implementações podem incorporar máscara/latente de formas mais sofisticadas, mas a ideia fundamental é restringir graus de liberdade espacialmente.
 
@@ -414,9 +414,9 @@ Hires fix é uma **estratégia de pipeline**, não um parâmetro fundamental.
 
 Fluxo:
 
-\[
+```math
 low/medium\ res\ generation\rightarrow upscale\rightarrow img2img/refine
-\]
+```
 
 É útil quando o modelo compõe melhor em menor resolução ou quando o custo quadrático torna geração nativa cara.
 
@@ -428,15 +428,15 @@ low/medium\ res\ generation\rightarrow upscale\rightarrow img2img/refine
 
 Seed normalmente inicializa noise:
 
-\[
+```math
 x_T\sim\mathcal N(0,I;seed)
-\]
+```
 
 Mas output depende também de:
 
-\[
+```math
 R=f(weights,VAE,text\ encoder,prompt,schedule,solver,steps,guidance,dtype,kernel,backend)
-\]
+```
 
 Mesma seed com pipeline diferente ≠ mesma imagem.
 
@@ -446,17 +446,17 @@ Mesma seed com pipeline diferente ≠ mesma imagem.
 
 ## 21. Latent token count
 
-Se latent \(H_l\times W_l\) é patchificado por \(p_h\times p_w\):
+Se latent $`H_l\times W_l`$ é patchificado por $`p_h\times p_w`$:
 
-\[
+```math
 N=\frac{H_lW_l}{p_hp_w}
-\]
+```
 
 Attention full:
 
-\[
+```math
 O(N^2d)
-\]
+```
 
 Dobrar H e W quadruplica tokens e pode multiplicar o componente quadrático de attention em ~16×, antes das otimizações.
 
@@ -466,15 +466,15 @@ Dobrar H e W quadruplica tokens e pode multiplicar o componente quadrático de a
 
 CFG clássico pode exigir duas predictions:
 
-\[
+```math
 f_c,\ f_u
-\]
+```
 
 Se não houver batching/fusão especial:
 
-\[
+```math
 Cost_{CFG}\approx2\times Cost_{conditional\ pass}
-\]
+```
 
 Guiders adicionais podem adicionar forwards extras.
 
@@ -499,8 +499,8 @@ Guiders adicionais podem adicionar forwards extras.
 
 | Conceito | ComfyUI |
 |---|---|
-| \(f_\theta\) | model/UNet/DiT loader |
-| \(C\) | text/image encoders + conditioning nodes |
+| $`f_\theta`$ | model/UNet/DiT loader |
+| $`C`$ | text/image encoders + conditioning nodes |
 | initial state | Empty Latent / encoded image / noise |
 | solver | sampler selection |
 | schedule | scheduler/sigmas |

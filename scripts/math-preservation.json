@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "source_commit": "7fca0402a01cf2fe273bcaa3d1ca7a9d231fde53",
+  "policy": "Exact prose and ordered TeX bodies; only reviewed registry bar aliases normalize. Formatting correction does not alter archived v1.0.0.",
+  "files": {
+    "docs/en-US/00_README_INDEX.md": {
+      "outside_sha256": "05389bfeb11e791790957ff0ce2b3794c16803d61e963078935d3b5460eb7a7b",
+      "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+      "inline": 0,
+      "display": 15
+    },
+    "docs/en-US/01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md": {
+      "outside_sha256": "47b86e7518f211de17b5a6c99ad9d76797bf91c5c5e987dd5dab83f2d616ea0f",
+      "tex_sha256": "3fff4e446bc6176fd6e3274b1d660424161900f796ff6c46081a790373cd603b",
+      "inline": 30,
+      "display": 55
+    },
+    "docs/en-US/02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md": {
+      "outside_sha256": "daafb250aff46c5f3676e6438a8df8f9f9f2d04104877913d9967ebc0c7b5217",
+      "tex_sha256": "95e816024447c1eaa7685abda64545821be75babdcd0f843091f96108c63caa7",
+      "inline": 24,
+      "display": 76
+    },
+    "docs/en-US/03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md": {
+      "outside_sha256": "37d8d75bb66e0d66228d28cf0c77041362c37670ecb8333435f6d400ba793545",
+      "tex_sha256": "2d5e955ddeec86391643d3df3d7c2fdca65f3bba492e2e3f9e5fbcce88396157",
+      "inline": 2,
+      "display": 26
+    },
+    "docs/en-US/04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md": {
+      "outside_sha256": "a37563b26204339e429fdc405b67c5b2649ee536abf544e8e1956a6c48ab07aa",
+      "tex_sha256": "714438098d8a54736b0980f629bd1fbc1a1b37a9d06b5f1286a551296981b68c",
+      "inline": 13,
+      "display": 36
+    },
+    "docs/en-US/05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md": {
+      "outside_sha256": "354e7af3b329fc937d1b7b3f0779312cd6d70189b225412e9f9ef53081267518",
+      "tex_sha256": "541ef72afb1ffe21063854de85668cd1bb99c7e6bceb8b81b19d5f0aa3c97ac3",
+      "inline": 3,
+      "display": 28
+    },
+    "docs/en-US/06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md": {
+      "outside_sha256": "ffb28a0693b0a32bd0b22eed8849002e92fafc22a8ef940a78489b4d89b17bb1",
+      "tex_sha256": "6a051924c4723561f5434c082f42fcacd604902d1c9f8fcd978a7ed3763628fe",
+      "inline": 20,
+      "display": 61
+    },
+    "docs/en-US/07_3D_GENERATION_REPRESENTATION_DATASHEET.md": {
+      "outside_sha256": "6df66c7f2413f05c84e4993e02037c44e2c39df3cfde272b6472958772909480",
+      "tex_sha256": "48b1da61708ce544f99ac44f50a584638afe9264ab28a395978f27275c18d3c8",
+      "inline": 3,
+      "display": 25
+    },
+    "docs/en-US/08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md": {
+      "outside_sha256": "ca2f8c041297c7a2706eb80e4bb2fea67d954c5916d35df85b3ad4d824839699",
+      "tex_sha256": "c54bf69391314ffb3680898757ceec5d6807584dc879fe6244511244b3aa513a",
+      "inline": 1,
+      "display": 34
+    },
+    "docs/en-US/09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md": {
+      "outside_sha256": "61694c5b2bda37f6068876746ae4e5419d22a44d5530f9913ccbfcbc8faad53d",
+      "tex_sha256": "e8591f3463c7f3ac64c1ec49b8ef9f08b5c8e34d7e98ec546479f6e94e9f0e58",
+      "inline": 34,
+      "display": 72
+    },
+    "docs/en-US/10_MULTIMODAL_VLM_OMNI_DATASHEET.md": {
+      "outside_sha256": "efaa259dc1f8a6ff260fc04be15cc7a7a2946fe32278ca55917f94f8e5dee7a2",
+      "tex_sha256": "265bd69f49a7d757e73259f5f8a4fe29711d84184a885dab952ace199fc18846",
+      "inline": 8,
+      "display": 53
+    },
+    "docs/en-US/11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md": {
+      "outside_sha256": "f561509e17d8cbdd17cd37566f45803cede2df29d210aa59ee74f13ee826c4f3",
+      "tex_sha256": "4346d665cb777ed893454392eac62212019ba0d49342b48a08f4d8ffbd872bf4",
+      "inline": 10,
+      "display": 59
+    },
+    "docs/en-US/12_REWARD_VERIFIER_JUDGE_DATASHEET.md": {
+      "outside_sha256": "77d82fc9a7f8b2b2321dba04d15c04ea814551a7e2a9472daaea8e39fb83a41f",
+      "tex_sha256": "04f3fa1d29a8331aa1444f481f6b22fe6d7bac3cd44f3064bf3f50024dfc2441",
+      "inline": 7,
+      "display": 53
+    },
+    "docs/en-US/13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md": {
+      "outside_sha256": "11541bfd6688c538aed7d9782089e855c5929118ea7941505f1828f18cf316e1",
+      "tex_sha256": "dd08304ddd96aecde775b31a0a42d964c2b6cf85eaeb2726c31c86ae0ae46e1a",
+      "inline": 7,
+      "display": 65
+    },
+    "docs/en-US/14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md": {
+      "outside_sha256": "93d7ca3e97f109c04db2c61ffd385100e4f9149c1c75b9177190918f1c266532",
+      "tex_sha256": "281f4aaff9ae955568b062b4079ca1c09e2489996e332547e84d31812db71ee0",
+      "inline": 6,
+      "display": 59
+    },
+    "docs/en-US/15_GRAPH_FOUNDATION_MODELS_DATASHEET.md": {
+      "outside_sha256": "90805e89e18fb97c3d3780c3d151405892a7dcc05e1985a092d95438f049bcf2",
+      "tex_sha256": "54a6b8975973cd521bd076649f8d0bca4ac6895f882fbcb641f36cebcf498ce9",
+      "inline": 14,
+      "display": 49
+    },
+    "docs/en-US/16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md": {
+      "outside_sha256": "9e580ad0aa0246cdd3f45b6eb4b4d8836925b4babb0d65ee0ce03876691dd4b3",
+      "tex_sha256": "720333f92895209d43e2747199ce4acfd5036ced2bdcec56841e9f77ac6b4b8a",
+      "inline": 36,
+      "display": 109
+    },
+    "docs/en-US/17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md": {
+      "outside_sha256": "c15d8705f0d486294d856acace662a233b389adc78a024e93ed581e9e93b065a",
+      "tex_sha256": "18868afe3c67d22dd5301eba43c068882aad760352600fcbf9aeab1f5477db48",
+      "inline": 23,
+      "display": 100
+    },
+    "docs/en-US/18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md": {
+      "outside_sha256": "c270a2828d92681839da356c6ec38bcc810dc8da2c29d7c7016e089ca9beabbd",
+      "tex_sha256": "99964ab986d1aba08e541ec0da094d535f7677278b990c52193518c68d470cc1",
+      "inline": 1,
+      "display": 81
+    },
+    "docs/en-US/19_PARAMETER_GLOSSARY_AND_REGISTRY.md": {
+      "outside_sha256": "6f0ec41221602569dbddb7669dcbbde043ce544e7934e17c2d72010f685fd642",
+      "tex_sha256": "2e7e5a18db27f46670617e7c7ea588a1a4db1e1205d95057d324b1962e8fc101",
+      "inline": 58,
+      "display": 9
+    },
+    "docs/en-US/CHANGELOG.md": {
+      "outside_sha256": "823bb2e8cb09885641c44b9100407464de65e8e860497171e1e329acef23af51",
+      "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "inline": 0,
+      "display": 0
+    },
+    "docs/en-US/CONVENTIONS.md": {
+      "outside_sha256": "552eb865a8cfc9417ecc1ee6d7edf5af18ade3f4b0b40e1dca13c6298d580ac6",
+      "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+      "inline": 9,
+      "display": 14
+    },
+    "docs/pt-BR/00_README_INDEX.md": {
+      "outside_sha256": "f26c9a01d888159cdadfedb309c373efb2e3f15c336a9c5cd8871bcbf3cfc4c4",
+      "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+      "inline": 0,
+      "display": 15
+    },
+    "docs/pt-BR/01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md": {
+      "outside_sha256": "000b017f40b6318c9b4099e6d110583b2b675ca48f6a82322054176eeb73a6f4",
+      "tex_sha256": "df5e0dbe30fdbf38ae1b91aefbd9a9e828a78b5c63410e2597747bbf284d2599",
+      "inline": 30,
+      "display": 55
+    },
+    "docs/pt-BR/02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md": {
+      "outside_sha256": "0a1f6a1fce037b58c5c1bf01f5ffb69501a610e959f9e8e248fe587bbad9cd91",
+      "tex_sha256": "95e816024447c1eaa7685abda64545821be75babdcd0f843091f96108c63caa7",
+      "inline": 24,
+      "display": 76
+    },
+    "docs/pt-BR/03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md": {
+      "outside_sha256": "d82220963ae4292c98e51c08e73e22fd534b9c5ce89771148a5168cbf6fc63e3",
+      "tex_sha256": "2d5e955ddeec86391643d3df3d7c2fdca65f3bba492e2e3f9e5fbcce88396157",
+      "inline": 2,
+      "display": 26
+    },
+    "docs/pt-BR/04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md": {
+      "outside_sha256": "9b350ff0de5ee8f87e2758518116eb123079d6bfd01336e6e8864778c29a2730",
+      "tex_sha256": "e3f3ec40976cc10b35e2a481b287976b1946175985e9c75f37a54c85a6c8c581",
+      "inline": 13,
+      "display": 36
+    },
+    "docs/pt-BR/05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md": {
+      "outside_sha256": "c9cbcb241b2f5dd57a0789bc8f3059e907b06d2129c7859b616c99e7ae030d46",
+      "tex_sha256": "541ef72afb1ffe21063854de85668cd1bb99c7e6bceb8b81b19d5f0aa3c97ac3",
+      "inline": 3,
+      "display": 28
+    },
+    "docs/pt-BR/06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md": {
+      "outside_sha256": "238e60406cc8afc50ab326f8e89384455871007ae2fee82193761e7a7ccbd986",
+      "tex_sha256": "6c864a5bacd2c26c4578e7bb2613388f887cb8f4ffd4b108b1cd95c9a219cddd",
+      "inline": 20,
+      "display": 61
+    },
+    "docs/pt-BR/07_3D_GENERATION_REPRESENTATION_DATASHEET.md": {
+      "outside_sha256": "ead8e131797684d3317ad2a9f75ad70876e455b5977c384419ac977d3cd3b375",
+      "tex_sha256": "48b1da61708ce544f99ac44f50a584638afe9264ab28a395978f27275c18d3c8",
+      "inline": 3,
+      "display": 25
+    },
+    "docs/pt-BR/08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md": {
+      "outside_sha256": "231e2a125786ca0d61d07a97cfbbc0ce1250b06b138830f39fe8103dd03a1a58",
+      "tex_sha256": "c54bf69391314ffb3680898757ceec5d6807584dc879fe6244511244b3aa513a",
+      "inline": 1,
+      "display": 34
+    },
+    "docs/pt-BR/09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md": {
+      "outside_sha256": "c469e5658564aeab132282858e3eb36b1e129a80346536374e7ac900d72d705c",
+      "tex_sha256": "e238a7efe52c7694c55d3fe72b99d077bebfbe04711a1d66949a9a37194fc4ca",
+      "inline": 34,
+      "display": 72
+    },
+    "docs/pt-BR/10_MULTIMODAL_VLM_OMNI_DATASHEET.md": {
+      "outside_sha256": "9b0744344c3821a833be890502cad7b64cd3efedadc1b3649e67cd64ccba8b75",
+      "tex_sha256": "36ebf59e9639cfb200ec59d05db1897c10b5683dea9138a9f90c2e1577fb5143",
+      "inline": 8,
+      "display": 53
+    },
+    "docs/pt-BR/11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md": {
+      "outside_sha256": "9b688e463013dd3c9888636226268d566784f4fbc2b27db8aab66d88b1a17500",
+      "tex_sha256": "4346d665cb777ed893454392eac62212019ba0d49342b48a08f4d8ffbd872bf4",
+      "inline": 10,
+      "display": 59
+    },
+    "docs/pt-BR/12_REWARD_VERIFIER_JUDGE_DATASHEET.md": {
+      "outside_sha256": "accba3d80d933b5f327904e05c6df9c8a1772d6ac85708a545366faa35310e01",
+      "tex_sha256": "5b84cbfe793dcd9fd3c5f5dbfc5b7f691ebbdfe54321172bc2f289cec1f19ae6",
+      "inline": 7,
+      "display": 53
+    },
+    "docs/pt-BR/13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md": {
+      "outside_sha256": "a4c9687decac6a8d03f0937799072b4a8275be1c61dd1ccd30e34f72e1eb208f",
+      "tex_sha256": "d6861963f71f68e97dbb6d95a5080bb765669af528d9f5fde8a626e6139422ba",
+      "inline": 7,
+      "display": 65
+    },
+    "docs/pt-BR/14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md": {
+      "outside_sha256": "9311cd17faf3d69c5c0cfde5c0ac2b862f4664870032be365d51e010d8db3351",
+      "tex_sha256": "281f4aaff9ae955568b062b4079ca1c09e2489996e332547e84d31812db71ee0",
+      "inline": 6,
+      "display": 59
+    },
+    "docs/pt-BR/15_GRAPH_FOUNDATION_MODELS_DATASHEET.md": {
+      "outside_sha256": "6c5565fd66cd285be31821312ce6ed46ad7cae1f41fff92f9046ae06e059fbfd",
+      "tex_sha256": "54a6b8975973cd521bd076649f8d0bca4ac6895f882fbcb641f36cebcf498ce9",
+      "inline": 14,
+      "display": 49
+    },
+    "docs/pt-BR/16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md": {
+      "outside_sha256": "040f4350724bcaf616a451766b7a129d33f84fd09339a93fce621c04f1dee894",
+      "tex_sha256": "720333f92895209d43e2747199ce4acfd5036ced2bdcec56841e9f77ac6b4b8a",
+      "inline": 36,
+      "display": 109
+    },
+    "docs/pt-BR/17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md": {
+      "outside_sha256": "f794230b11a59f76f686ac92af7b88ba18c38b681546b2367d81e3fb249db1a7",
+      "tex_sha256": "aa5f8caf28df5f15879957b8d85e111bce7dba09bf4b667376e1c5dc9c96763a",
+      "inline": 22,
+      "display": 100
+    },
+    "docs/pt-BR/18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md": {
+      "outside_sha256": "e65a6e41ef008cca50c7c725d5a1548c1b3d677b988fadf05c93501cd67f8a77",
+      "tex_sha256": "99964ab986d1aba08e541ec0da094d535f7677278b990c52193518c68d470cc1",
+      "inline": 1,
+      "display": 81
+    },
+    "docs/pt-BR/19_PARAMETER_GLOSSARY_AND_REGISTRY.md": {
+      "outside_sha256": "daa34fe507fabeed0aa4806912e955f410bbba12cec691a6deeb512c2fa997bb",
+      "tex_sha256": "43a017fe20b496027cde6d1be5e9a2e674ac74460389ccbf9ff08da7bdceb4f6",
+      "inline": 58,
+      "display": 9
+    },
+    "docs/pt-BR/CHANGELOG.md": {
+      "outside_sha256": "3e6795f81fd05d2b909ed5e864cdeb1b2332935d7b1d6bd0383024057ad7ffcc",
+      "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "inline": 0,
+      "display": 0
+    },
+    "docs/pt-BR/CONVENTIONS.md": {
+      "outside_sha256": "9bb7799b75cd6c2f0f3b96d09e4e0ea78e343f2bc0f679d4110ccb5ed693b9c7",
+      "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+      "inline": 9,
+      "display": 14
+    }
+  }
+}

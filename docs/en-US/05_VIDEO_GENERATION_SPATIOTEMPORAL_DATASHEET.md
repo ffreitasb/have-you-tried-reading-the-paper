@@ -6,21 +6,21 @@ updated: 2026-10-01
 
 # Video Generation — Spatiotemporal Latent Datasheet v2.0
 
-> Video is not “image + motion slider.” It is generation over a compressed spatiotemporal state, where identity, geometry, camera, motion, and sometimes audio must remain coherent across \(T\).
+> Video is not “image + motion slider.” It is generation over a compressed spatiotemporal state, where identity, geometry, camera, motion, and sometimes audio must remain coherent across $`T`$.
 
 ## 1. Fundamental tensor
 
 Pixels:
 
-\[
+```math
 X\in\mathbb{R}^{B\times T\times H\times W\times C}
-\]
+```
 
 After a spatiotemporal codec/VAE:
 
-\[
+```math
 Z\in\mathbb{R}^{B\times T_l\times H_l\times W_l\times C_l}
-\]
+```
 
 ---
 
@@ -28,13 +28,13 @@ Z\in\mathbb{R}^{B\times T_l\times H_l\times W_l\times C_l}
 
 Define:
 
-\[
+```math
 r_s=\frac{H}{H_l}=\frac{W}{W_l}
-\]
+```
 
-\[
+```math
 r_t=\frac{T}{T_l}
-\]
+```
 
 The stronger the compression, the lower the denoiser/DiT cost, but the more work the decoder must do to reconstruct detail and motion.
 
@@ -48,15 +48,15 @@ Observable resolution such as `1920×1080×N frames` is not the dimensionality d
 
 If the latent is patchified:
 
-\[
+```math
 N=T_pH_pW_p
-\]
+```
 
 Naive global attention:
 
-\[
+```math
 O(N^2)
-\]
+```
 
 That is why video needs:
 
@@ -75,9 +75,9 @@ That is why video needs:
 
 All frames/latents belong to the same state:
 
-\[
+```math
 Z_t=[z_t^1,z_t^2,\ldots,z_t^T]
-\]
+```
 
 The model may denoise/transport the sequence jointly.
 
@@ -91,15 +91,15 @@ There is no mathematical law saying “the last frame is always worse.”
 
 When future blocks explicitly depend on previous outputs:
 
-\[
+```math
 Z_{chunk,k+1}\sim p(Z\mid Z_{chunk,\le k},C)
-\]
+```
 
 errors may accumulate:
 
-\[
+```math
 e_{k+1}=f(e_k,\ldots)
-\]
+```
 
 Here, accumulated temporal drift is a genuine structural concern.
 
@@ -123,9 +123,9 @@ the harder it is to maintain temporal correspondence.
 
 ### Heuristic, not a law
 
-\[
+```math
 Motion\ complexity\uparrow\Rightarrow Coherence\ risk\uparrow
-\]
+```
 
 but the strength of that relationship depends on architecture and training.
 
@@ -135,9 +135,9 @@ but the strength of that relationship depends on architecture and training.
 
 For a point/feature:
 
-\[
+```math
 (x_t,y_t)\rightarrow(x_{t+1},y_{t+1})
-\]
+```
 
 The model must infer simultaneously:
 
@@ -155,21 +155,21 @@ The model must infer simultaneously:
 
 ## 8. Text-to-video
 
-\[
+```math
 C=C_{text}
-\]
+```
 
 ### Image-to-video
 
-\[
+```math
 C=\{C_{text},C_{image}\}
-\]
+```
 
 ### Start/end/keyframe conditioning
 
-\[
+```math
 C=\{frame_{start},frame_{end},keyframes,\ldots\}
-\]
+```
 
 ### Camera conditioning
 
@@ -200,11 +200,11 @@ Classify it as `MODEL/PIPE`.
 
 Same general formulation:
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
-but now \(f\) acts over a spatiotemporal tensor.
+but now $`f`$ acts over a spatiotemporal tensor.
 
 High guidance can increase prompt adherence while also amplifying inconsistency, oversharpening, or flicker depending on the model.
 
@@ -214,9 +214,9 @@ High guidance can increase prompt adherence while also amplifying inconsistency,
 
 Modern pipelines may create a “degraded” prediction by perturbing self-attention/blocks and push the trajectory away from it:
 
-\[
+```math
 f_{guided}=f_{base}+s_{stg}(f_{base}-f_{perturbed})
-\]
+```
 
 The idea is to strengthen spatiotemporal structure/coherence using a differential direction, analogous in spirit to CFG but based on a different perturbation.
 
@@ -228,9 +228,9 @@ LTX-2.x exposes STG as an explicit control.
 
 In joint video+audio models, one prediction may be obtained with cross-modality attention disabled and used as a weak reference:
 
-\[
+```math
 f_{guided}=f+ s_m(f-f_{isolated})
-\]
+```
 
 This shows that guidance is a general family of **contrasts between predictions**, not merely positive prompt vs negative prompt.
 
@@ -242,11 +242,11 @@ This shows that guidance is a general family of **contrasts between predictions*
 
 FPS is an output property:
 
-\[
+```math
 Duration=Frames/FPS
-\]
+```
 
-But model cost depends on \(T_l\), not directly on final FPS when temporal compression/interpolation is involved.
+But model cost depends on $`T_l`$, not directly on final FPS when temporal compression/interpolation is involved.
 
 ### Do not confuse
 
@@ -262,9 +262,9 @@ These are mathematically different pipelines.
 
 A separate model may estimate intermediate frames:
 
-\[
+```math
 I_{t+\alpha}=F(I_t,I_{t+1},\alpha)
-\]
+```
 
 This does not add original temporal information from the generative core in the same way as generating additional latent frames.
 
@@ -274,27 +274,27 @@ This does not add original temporal information from the generative core in the 
 
 ## 15. Duration
 
-\[
+```math
 T=FPS\cdot duration
-\]
+```
 
 But latent frames:
 
-\[
+```math
 T_l\approx T/r_t
-\]
+```
 
 Long videos may use windows:
 
-\[
+```math
 W_1,W_2,\ldots,W_k
-\]
+```
 
 with overlap:
 
-\[
+```math
 |W_i\cap W_{i+1}|>0
-\]
+```
 
 More overlap increases continuity and compute.
 
@@ -321,9 +321,9 @@ The correct solution depends on topology, not a rule such as “cut off the last
 
 Ideally decompose:
 
-\[
+```math
 Motion_{observed}=Motion_{camera}+Motion_{objects}+deformation
-\]
+```
 
 Prompting everything as one sentence leaves the model to infer that decomposition. Control representations can reduce ambiguity.
 
@@ -333,21 +333,21 @@ Prompting everything as one sentence leaves the model to infer that decompositio
 
 ## 18. Token count
 
-\[
+```math
 N=T_pH_pW_p
-\]
+```
 
 Double the duration while holding everything else constant:
 
-\[
+```math
 N\approx2N
-\]
+```
 
 Naive global attention:
 
-\[
+```math
 N^2\rightarrow4N^2
-\]
+```
 
 That is the structural reason for compression and factorized attention.
 
@@ -357,9 +357,9 @@ That is the structural reason for compression and factorized attention.
 
 CFG + STG + modality guidance may require multiple forward passes per step.
 
-\[
+```math
 Cost\approx NFE\times passes_{guidance}\times C_{forward}
-\]
+```
 
 A guidance slider may therefore change both **quality and cost**.
 

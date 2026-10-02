@@ -11,17 +11,17 @@ updated: 2026-10-01
 
 Main rule:
 
-\[
+```math
 \boxed{
 Name \neq Meaning
 }
-\]
+```
 
 Meaning is defined by the triple:
 
-\[
+```math
 \boxed{(Domain,Layer,Definition)}
-\]
+```
 
 Example: `temperature` has multiple incompatible meanings.
 
@@ -59,23 +59,23 @@ See [CONVENTIONS](CONVENTIONS.md) for editorial and notation rules.
 
 | Symbol | Default meaning |
 |---|---|
-| \(B\) | batch size / number of sequences |
-| \(T\) | temporal or sequence length; context must disambiguate |
-| \(L\) | number of layers; loss uses \(\mathcal L\) |
-| \(d\) | generic hidden/embedding dimension |
-| \(d_h\) | dimension per attention head |
-| \(H\) | image height **or** number of heads; avoid unsubscripted use in ambiguous formulas |
-| \(W\) | image width **or** weight matrix; use context/subscripts |
-| \(C\) | channels/conditioning depending on context |
-| \(V\) | vocabulary size or value tensor; prefer \(|\mathcal V|\) for vocabulary when ambiguous |
-| \(N\) | generic number of items/tokens/samples |
-| \(K\) | top-K / retrieval K / clusters; always qualify |
-| \(r\) | LoRA/low-rank rank |
-| \(\theta\) | learned model parameters |
-| \(\eta\) | learning rate in training context |
-| \(\epsilon\) | noise/residual/tolerance; always qualify |
-| \(\tau\) | contrastive/calibration temperature when explicitly stated |
-| \(s\) | CFG/guidance scale in diffusion context |
+| $`B`$ | batch size / number of sequences |
+| $`T`$ | temporal or sequence length; context must disambiguate |
+| $`L`$ | number of layers; loss uses $`\mathcal L`$ |
+| $`d`$ | generic hidden/embedding dimension |
+| $`d_h`$ | dimension per attention head |
+| $`H`$ | image height **or** number of heads; avoid unsubscripted use in ambiguous formulas |
+| $`W`$ | image width **or** weight matrix; use context/subscripts |
+| $`C`$ | channels/conditioning depending on context |
+| $`V`$ | vocabulary size or value tensor; prefer $`\vert\mathcal V\vert`$ for vocabulary when ambiguous |
+| $`N`$ | generic number of items/tokens/samples |
+| $`K`$ | top-K / retrieval K / clusters; always qualify |
+| $`r`$ | LoRA/low-rank rank |
+| $`\theta`$ | learned model parameters |
+| $`\eta`$ | learning rate in training context |
+| $`\epsilon`$ | noise/residual/tolerance; always qualify |
+| $`\tau`$ | contrastive/calibration temperature when explicitly stated |
+| $`s`$ | CFG/guidance scale in diffusion context |
 
 ---
 
@@ -85,9 +85,9 @@ See [CONVENTIONS](CONVENTIONS.md) for editorial and notation rules.
 
 | Canonical name | Formula/use | Do not confuse with |
 |---|---|---|
-| Sampling Temperature | \(softmax(z/T)\) | contrastive temperature |
-| Contrastive Temperature | \(\exp(sim/\tau)\) | LLM sampling |
-| Distillation Temperature | softened targets via \(T\) | sampling |
+| Sampling Temperature | $`softmax(z/T)`$ | contrastive temperature |
+| Contrastive Temperature | $`\exp(sim/\tau)`$ | LLM sampling |
+| Distillation Temperature | softened targets via $`T`$ | sampling |
 | Entropy/Policy Temperature | regularization/exploration in RL | sampling |
 | Calibration Temperature | post-hoc temperature scaling | generation randomness |
 
@@ -99,7 +99,7 @@ Never write only “temperature” in a cross-domain document.
 
 | Rank | Meaning |
 |---|---|
-| LoRA rank \(r\) | dimension of the low-rank update |
+| LoRA rank $`r`$ | dimension of the low-rank update |
 | Retrieval rank | document position in a ranking |
 | Matrix rank | algebraic dimension of row/column space |
 | Rank correlation | statistical ordering, e.g. Spearman/Kendall |
@@ -193,11 +193,11 @@ Primary file: [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERE
 
 | Parameter | Tag | Definition | Conceptual unit/range |
 |---|---|---|---|
-| temperature | `INF` | divides logits before softmax | \(T>0\) |
+| temperature | `INF` | divides logits before softmax | $`T>0`$ |
 | top-k | `INF` | keeps K highest-scoring tokens | integer |
-| top-p | `INF` | smallest set with cumulative mass ≥ p | \(0<p\le1\) |
-| min-p | `INF` | cutoff relative to the most probable token | \(0\le p\le1\) |
-| typical-p | `INF` | filters by typicality/self-information | \(0<p\le1\) |
+| top-p | `INF` | smallest set with cumulative mass ≥ p | $`0<p\le1`$ |
+| min-p | `INF` | cutoff relative to the most probable token | $`0\le p\le1`$ |
+| typical-p | `INF` | filters by typicality/self-information | $`0<p\le1`$ |
 | top-n-sigma | `INF` | threshold based on the logit distribution | backend-specific |
 | XTC | `INF` | exclusion/candidate-pruning sampler | backend-specific |
 | adaptive-p | `INF` | adaptive cutoff with state/EMA | backend-specific |
@@ -269,11 +269,11 @@ File: [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSI
 | latent width/height | `STATE` | latent spatial resolution |
 | VAE scale factor | `MODEL` | pixel ↔ latent-resolution ratio |
 | latent channels | `ARCH/MODEL` | channels in latent space |
-| timestep \(t\) | `GEN` | trajectory coordinate |
-| sigma \(\sigma_t\) | `GEN` | noise level |
-| alpha \(\alpha_t\) | `GEN` | signal coefficient |
+| timestep $`t`$ | `GEN` | trajectory coordinate |
+| sigma $`\sigma_t`$ | `GEN` | noise level |
+| alpha $`\alpha_t`$ | `GEN` | signal coefficient |
 | steps / NFE | `INF` | number of evaluations/integration steps |
-| scheduler | `INF` | locations \(t_i/\sigma_i\) on the integration grid |
+| scheduler | `INF` | locations $`t_i/\sigma_i`$ on the integration grid |
 | solver/sampler | `INF` | numerical stepping rule between points |
 | CFG scale | `INF` | conditional/unconditional extrapolation |
 | guidance | `INF/MODEL` | strength/form of conditioning; family-specific definition |
@@ -306,7 +306,7 @@ File: [05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET](05_VIDEO_GENERATION_SPATIOT
 
 | Term | Tag | Definition |
 |---|---|---|
-| frames \(T\) | `STATE` | observable temporal extent |
+| frames $`T`$ | `STATE` | observable temporal extent |
 | latent frames | `STATE` | temporal extent after compression |
 | temporal compression ratio | `MODEL` | frames ↔ latent frames |
 | spatial compression | `MODEL` | pixels ↔ latent spatial grid |
@@ -369,13 +369,13 @@ File: [07_3D_GENERATION_REPRESENTATION_DATASHEET](07_3D_GENERATION_REPRESENTATIO
 
 | Term | Definition |
 |---|---|
-| vertices \(V\) | mesh positions |
-| faces \(F\) | mesh connectivity |
+| vertices $`V`$ | mesh positions |
+| faces $`F`$ | mesh connectivity |
 | SDF | signed distance field |
 | density field | volumetric/NeRF-like density |
-| Gaussian mean \(\mu\) | splat position |
-| covariance \(\Sigma\) | Gaussian shape/orientation |
-| opacity \(\alpha\) | volumetric contribution |
+| Gaussian mean $`\mu`$ | splat position |
+| covariance $`\Sigma`$ | Gaussian shape/orientation |
+| opacity $`\alpha`$ | volumetric contribution |
 | SH/features | directional appearance/color |
 | isosurface threshold | level set used to extract a surface |
 | marching cubes resolution | grid used during extraction |
@@ -414,12 +414,12 @@ File: [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKE
 
 | Term | Tag | Definition |
 |---|---|---|
-| embedding dimension \(d\) | `MODEL` | vector dimensionality |
+| embedding dimension $`d`$ | `MODEL` | vector dimensionality |
 | pooling | `MODEL/PIPE` | sequence → vector |
-| L2 normalization | `PIPE/MODEL` | \(z/\|z\|\) |
+| L2 normalization | `PIPE/MODEL` | $`z/\Vert z\Vert`$ |
 | cosine similarity | `INF` | normalized angular similarity |
 | dot product | `INF` | inner product |
-| contrastive temperature \(\tau\) | `TRAIN/OBJ` | sharpness of the contrastive loss |
+| contrastive temperature $`\tau`$ | `TRAIN/OBJ` | sharpness of the contrastive loss |
 | chunk size | `PIPE` | size of an indexed fragment |
 | chunk overlap | `PIPE` | duplicated content across chunks |
 | retrieval K | `INF` | number of retrieved candidates |
@@ -441,7 +441,7 @@ File: [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md
 
 | Term | Tag | Definition |
 |---|---|---|
-| reward \(r\) | `OBJ/EVAL` | scalar utility proxy |
+| reward $`r`$ | `OBJ/EVAL` | scalar utility proxy |
 | chosen/rejected | `DATA/ALIGN` | preference pair |
 | ORM | `MODEL` | outcome reward model |
 | PRM | `MODEL` | process reward model |
@@ -481,12 +481,12 @@ File: [13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET](13_WORLD_MODEL_VLA_EMBODIED_AI_
 
 | Term | Definition |
 |---|---|
-| state \(s_t\) | representation of the environment |
-| action \(a_t\) | applied command |
-| transition model | \(p(s_{t+1}|s_t,a_t)\) |
-| observation \(o_t\) | partial measurement of the state |
+| state $`s_t`$ | representation of the environment |
+| action $`a_t`$ | applied command |
+| transition model | $`p(s_{t+1}\vert s_t,a_t)`$ |
+| observation $`o_t`$ | partial measurement of the state |
 | belief state | distribution/latent over hidden state |
-| rollout horizon \(H\) | imagined steps |
+| rollout horizon $`H`$ | imagined steps |
 | action chunk | block-predicted action sequence |
 | diffusion policy | trajectory denoising in action space |
 | flow policy | vector field over an action trajectory |
@@ -508,7 +508,7 @@ File: [14_TIME_SERIES_TABULAR_FOUNDATION_MODELS](14_TIME_SERIES_TABULAR_FOUNDATI
 | stride | shift between patches |
 | frequency | sample interval/rate |
 | covariates | auxiliary variables |
-| quantile \(\tau\) | level of the predicted distribution |
+| quantile $`\tau`$ | level of the predicted distribution |
 | prediction interval | probabilistic range |
 | MAE | mean absolute error |
 | RMSE | root mean squared error |
@@ -539,13 +539,13 @@ File: [15_GRAPH_FOUNDATION_MODELS_DATASHEET](15_GRAPH_FOUNDATION_MODELS_DATASHEE
 
 | Term | Definition |
 |---|---|
-| node | element \(v\in V\) |
-| edge | relation \((u,v)\in E\) |
+| node | element $`v\in V`$ |
+| edge | relation $`(u,v)\in E`$ |
 | degree | number of connections |
 | adjacency | connectivity structure |
 | message passing | neighbor → node aggregation |
-| neighborhood \(\mathcal N(v)\) | neighboring nodes |
-| aggregation \(\oplus\) | sum/mean/max/attention, etc. |
+| neighborhood $`\mathcal N(v)`$ | neighboring nodes |
+| aggregation $`\oplus`$ | sum/mean/max/attention, etc. |
 | graph depth | message-passing layers |
 | oversmoothing | node states become too similar |
 | oversquashing | distant information compressed through a bottleneck |
@@ -562,7 +562,7 @@ File: [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTAT
 
 | Parameter | Tag | Definition |
 |---|---|---|
-| learning rate \(\eta\) | `TRAIN` | base magnitude of optimizer updates |
+| learning rate $`\eta`$ | `TRAIN` | base magnitude of optimizer updates |
 | batch size | `TRAIN` | samples per logical update |
 | microbatch | `TRAIN` | samples per physical forward/backward pass |
 | gradient accumulation | `TRAIN` | microsteps accumulated before optimizer step |
@@ -584,7 +584,7 @@ File: [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTAT
 |---|---|
 | SFT | supervised fine-tuning |
 | completion-only loss | prompt tokens masked out of the loss |
-| preference pair | \((x,y_w,y_l)\) |
+| preference pair | $`(x,y_w,y_l)`$ |
 | reward model | preferences → scalar |
 | DPO beta | strength/log-ratio scaling in DPO |
 | KL coefficient | limits policy drift |
@@ -601,7 +601,7 @@ File: [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTAT
 
 | Term | Definition |
 |---|---|
-| LoRA rank \(r\) | low-rank dimension |
+| LoRA rank $`r`$ | low-rank dimension |
 | LoRA alpha | scale of the adapter update |
 | target modules | matrices receiving the adapter |
 | LoRA dropout | dropout on the adapter path |
@@ -634,7 +634,7 @@ File: [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTAT
 | Term | Definition |
 |---|---|
 | linear merge | weighted average of parameters |
-| task vector | \(\tau=\theta_{ft}-\theta_{base}\) |
+| task vector | $`\tau=\theta_{ft}-\theta_{base}`$ |
 | task arithmetic | weighted sum of task vectors |
 | SLERP | spherical linear interpolation |
 | TIES | trim + sign resolve + merge |
@@ -678,9 +678,9 @@ File: [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMAR
 
 | Term | Definition |
 |---|---|
-| sample mean \(\bar x\) | estimate of the mean |
-| sample variance \(s^2\) | dispersion estimate |
-| standard error | \(s/\sqrt N\) |
+| sample mean $`\bar x`$ | estimate of the mean |
+| sample variance $`s^2`$ | dispersion estimate |
+| standard error | $`s/\sqrt N`$ |
 | confidence interval | interval estimate |
 | bootstrap | resampling with replacement |
 | paired comparison | same unit evaluated by A and B |
@@ -736,11 +736,11 @@ may map to different mechanisms in different products.
 
 Rule:
 
-\[
+```math
 UIKnob
 \xrightarrow{document}
 UnderlyingParameter(s)
-\]
+```
 
 Without that mapping, do not promote the knob into a law in a datasheet.
 
@@ -785,9 +785,9 @@ Prefer:
 - bytes;
 - MiB/GiB for binary memory.
 
-\[
+```math
 1GiB=2^{30}bytes
-\]
+```
 
 Use GB only when the source/vendor uses decimal units, and make that explicit.
 
@@ -866,9 +866,9 @@ Distinguish:
 
 Example:
 
-\[
+```math
 T>0
-\]
+```
 
 for sampling temperature.
 
@@ -956,17 +956,17 @@ This classification should accompany causal interpretations.
 
 When useful, record the local sign:
 
-\[
+```math
 \frac{\partial Y}{\partial x}>0
-\]
+```
 
 but only if the relationship is monotonic in the regime being discussed.
 
 Otherwise:
 
-\[
+```math
 Y(x)\text{ is non-monotonic}
-\]
+```
 
 is more accurate than drawing a misleading arrow.
 
@@ -1016,9 +1016,9 @@ Before adding a new term, ask:
 
 If the definition does not change:
 
-\[
+```math
 NewName\rightarrow Alias
-\]
+```
 
 not a new entity.
 
@@ -1072,11 +1072,11 @@ When someone says:
 
 first ask yourself:
 
-\[
+```math
 \boxed{
 Which\ X?
 }
-\]
+```
 
 Then:
 

@@ -16,30 +16,30 @@ Related: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UNIFIED
 
 Graph:
 
-\[
+```math
 G=(V,E)
-\]
+```
 
 with:
 
-- nodes \(V\);
-- edges \(E\subseteq V\times V\).
+- nodes $`V`$;
+- edges $`E\subseteq V\times V`$.
 
 With attributes:
 
-\[
+```math
 G=(V,E,X_V,X_E)
-\]
+```
 
 where:
 
-\[
+```math
 X_V\in\mathbb R^{|V|\times d_v}
-\]
+```
 
-\[
+```math
 X_E\in\mathbb R^{|E|\times d_e}
-\]
+```
 
 ---
 
@@ -61,19 +61,19 @@ X_E\in\mathbb R^{|E|\times d_e}
 
 # 3. Permutation invariance/equivariance
 
-If we relabel node IDs using a permutation \(P\), the graph's structural meaning does not change.
+If we relabel node IDs using a permutation $`P`$, the graph's structural meaning does not change.
 
 For graph-level prediction we want invariance:
 
-\[
+```math
 f(PX,PAP^T)=f(X,A)
-\]
+```
 
 For node-level representations we want equivariance:
 
-\[
+```math
 F(PX,PAP^T)=PF(X,A)
-\]
+```
 
 This is a fundamental symmetry that a conventional sequence does not preserve automatically.
 
@@ -81,30 +81,30 @@ This is a fundamental symmetry that a conventional sequence does not preserve au
 
 # 4. Message Passing Neural Network
 
-State of node \(v\) at layer \(l\):
+State of node $`v`$ at layer $`l`$:
 
-\[
+```math
 h_v^{(l)}
-\]
+```
 
 Message:
 
-\[
+```math
 m_v^{(l)}
 =
 \bigoplus_{u\in\mathcal N(v)}
 \psi_l(h_v^{(l)},h_u^{(l)},e_{uv})
-\]
+```
 
 Update:
 
-\[
+```math
 h_v^{(l+1)}
 =
 \phi_l(h_v^{(l)},m_v^{(l)})
-\]
+```
 
-\(\bigoplus\) should typically be permutation-invariant:
+$`\bigoplus`$ should typically be permutation-invariant:
 
 - sum;
 - mean;
@@ -117,19 +117,19 @@ h_v^{(l+1)}
 
 After 1 layer, a node sees its 1-hop neighborhood.
 
-After \(L\) layers:
+After $`L`$ layers:
 
-\[
+```math
 ReceptiveField\approx L-hop
-\]
+```
 
 But neighborhood size can grow exponentially:
 
-\[
+```math
 |N_L(v)|\sim d^L
-\]
+```
 
-for average degree \(d\), before accounting for overlap.
+for average degree $`d`$, before accounting for overlap.
 
 This creates memory and sampling problems.
 
@@ -139,9 +139,9 @@ This creates memory and sampling problems.
 
 With many layers, node embeddings may converge:
 
-\[
+```math
 \|h_u^{(L)}-h_v^{(L)}\|\rightarrow0
-\]
+```
 
 and lose discriminative power.
 
@@ -153,11 +153,11 @@ More depth does not automatically mean better representations.
 
 Large amounts of distant information must pass through a fixed-dimensional bottleneck:
 
-\[
+```math
 Many\ distant\ signals
 \rightarrow
 h_v\in\mathbb R^d
-\]
+```
 
 Even without oversmoothing, the ability to transmit long-range dependencies can collapse.
 
@@ -167,31 +167,31 @@ This is a topological/information bottleneck.
 
 # 8. Graph Attention
 
-For edge \((v,u)\):
+For edge $`(v,u)`$:
 
-\[
+```math
 q_v=W_Qh_v,
 \quad k_u=W_Kh_u,
 \quad v_u=W_Vh_u
-\]
+```
 
 Score:
 
-\[
+```math
 e_{vu}=\frac{q_v^Tk_u}{\sqrt d}+b_{vu}
-\]
+```
 
-\[
+```math
 \alpha_{vu}=softmax_{u\in\mathcal N(v)}(e_{vu})
-\]
+```
 
 Update:
 
-\[
+```math
 h'_v=\sum_{u\in\mathcal N(v)}\alpha_{vu}v_u
-\]
+```
 
-Bias \(b_{vu}\) may encode structure, relation type, or distance.
+Bias $`b_{vu}`$ may encode structure, relation type, or distance.
 
 ---
 
@@ -211,33 +211,33 @@ Structure must be injected through mechanisms such as:
 
 The fundamental question is:
 
-\[
+```math
 How\ is\ topology\ represented\ to\ attention?
-\]
+```
 
 ---
 
 # 10. Laplacian positional encoding
 
-Adjacency \(A\), degree \(D\).
+Adjacency $`A`$, degree $`D`$.
 
 Graph Laplacian:
 
-\[
+```math
 L=D-A
-\]
+```
 
 or normalized:
 
-\[
+```math
 L_{sym}=I-D^{-1/2}AD^{-1/2}
-\]
+```
 
 Eigenvectors:
 
-\[
+```math
 Lu_i=\lambda_i u_i
-\]
+```
 
 may provide spectral coordinates.
 
@@ -251,15 +251,15 @@ Eigenvectors have sign ambiguities and degeneracies; the architecture must accou
 
 Transition matrix:
 
-\[
+```math
 P=D^{-1}A
-\]
+```
 
-Return/visit probabilities after \(k\) steps:
+Return/visit probabilities after $`k`$ steps:
 
-\[
+```math
 P^k
-\]
+```
 
 carry local and global structural information.
 
@@ -269,20 +269,20 @@ carry local and global structural information.
 
 Types:
 
-\[
+```math
 type(v)\in\mathcal T_V
-\]
+```
 
-\[
+```math
 type(e)\in\mathcal T_E
-\]
+```
 
 Messages may depend on relation type:
 
-\[
+```math
 m_{u\rightarrow v}
 =\psi_{type(e)}(h_u,h_v)
-\]
+```
 
 Knowledge graphs are a natural instance of this setting.
 
@@ -292,15 +292,15 @@ Knowledge graphs are a natural instance of this setting.
 
 An edge carries a timestamp:
 
-\[
+```math
 e=(u,v,t)
-\]
+```
 
 State becomes event-dependent:
 
-\[
+```math
 h_v(t^+)=F(h_v(t^-),event_t)
-\]
+```
 
 Now the system has all three simultaneously:
 
@@ -312,9 +312,9 @@ Now the system has all three simultaneously:
 
 # 14. Node-level tasks
 
-\[
+```math
 P(y_v|G,X)
-\]
+```
 
 Examples:
 
@@ -326,15 +326,15 @@ Examples:
 
 # 15. Edge / link prediction
 
-\[
+```math
 P((u,v)\in E|G)
-\]
+```
 
 Simple score:
 
-\[
+```math
 s(u,v)=h_u^Th_v
-\]
+```
 
 or an MLP, bilinear form, or relation-aware scorer.
 
@@ -346,17 +346,17 @@ Negative sampling is a critical part of training.
 
 Readout:
 
-\[
+```math
 z_G=Readout(\{h_v\}_{v\in V})
-\]
+```
 
 The readout must respect permutation invariance.
 
 Then:
 
-\[
+```math
 P(y_G|z_G)
-\]
+```
 
 Example: molecular-property prediction.
 
@@ -366,15 +366,15 @@ Example: molecular-property prediction.
 
 We want:
 
-\[
+```math
 p(G)
-\]
+```
 
 or conditionally:
 
-\[
+```math
 p(G|C)
-\]
+```
 
 Possible decompositions include:
 
@@ -392,9 +392,9 @@ The state has no natural sequential ordering; any serialization imposes an artif
 
 One possible serialization:
 
-\[
+```math
 p(G)=\prod_t p(action_t|action_{<t})
-\]
+```
 
 with actions such as:
 
@@ -418,9 +418,9 @@ Corruption can be applied to:
 
 Then denoise:
 
-\[
+```math
 G_t\rightarrow G_{t-1}
-\]
+```
 
 The process must respect structural and discrete constraints.
 
@@ -447,9 +447,9 @@ There is no universal tokenizer analogous to BPE.
 
 Goal: learn an operator transferable across graphs and tasks:
 
-\[
+```math
 f_\theta(G,task/context)\rightarrow output
-\]
+```
 
 Challenges:
 
@@ -465,17 +465,17 @@ Challenges:
 
 A new graph may have:
 
-\[
+```math
 X\in\mathbb R^{N\times d_{new}}
-\]
+```
 
-while the backbone expects \(d_h\).
+while the backbone expects $`d_h`$.
 
 Projector:
 
-\[
+```math
 H=XW_p
-\]
+```
 
 If every dataset requires a new projector, “foundation” loses part of its ideal zero-shot character.
 
@@ -487,10 +487,10 @@ Acacia 2026 is relevant precisely because it aims to accept arbitrary dimensiona
 
 Analogy:
 
-\[
+```math
 ContextGraphs/Labels + QueryGraph
 \rightarrow Prediction
-\]
+```
 
 or examples of node/link tasks embedded in the structural context.
 
@@ -504,23 +504,23 @@ On a very large graph, the full neighborhood is infeasible.
 
 Fanout:
 
-\[
+```math
 K_1,K_2,\ldots,K_L
-\]
+```
 
 Approximate sampled receptive field:
 
-\[
+```math
 N_{sample}\sim\prod_lK_l
-\]
+```
 
 before overlap.
 
 Trade-off:
 
-\[
+```math
 Fanout\uparrow\Rightarrow Coverage\uparrow,Memory\uparrow
-\]
+```
 
 ---
 
@@ -545,29 +545,29 @@ This changes the data-pipeline engineering.
 
 Node states:
 
-\[
+```math
 M_V\approx |V|d_hb
-\]
+```
 
 Edge states:
 
-\[
+```math
 M_E\approx |E|d_eb
-\]
+```
 
 Global attention over all nodes:
 
-\[
+```math
 O(|V|^2)
-\]
+```
 
 quickly becomes infeasible.
 
 Graph structure enables sparse attention/message passing closer to:
 
-\[
+```math
 O(|E|d)
-\]
+```
 
 in many regimes.
 
@@ -602,9 +602,9 @@ This reinforces the idea that graph structure itself can serve as a foundation s
 
 Many graphs contain node text:
 
-\[
+```math
 h_v=Fuse(GraphFeature_v,TextEncoder(text_v))
-\]
+```
 
 Do not confuse a graph foundation model with “an LLM serializing edges.”
 

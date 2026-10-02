@@ -18,9 +18,9 @@ Relacionados: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UN
 
 Série multivariada:
 
-\[
+```math
 X=(x_1,\ldots,x_T),\quad x_t\in\mathbb R^D
-\]
+```
 
 Diferente de texto:
 
@@ -35,27 +35,27 @@ Diferente de texto:
 
 Histórico:
 
-\[
+```math
 X_{1:T}
-\]
+```
 
 Horizonte:
 
-\[
+```math
 H
-\]
+```
 
 Predição pontual:
 
-\[
+```math
 \hat X_{T+1:T+H}=f_\theta(X_{1:T})
-\]
+```
 
 Distribucional:
 
-\[
+```math
 p(X_{T+1:T+H}|X_{1:T})
-\]
+```
 
 A segunda formulação é superior quando múltiplos futuros são plausíveis.
 
@@ -65,15 +65,15 @@ A segunda formulação é superior quando múltiplos futuros são plausíveis.
 
 Cada timestamp vira token/embedding:
 
-\[
+```math
 e_t=\phi(x_t)
-\]
+```
 
 Sequence length:
 
-\[
+```math
 N=T
-\]
+```
 
 Bom para granularidade fina; ruim para sequências longas.
 
@@ -81,26 +81,26 @@ Bom para granularidade fina; ruim para sequências longas.
 
 # 4. Patch tokenization
 
-Patch de comprimento \(P\):
+Patch de comprimento $`P`$:
 
-\[
+```math
 p_i=[x_{iP},\ldots,x_{iP+P-1}]
-\]
+```
 
 Número de tokens:
 
-\[
+```math
 N\approx\frac{T}{P}
-\]
+```
 
 Trade-off:
 
-\[
+```math
 P\uparrow
 \Rightarrow
 SequenceLength\downarrow,
 LocalResolution\downarrow
-\]
+```
 
 Patching é o equivalente temporal de reduzir resolução.
 
@@ -112,15 +112,15 @@ Processos reais contêm frequências diferentes.
 
 Uma representação hierárquica pode manter:
 
-\[
+```math
 X^{(0)},X^{(1)},\ldots,X^{(L)}
-\]
+```
 
 com:
 
-\[
+```math
 T_{l+1}<T_l
-\]
+```
 
 Fine scale captura spikes; coarse scale captura tendência/regime.
 
@@ -132,9 +132,9 @@ Zeus 2026 usa Transformer multiescala e hierarquia em U para equilibrar point fi
 
 Uma série pode sofrer affine transform:
 
-\[
+```math
 x'_t=\frac{x_t-\mu}{\sigma}
-\]
+```
 
 ou normalization local/instance-wise.
 
@@ -142,9 +142,9 @@ Isso ajuda transfer entre séries de escala diferente, mas pode apagar significa
 
 ### Regra
 
-\[
+```math
 Normalization\ choice\in Model\ Contract
-\]
+```
 
 não mero pré-processamento opcional.
 
@@ -154,15 +154,15 @@ não mero pré-processamento opcional.
 
 Contexto pode incluir:
 
-\[
+```math
 C_t=\{calendar,price,promotion,weather,static\ metadata,\ldots\}
-\]
+```
 
 Forecast real:
 
-\[
+```math
 p(Y_{future}|Y_{past},C_{past},C_{future-known})
-\]
+```
 
 Separar:
 
@@ -176,9 +176,9 @@ Separar:
 
 Loss MSE:
 
-\[
+```math
 \mathcal L_{MSE}=\frac1N\sum_i(y_i-\hat y_i)^2
-\]
+```
 
 Ótima para mean prediction sob hipóteses específicas.
 
@@ -188,21 +188,21 @@ Problema: comprime multimodalidade do futuro em média.
 
 # 9. Quantile forecasting
 
-Para quantile \(\tau\):
+Para quantile $`\tau`$:
 
 Pinball loss:
 
-\[
+```math
 L_\tau(y,\hat q)
 =
 \max(\tau(y-\hat q),(\tau-1)(y-\hat q))
-\]
+```
 
 Gera intervalos:
 
-\[
+```math
 [q_{0.1},q_{0.5},q_{0.9}]
-\]
+```
 
 Coverage precisa ser calibrado no domínio.
 
@@ -212,15 +212,15 @@ Coverage precisa ser calibrado no domínio.
 
 Modelo pode parametrizar distribuição:
 
-\[
+```math
 p(y|\theta_t)
-\]
+```
 
 ou gerar amostras:
 
-\[
+```math
 y^{(1)},\ldots,y^{(N)}\sim p_\theta
-\]
+```
 
 Metrics precisam avaliar distribuição, não só mean error.
 
@@ -232,9 +232,9 @@ Continuous Ranked Probability Score mede distribuição predita versus observaç
 
 Forma conceitual:
 
-\[
+```math
 CRPS(F,y)=\int_{-\infty}^{\infty}(F(z)-1[z\ge y])^2dz
-\]
+```
 
 Menor é melhor.
 
@@ -242,18 +242,18 @@ Menor é melhor.
 
 # 12. Autoregressive forecasting
 
-\[
+```math
 p(y_{T+1:T+H}|X)
 =
 \prod_{h=1}^{H}
 p(y_{T+h}|X,y_{T+1:T+h-1})
-\]
+```
 
 Problema:
 
-\[
+```math
 Error_{h}\rightarrow Conditioning_{h+1}
-\]
+```
 
 acumulação de erro.
 
@@ -263,9 +263,9 @@ acumulação de erro.
 
 Prediz horizonte inteiro:
 
-\[
+```math
 \hat Y_{1:H}=f_\theta(X)
-\]
+```
 
 Evita AR error propagation, mas precisa modelar dependência interna do horizonte por outra forma.
 
@@ -275,16 +275,16 @@ Evita AR error propagation, mas precisa modelar dependência interna do horizont
 
 Futuro como trajetória aleatória:
 
-\[
+```math
 Y_{future,\tau}
 =\alpha_\tau Y_{future,0}+\sigma_\tau\epsilon
-\]
+```
 
 ou flow:
 
-\[
+```math
 \frac{dY_\tau}{d\tau}=v_\theta(Y_\tau,\tau,X_{past})
-\]
+```
 
 Útil para gerar **ensemble de futuros plausíveis**, especialmente em domínios multimodais.
 
@@ -294,11 +294,11 @@ Snapshot 2026: KiT aplica Diffusion Transformer + flow matching a trajetórias O
 
 # 15. Masked time-series modeling
 
-Mascare intervalo \(M\):
+Mascare intervalo $`M`$:
 
-\[
+```math
 \mathcal L=\sum_{t\in M}\ell(x_t,\hat x_t)
-\]
+```
 
 Variar o padrão de máscara pode induzir tarefas:
 
@@ -313,17 +313,17 @@ Zeus usa Multi-Objective Temporal Masking para unificar tarefas sem fine-tuning 
 
 # 16. Imputation
 
-Dado mask \(m_t\):
+Dado mask $`m_t`$:
 
-\[
+```math
 \hat x_t=f(X\odot m,m)
-\]
+```
 
 Missingness pode ser informativa:
 
-\[
+```math
 P(missing|state)\neq const
-\]
+```
 
 Logo preencher zero/mean sem mask explícita pode introduzir semântica falsa.
 
@@ -335,21 +335,21 @@ Possibilidades:
 
 ### Reconstruction residual
 
-\[
+```math
 e_t=|x_t-\hat x_t|
-\]
+```
 
 ### Forecast surprise
 
-\[
+```math
 score_t=-\log p(x_t|x_{<t})
-\]
+```
 
 ### Representation distance
 
-\[
+```math
 score_t=d(z_t,\mathcal M_{normal})
-\]
+```
 
 Threshold depende do regime e custo de falso positivo.
 
@@ -359,15 +359,15 @@ Threshold depende do regime e custo de falso positivo.
 
 Converta série em representação global:
 
-\[
+```math
 z=Pool(f_\theta(X))
-\]
+```
 
-\[
+```math
 P(y|X)=softmax(Wz)
-\]
+```
 
-Foundation model multi-task tenta tornar \(z\) transferível entre domínios.
+Foundation model multi-task tenta tornar $`z`$ transferível entre domínios.
 
 ---
 
@@ -375,9 +375,9 @@ Foundation model multi-task tenta tornar \(z\) transferível entre domínios.
 
 Processo muda:
 
-\[
+```math
 p_{train}(X,Y)\neq p_{deploy}(X,Y)
-\]
+```
 
 Em séries, drift pode ser:
 
@@ -395,9 +395,9 @@ Long context não corrige automaticamente regime antigo irrelevante.
 
 Transformada discreta:
 
-\[
+```math
 X_k=\sum_{n=0}^{N-1}x_n e^{-j2\pi kn/N}
-\]
+```
 
 Permite expor periodicidades, mas processos não estacionários podem exigir time-frequency/local methods.
 
@@ -429,13 +429,13 @@ Estudos 2026 de causal stress-testing em TSFMs encontram falhas súbitas em padr
 
 Dataset supervisionado:
 
-\[
+```math
 D=\{(x_i,y_i)\}_{i=1}^{N}
-\]
+```
 
-\[
+```math
 x_i=(x_{i1},\ldots,x_{iD})
-\]
+```
 
 Features podem ser:
 
@@ -454,15 +454,15 @@ Não existe necessariamente uma ordem natural das colunas.
 
 Cada célula/feature pode gerar embedding:
 
-\[
+```math
 e_{ij}=Embed_j(x_{ij})
-\]
+```
 
 Pode incorporar column identity:
 
-\[
+```math
 e_{ij}=ValueEmbed(x_{ij})+ColumnEmbed(j)
-\]
+```
 
 Isso resolve parte da heterogeneidade.
 
@@ -472,19 +472,19 @@ Isso resolve parte da heterogeneidade.
 
 Rows em supervised learning são usualmente exchangeable:
 
-\[
+```math
 P(D)=P(\pi(D))
-\]
+```
 
-para permutação \(\pi\), salvo estrutura temporal/grupal explícita.
+para permutação $`\pi`$, salvo estrutura temporal/grupal explícita.
 
 Columns não são exchangeable semanticamente a menos que identidade seja preservada.
 
 Arquitetura precisa distinguir:
 
-\[
+```math
 Value\ identity\neq Feature\ identity
-\]
+```
 
 ---
 
@@ -492,15 +492,15 @@ Value\ identity\neq Feature\ identity
 
 Defina mask:
 
-\[
+```math
 m_{ij}=1[x_{ij}\ observed]
-\]
+```
 
 Modelo ideal recebe:
 
-\[
+```math
 (x_{ij},m_{ij})
-\]
+```
 
 Missing pode ser MCAR/MAR/MNAR; o mecanismo altera inferência.
 
@@ -512,15 +512,15 @@ TabPFN-style não é simplesmente “Transformer treinado em planilhas”.
 
 Durante pretraining, modelo aprende sobre distribuições de tarefas/datasets sintéticos/priors:
 
-\[
+```math
 \theta^*=argmin E_{D\sim p(D)}L(f_\theta(D_{train},x^*),y^*)
-\]
+```
 
 Na inferência:
 
-\[
+```math
 P(y^*|D_{train},x^*)
-\]
+```
 
 é computado **in-context**, sem otimizar novos weights por dataset.
 
@@ -532,21 +532,21 @@ Isso lembra amortized Bayesian inference / meta-learning.
 
 Contexto contém pares:
 
-\[
+```math
 (x_1,y_1),\ldots,(x_N,y_N)
-\]
+```
 
 mais query:
 
-\[
+```math
 x^*
-\]
+```
 
 Modelo retorna:
 
-\[
+```math
 P(y^*|x^*,D)
-\]
+```
 
 O “prompt” é o próprio training set.
 
@@ -556,9 +556,9 @@ O “prompt” é o próprio training set.
 
 Diferente de LLM:
 
-\[
+```math
 Context\sim N\times D
-\]
+```
 
 crescimento de samples e features pressiona memória/attention.
 
@@ -570,15 +570,15 @@ TabPFN-2.5 amplia regime para dezenas de milhares de pontos e milhares de featur
 
 Classification:
 
-\[
+```math
 P(y=c|x,D)
-\]
+```
 
 Regression:
 
-\[
+```math
 p(y|x,D)
-\]
+```
 
 Regression exige modelar escala/caudas/heteroscedasticidade de forma que classification não exige.
 
@@ -588,15 +588,15 @@ Regression exige modelar escala/caudas/heteroscedasticidade de forma que classif
 
 Foundation model pode atuar como expensive teacher:
 
-\[
+```math
 F(D,x)\rightarrow \hat y
-\]
+```
 
 Distill para modelo menor:
 
-\[
+```math
 g_\phi(x)\approx F(D,x)
-\]
+```
 
 TabPFN-2.5 introduz caminho de distillation para MLP/tree ensemble, separando **training-time intelligence amortizada** de runtime barato.
 
@@ -643,15 +643,15 @@ Comparar modelos em múltiplos datasets exige ranks/aggregate robustos, não ape
 
 Time series:
 
-\[
+```math
 order\ matters
-\]
+```
 
 Tabular i.i.d. clássico:
 
-\[
+```math
 row\ order\ ideally\ irrelevant
-\]
+```
 
 Time series possui relógio e horizonte; tabular supervisionado possui training set/context.
 
@@ -665,17 +665,17 @@ Por isso dividimos o mesmo arquivo em duas metades, mas não tratamos como a mes
 
 Custo principal:
 
-\[
+```math
 N_{tokens}=f(T,patch,multiscale)
-\]
+```
 
 ## Tabular PFN
 
 Custo:
 
-\[
+```math
 N_{context}=f(N_{rows},D_{features},representation)
-\]
+```
 
 Em ambos, aumentar “dados de contexto” não altera weights, mas aumenta inferência.
 

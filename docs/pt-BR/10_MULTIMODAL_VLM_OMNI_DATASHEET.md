@@ -16,9 +16,9 @@ Relacionados: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UN
 
 Considere modalidades:
 
-\[
+```math
 X=\{X_t,X_v,X_a,X_{vid}\}
-\]
+```
 
 com:
 
@@ -29,21 +29,21 @@ com:
 
 O sistema precisa construir representações compatíveis:
 
-\[
+```math
 Z_m=E_m(X_m)
-\]
+```
 
 seguido por alguma fusão:
 
-\[
+```math
 H=\mathcal F(Z_t,Z_v,Z_a,Z_{vid})
-\]
+```
 
 A pergunta-chave não é “qual prompt usar?”, mas:
 
-\[
+```math
 \boxed{Como\ cada\ modalidade\ vira\ estado\ compartilhável?}
-\]
+```
 
 ---
 
@@ -53,25 +53,25 @@ A pergunta-chave não é “qual prompt usar?”, mas:
 
 Forma VLM clássica:
 
-\[
+```math
 Image\xrightarrow{VisionEncoder}Z_v
 \xrightarrow{Projector}Z'_v
 \rightarrow LLM
-\]
+```
 
 Se:
 
-\[
+```math
 Z_v\in\mathbb R^{N_v\times d_v}
-\]
+```
 
-mas o backbone usa hidden size \(d_h\):
+mas o backbone usa hidden size $`d_h`$:
 
-\[
+```math
 Z'_v=Z_vW_p,
 \quad
 W_p\in\mathbb R^{d_v\times d_h}
-\]
+```
 
 O projector pode ser:
 
@@ -85,9 +85,9 @@ O projector pode ser:
 
 Backbone enorme + bridge fraco ainda produz gargalo:
 
-\[
+```math
 Information(X_v)\gg Information(Z'_v)
-\]
+```
 
 A perda já ocorreu antes do LLM.
 
@@ -97,17 +97,17 @@ A perda já ocorreu antes do LLM.
 
 Texto consulta features visuais/sonoras:
 
-\[
+```math
 Q=H_{text}W_Q
-\]
+```
 
-\[
+```math
 K=Z_vW_K,\quad V=Z_vW_V
-\]
+```
 
-\[
+```math
 A=softmax\left(\frac{QK^T}{\sqrt d}\right)V
-\]
+```
 
 Vantagem: não é necessário serializar toda modalidade como “tokens textuais” equivalentes.
 
@@ -119,9 +119,9 @@ Trade-off: mais módulos, estado e custo de atenção cruzada.
 
 Todas as modalidades entram numa sequência/estado conjunto:
 
-\[
+```math
 H_0=[Z_t;Z_v;Z_a;Z_{vid}]
-\]
+```
 
 O backbone aprende interações diretamente.
 
@@ -129,13 +129,13 @@ O backbone aprende interações diretamente.
 
 Se atenção global for usada:
 
-\[
+```math
 N_{total}=N_t+N_v+N_a+N_{vid}
-\]
+```
 
-\[
+```math
 C_{attn}\sim O(N_{total}^2)
-\]
+```
 
 Logo, cada modalidade compete por orçamento de contexto.
 
@@ -145,9 +145,9 @@ Logo, cada modalidade compete por orçamento de contexto.
 
 Cada modalidade é processada mais profundamente antes da combinação:
 
-\[
+```math
 H=Fuse(f_t(X_t),f_v(X_v),f_a(X_a))
-\]
+```
 
 Prós:
 
@@ -165,21 +165,21 @@ Contras:
 
 Sistemas omni podem separar:
 
-\[
+```math
 Perception/Reasoning\rightarrow Thinker
-\]
+```
 
-\[
+```math
 Speech/Audio\ Generation\rightarrow Talker
-\]
+```
 
 mas compartilhar contexto/representações.
 
 A saída pode ser interleaved:
 
-\[
+```math
 Text\ tokens + Speech\ codec\ tokens
-\]
+```
 
 ou multi-head.
 
@@ -191,22 +191,22 @@ ou multi-head.
 
 Imagem:
 
-\[
+```math
 X\in\mathbb R^{H\times W\times C}
-\]
+```
 
-Patch \(P_h\times P_w\):
+Patch $`P_h\times P_w`$:
 
-\[
+```math
 N_v\approx
 \frac{H}{P_h}\frac{W}{P_w}
-\]
+```
 
 Exemplo idealizado 1024², patch 16:
 
-\[
+```math
 N_v=64^2=4096
-\]
+```
 
 antes de pooling/merging.
 
@@ -220,9 +220,9 @@ Em vez de resize fixo, sistemas modernos podem adaptar número de patches à raz
 
 Estado:
 
-\[
+```math
 N_v=f(H,W,P,budget)
-\]
+```
 
 ### Consequência
 
@@ -232,19 +232,19 @@ Duas imagens distintas podem ter custo de contexto muito diferente mesmo sendo a
 
 ## 3.3 Patch merging / token compression
 
-Agrupamento \(k\times k\):
+Agrupamento $`k\times k`$:
 
-\[
+```math
 N'_v\approx\frac{N_v}{k^2}
-\]
+```
 
 Trade-off:
 
-\[
+```math
 TokenBudget\downarrow
 \leftrightarrow
 SpatialDetail\downarrow
-\]
+```
 
 Não existe compressão gratuita.
 
@@ -254,12 +254,12 @@ Não existe compressão gratuita.
 
 Sem compressão:
 
-\[
+```math
 N_{vid}\approx
 T_f\frac{H}{P_h}\frac{W}{P_w}
-\]
+```
 
-onde \(T_f\) é o número de frames amostrados.
+onde $`T_f`$ é o número de frames amostrados.
 
 Mesmo 1 fps pode produzir enorme sequence length em vídeo longo.
 
@@ -275,11 +275,11 @@ Mesmo 1 fps pode produzir enorme sequence length em vídeo longo.
 
 ### Regra
 
-\[
+```math
 VideoDuration\uparrow
 \not\Rightarrow
 FramesProcessed\uparrow\ linearmente
-\]
+```
 
 porque pipelines podem mudar sampling rate ou comprimir adaptativamente.
 
@@ -295,13 +295,13 @@ Possíveis representações:
 - codec tokens;
 - compressed summary tokens.
 
-Se frontend gera \(r_a\) estados/s:
+Se frontend gera $`r_a`$ estados/s:
 
-\[
+```math
 N_a=r_aD
-\]
+```
 
-para duração \(D\).
+para duração $`D`$.
 
 Long-form audio é portanto um problema de **sequence compression**, não apenas de janela temporal.
 
@@ -313,33 +313,33 @@ Veja [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DAT
 
 Texto tem posição 1D:
 
-\[
+```math
 p_t=t
-\]
+```
 
 Imagem possui:
 
-\[
+```math
 p_v=(x,y)
-\]
+```
 
 Vídeo:
 
-\[
+```math
 p_{vid}=(t,x,y)
-\]
+```
 
 Áudio:
 
-\[
+```math
 p_a=t_{physical}
-\]
+```
 
 Modelos multimodais precisam codificar uma relação:
 
-\[
+```math
 R(position_i,position_j)
-\]
+```
 
 que preserve a estrutura relevante.
 
@@ -347,9 +347,9 @@ que preserve a estrutura relevante.
 
 Além da posição, o backbone frequentemente precisa saber **de qual modalidade veio o token**:
 
-\[
+```math
 h_i=e_i+p_i+m_i
-\]
+```
 
 ou via modulation/segment embeddings.
 
@@ -359,9 +359,9 @@ ou via modulation/segment embeddings.
 
 Em diálogo audiovisual:
 
-\[
+```math
 Audio(t)\leftrightarrow Video(t)
-\]
+```
 
 Uma palavra falada deve alinhar com o movimento/objeto correspondente.
 
@@ -375,9 +375,9 @@ Problemas:
 
 Um sistema omni precisa estabelecer algum mapa temporal comum:
 
-\[
+```math
 \tau_m(i)\rightarrow t_{global}
-\]
+```
 
 ### Failure surface
 
@@ -389,21 +389,21 @@ Se alinhamento temporal falha, o modelo pode identificar corretamente **o que** 
 
 Compreensão visual genérica:
 
-\[
+```math
 Image\rightarrow semantics
-\]
+```
 
 Grounding exige:
 
-\[
+```math
 Text\ phrase\rightarrow region/bbox/point
-\]
+```
 
 Bounding box:
 
-\[
+```math
 b=(x_{min},y_{min},x_{max},y_{max})
-\]
+```
 
 Pode ser representada como:
 
@@ -428,9 +428,9 @@ a ordem contextual passa a carregar semântica.
 
 O modelo precisa manter relações como:
 
-\[
+```math
 reference("segunda\ imagem")\rightarrow Z_{v,2}
-\]
+```
 
 Esse problema combina:
 
@@ -444,23 +444,23 @@ Esse problema combina:
 
 ## Text output
 
-\[
+```math
 H\rightarrow LMHead\rightarrow tokens
-\]
+```
 
 ## Speech output
 
-\[
+```math
 H\rightarrow SpeechHead/Talker\rightarrow codec/latent\rightarrow waveform
-\]
+```
 
 ## Image/video output
 
 Pode haver outro backbone generativo condicionado pelo modelo de entendimento:
 
-\[
+```math
 H_{reasoning}\rightarrow C_{generator}\rightarrow Diffusion/Flow
-\]
+```
 
 “Um modelo multimodal” pode portanto ser **um sistema de múltiplos operadores**, não uma única rede monolítica.
 
@@ -470,7 +470,7 @@ H_{reasoning}\rightarrow C_{generator}\rightarrow Diffusion/Flow
 
 Para runtime:
 
-\[
+```math
 T_{effective}
 =
 T_{text}
@@ -478,13 +478,13 @@ T_{text}
 +N_a
 +N_{vid}
 +N_{special}
-\]
+```
 
 Se o backbone causal constrói KV para tudo:
 
-\[
+```math
 M_{KV}\propto T_{effective}
-\]
+```
 
 Essa equação é uma das mais úteis na prática.
 
@@ -496,17 +496,17 @@ Adicionar uma imagem pode custar mais memória/contexto que milhares de palavras
 
 # 12. Cross-modal attention cost
 
-Se texto \(N_t\) consulta visão \(N_v\):
+Se texto $`N_t`$ consulta visão $`N_v`$:
 
-\[
+```math
 C_{cross}\sim O(N_tN_vd)
-\]
+```
 
 Se fundimos tudo e fazemos self-attention global:
 
-\[
+```math
 C_{joint}\sim O((N_t+N_v)^2d)
-\]
+```
 
 A arquitetura define a curva física.
 
@@ -518,43 +518,43 @@ Possíveis componentes:
 
 ### Contrastive
 
-\[
+```math
 L_{contrastive}
-\]
+```
 
 alinha representações.
 
 ### Caption/next-token
 
-\[
+```math
 L_{LM}
-\]
+```
 
 ensina descrição/resposta.
 
 ### Reconstruction/generation
 
-\[
+```math
 L_{gen}
-\]
+```
 
 ### Grounding
 
-\[
+```math
 L_{ground}
-\]
+```
 
 ### Audio-visual synchronization
 
-\[
+```math
 L_{sync}
-\]
+```
 
 Treino multimodal moderno pode combinar:
 
-\[
+```math
 L=\sum_i\lambda_iL_i
-\]
+```
 
 Logo “é um VLM” não revela sua função-objetivo real.
 
@@ -590,9 +590,9 @@ Semântica plausível sem evidência espacial real.
 
 ## 14.7 Cross-modal conflict
 
-\[
+```math
 C_{text}\neq C_{vision}
-\]
+```
 
 O modelo precisa arbitrar fontes contraditórias.
 

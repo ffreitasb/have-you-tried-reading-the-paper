@@ -7,15 +7,15 @@ updated: 2026-10-01
 
 # Training, Alignment & Adaptation Datasheet — SOTA++ 2026
 
-> Inferência começa em \(\theta\). Este documento explica **como \(\theta\) chegou ali**: dados, objetivos, otimização, SFT, preference optimization, RL, PEFT, distillation, merging, pruning e continual adaptation.
+> Inferência começa em $`\theta`$. Este documento explica **como $`\theta`$ chegou ali**: dados, objetivos, otimização, SFT, preference optimization, RL, PEFT, distillation, merging, pruning e continual adaptation.
 
 A fronteira conceitual é:
 
-\[
+```math
 \boxed{
 Architecture \neq Weights \neq Training \neq PostTraining \neq Inference
 }
-\]
+```
 
 O mesmo backbone pode produzir comportamentos radicalmente diferentes dependendo do dataset, objective, optimizer trajectory e pós-treinamento.
 
@@ -67,19 +67,19 @@ Não existe um único “training step”. Existem **múltiplos operadores de at
 
 # 2. A equação universal de atualização
 
-Para parâmetros \(\theta\), loss \(\mathcal L\) e learning rate \(\eta\):
+Para parâmetros $`\theta`$, loss $`\mathcal L`$ e learning rate $`\eta`$:
 
-\[
+```math
 \theta_{t+1}=\theta_t-\eta_t\,\hat g_t
-\]
+```
 
 onde:
 
-\[
+```math
 \hat g_t \approx \nabla_\theta \mathcal L(\theta_t;B_t)
-\]
+```
 
-é uma estimativa do gradiente no minibatch \(B_t\).
+é uma estimativa do gradiente no minibatch $`B_t`$.
 
 A loss define **o que é desejável**.
 
@@ -89,9 +89,9 @@ O dataset define **quais regiões desse espaço recebem sinal**.
 
 Portanto:
 
-\[
+```math
 Behavior = f(Architecture,Data,Objective,Optimization,PostTraining)
-\]
+```
 
 ---
 
@@ -99,21 +99,21 @@ Behavior = f(Architecture,Data,Objective,Optimization,PostTraining)
 
 ## 3.1 Dataset mixture
 
-Considere datasets \(D_i\) e pesos \(w_i\):
+Considere datasets $`D_i`$ e pesos $`w_i`$:
 
-\[
+```math
 P(x)=\sum_i w_iP_i(x)
-\]
+```
 
 com:
 
-\[
+```math
 \sum_i w_i=1
-\]
+```
 
 Os pesos da mistura são um **hyperparameter comportamental**.
 
-Alterar \(w_i\) muda a distribuição sobre a qual o modelo aprende.
+Alterar $`w_i`$ muda a distribuição sobre a qual o modelo aprende.
 
 ---
 
@@ -123,7 +123,7 @@ Mais tokens não significam automaticamente mais informação útil.
 
 Uma decomposição conceitual:
 
-\[
+```math
 EffectiveData
 =f(
 N_{tokens},
@@ -133,7 +133,7 @@ Novelty,
 Coverage,
 Duplication
 )
-\]
+```
 
 Duplicação excessiva reduz novidade e pode aumentar memorization.
 
@@ -151,9 +151,9 @@ Pode ocorrer em diferentes granularidades:
 
 O objetivo é reduzir:
 
-\[
+```math
 P(repeated\ evidence)
-\]
+```
 
 sem destruir repetições semanticamente legítimas.
 
@@ -161,11 +161,11 @@ sem destruir repetições semanticamente legítimas.
 
 ## 3.4 Contamination
 
-Se um item de avaliação \(e\) ou uma transformação quase equivalente aparece no treino:
+Se um item de avaliação $`e`$ ou uma transformação quase equivalente aparece no treino:
 
-\[
+```math
 P(e\in D_{train})>0
-\]
+```
 
 então o benchmark deixa de medir puramente generalização.
 
@@ -179,21 +179,21 @@ Veja [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMARK
 
 Pipeline típico:
 
-\[
+```math
 SeedData
 \xrightarrow{Teacher}
 SyntheticCandidates
 \xrightarrow{Filter/Verifier}
 TrainingSet
-\]
+```
 
 O ganho depende de:
 
-\[
+```math
 Q_{synthetic}
 \times Diversity
 \times Coverage
-\]
+```
 
 Há risco de:
 
@@ -209,24 +209,24 @@ Há risco de:
 
 Após tokenizer:
 
-\[
+```math
 x\rightarrow(t_1,\ldots,t_T)
-\]
+```
 
-Treino normalmente usa janelas de comprimento \(L\).
+Treino normalmente usa janelas de comprimento $`L`$.
 
 Sem packing eficiente, padding desperdiça compute:
 
-\[
+```math
 Efficiency=
 \frac{UsefulTokens}{TotalProcessedTokens}
-\]
+```
 
 Sequence packing concatena exemplos para aproximar:
 
-\[
+```math
 Efficiency\rightarrow1
-\]
+```
 
 mas exige cuidado com:
 
@@ -241,10 +241,10 @@ mas exige cuidado com:
 
 ## 5.1 Causal language modeling
 
-\[
+```math
 \mathcal L_{CLM}
 =-\sum_{t=1}^{T}\log p_\theta(x_t|x_{<t})
-\]
+```
 
 É o objective clássico de decoder-only AR.
 
@@ -252,12 +252,12 @@ mas exige cuidado com:
 
 ## 5.2 Masked modeling
 
-Para conjunto de posições \(M\):
+Para conjunto de posições $`M`$:
 
-\[
+```math
 \mathcal L_{mask}
 =-\sum_{i\in M}\log p_\theta(x_i|x_{\setminus M})
-\]
+```
 
 Veja [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md).
 
@@ -265,14 +265,14 @@ Veja [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATAS
 
 ## 5.3 Contrastive learning
 
-\[
+```math
 \mathcal L=
 -\log
 \frac{\exp(sim(q,d^+)/\tau)}
 {\sum_j\exp(sim(q,d_j)/\tau)}
-\]
+```
 
-Aqui \(\tau\) é **contrastive temperature**, não sampling temperature.
+Aqui $`\tau`$ é **contrastive temperature**, não sampling temperature.
 
 Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -282,25 +282,25 @@ Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER
 
 Diffusion-style:
 
-\[
+```math
 x_t=\alpha_tx_0+\sigma_t\epsilon
-\]
+```
 
 Treino pode minimizar:
 
-\[
+```math
 \mathbb E\|\epsilon-\epsilon_\theta(x_t,t,c)\|^2
-\]
+```
 
 ou parametrizações equivalentes.
 
 Flow matching:
 
-\[
+```math
 \mathcal L_{FM}
 =
 \mathbb E\|v_\theta(x_t,t,c)-u_t(x_t)\|^2
-\]
+```
 
 Veja [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md).
 
@@ -310,19 +310,19 @@ Veja [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSIO
 
 ## 6.1 Effective batch
 
-Com microbatch \(B_m\), gradient accumulation \(G\) e data-parallel world size \(W\):
+Com microbatch $`B_m`$, gradient accumulation $`G`$ e data-parallel world size $`W`$:
 
-\[
+```math
 B_{effective}=B_mGW
-\]
+```
 
 Em tokens:
 
-\[
+```math
 Tokens/update
 \approx
 B_{effective}\times L_{avg}
-\]
+```
 
 É frequentemente melhor comparar treino por **tokens por update** do que por “batch size” nominal.
 
@@ -330,17 +330,17 @@ B_{effective}\times L_{avg}
 
 ## 6.2 Learning rate
 
-\[
+```math
 \eta_t
-\]
+```
 
 é um dos knobs de maior sensibilidade.
 
 Muito baixo:
 
-\[
+```math
 |\Delta\theta|\rightarrow0
-\]
+```
 
 Muito alto:
 
@@ -355,11 +355,11 @@ Muito alto:
 
 Uma forma linear:
 
-\[
+```math
 \eta_t=
 \eta_{max}\frac{t}{T_w}
 \qquad t<T_w
-\]
+```
 
 Reduz passos agressivos enquanto optimizer statistics e activations ainda se estabilizam.
 
@@ -369,17 +369,17 @@ Reduz passos agressivos enquanto optimizer statistics e activations ainda se est
 
 Momentos:
 
-\[
+```math
 m_t=\beta_1m_{t-1}+(1-\beta_1)g_t
-\]
+```
 
-\[
+```math
 v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2
-\]
+```
 
 Atualização simplificada:
 
-\[
+```math
 \theta_{t+1}
 =
 \theta_t
@@ -387,15 +387,15 @@ Atualização simplificada:
 \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
 -
 \eta\lambda\theta_t
-\]
+```
 
 Parâmetros fundamentais:
 
-- learning rate \(\eta\);
-- \(\beta_1\);
-- \(\beta_2\);
-- \(\epsilon\);
-- weight decay \(\lambda\).
+- learning rate $`\eta`$;
+- $`\beta_1`$;
+- $`\beta_2`$;
+- $`\epsilon`$;
+- weight decay $`\lambda`$.
 
 ---
 
@@ -403,11 +403,11 @@ Parâmetros fundamentais:
 
 Global norm:
 
-\[
+```math
 g'=
  g\cdot
 \min\left(1,\frac{c}{\|g\|}\right)
-\]
+```
 
 Evita updates extremos.
 
@@ -419,12 +419,12 @@ Não corrige uma loss mal especificada.
 
 Estados podem viver em precisões diferentes:
 
-\[
+```math
 W_{storage},
 W_{compute},
 Gradients,
 OptimizerStates
-\]
+```
 
 Exemplos:
 
@@ -442,26 +442,26 @@ Mixed precision busca reduzir memória/compute mantendo estabilidade numérica.
 
 A regra ingênua:
 
-\[
+```math
 M=N_{params}\times bytes
-\]
+```
 
 é insuficiente.
 
 Treino inclui aproximadamente:
 
-\[
+```math
 M_{train}
 =
 M_W+M_G+M_{opt}+M_A+M_{comm}+M_{workspace}
-\]
+```
 
 onde:
 
-- \(M_W\): pesos;
-- \(M_G\): gradients;
-- \(M_{opt}\): optimizer state;
-- \(M_A\): activations.
+- $`M_W`$: pesos;
+- $`M_G`$: gradients;
+- $`M_{opt}`$: optimizer state;
+- $`M_A`$: activations.
 
 Com Adam-like optimizers, optimizer states podem superar o tamanho dos próprios pesos.
 
@@ -475,11 +475,11 @@ Sem checkpointing, muitas activations intermediárias são guardadas.
 
 Checkpointing troca memória por recompute:
 
-\[
+```math
 Memory\downarrow
 \quad\Longleftrightarrow\quad
 Compute\uparrow
-\]
+```
 
 É uma alavanca de **runtime de treino**, não uma mudança na função-objetivo.
 
@@ -509,11 +509,11 @@ Particiona:
 
 A topologia de comunicação passa a ser parte importante do custo:
 
-\[
+```math
 T_{step}
 =
 T_{compute}+T_{communication}+T_{sync}
-\]
+```
 
 ---
 
@@ -521,20 +521,20 @@ T_{compute}+T_{communication}+T_{sync}
 
 Dataset:
 
-\[
+```math
 D=\{(x_i,y_i)\}
-\]
+```
 
 Loss:
 
-\[
+```math
 \mathcal L_{SFT}
 =-\sum_i\sum_t
 m_{i,t}
 \log p_\theta(y_{i,t}|x_i,y_{i,<t})
-\]
+```
 
-onde \(m\) define quais tokens participam da loss.
+onde $`m`$ define quais tokens participam da loss.
 
 ---
 
@@ -542,13 +542,13 @@ onde \(m\) define quais tokens participam da loss.
 
 Se tokens de prompt têm máscara zero:
 
-\[
+$$
 m_t=
 \begin{cases}
 0 & prompt\\
 1 & answer
 \end{cases}
-\]
+$$
 
 Isso evita ensinar o modelo a predizer o próprio prompt quando a finalidade é instruction following.
 
@@ -560,10 +560,10 @@ Mensagens são serializadas em tokens especiais.
 
 Logo:
 
-\[
+```math
 Template_{train}
 eq Template_{infer}
-\]
+```
 
 pode causar regressão relevante.
 
@@ -585,15 +585,15 @@ Fine-tuning pequeno é excelente para:
 
 Uma aproximação conceitual:
 
-\[
+```math
 SFT\rightarrow BehaviorPrior
-\]
+```
 
 mais do que:
 
-\[
+```math
 SFT\rightarrow ExactDatabase
-\]
+```
 
 Para conhecimento mutável, retrieval frequentemente é melhor.
 
@@ -603,14 +603,14 @@ Para conhecimento mutável, retrieval frequentemente é melhor.
 
 Uma amostra pairwise:
 
-\[
+```math
 (x,y_w,y_l)
-\]
+```
 
 onde:
 
-- \(y_w\): preferred/chosen;
-- \(y_l\): rejected.
+- $`y_w`$: preferred/chosen;
+- $`y_l`$: rejected.
 
 O dado não contém apenas “qualidade”. Ele incorpora a distribuição de preferências do anotador/judge.
 
@@ -622,32 +622,32 @@ Veja [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md)
 
 Reward model:
 
-\[
+```math
 r_\phi(x,y)\in\mathbb R
-\]
+```
 
 Bradley–Terry:
 
-\[
+```math
 P(y_w\succ y_l)
 =
 \sigma(r_w-r_l)
-\]
+```
 
 Loss:
 
-\[
+```math
 \mathcal L_{RM}
 =-\log\sigma(r_w-r_l)
-\]
+```
 
 O reward é uma **proxy learned objective**.
 
 Portanto:
 
-\[
+```math
 MaxReward\neq MaxTrueUtility
-\]
+```
 
 necessariamente.
 
@@ -671,12 +671,12 @@ aligned policy
 
 Uma objective abstrata:
 
-\[
+```math
 \max_\theta
 \mathbb E_{y\sim\pi_\theta}[r_\phi(x,y)]
 -
 \beta D_{KL}(\pi_\theta\|\pi_{ref})
-\]
+```
 
 O termo KL limita drift.
 
@@ -686,15 +686,15 @@ O termo KL limita drift.
 
 PPO usa clipped policy ratio.
 
-\[
+```math
 r_t(\theta)=
 \frac{\pi_\theta(a_t|s_t)}
 {\pi_{old}(a_t|s_t)}
-\]
+```
 
 Objective simplificada:
 
-\[
+```math
 L^{CLIP}
 =
 \mathbb E
@@ -704,7 +704,7 @@ r_tA_t,
 clip(r_t,1-\epsilon,1+\epsilon)A_t
 )
 \right]
-\]
+```
 
 Historicamente importante, porém infraestrutura de actor/critic/reward/reference torna o pipeline complexo.
 
@@ -716,7 +716,7 @@ DPO elimina o reward model explícito no loop de otimização.
 
 Uma forma canônica:
 
-\[
+```math
 \mathcal L_{DPO}
 =
 -
@@ -729,11 +729,11 @@ Uma forma canônica:
 \log\frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}
 \right)
 \right]
-\]
+```
 
 Knobs fundamentais:
 
-- \(\beta\);
+- $`\beta`$;
 - preference dataset;
 - reference policy;
 - sequence length;
@@ -765,13 +765,13 @@ A taxonomia é mais durável que a sigla.
 
 Em tarefas com checker:
 
-\[
+$$
 R(y)=
 \begin{cases}
 1 & verified\\
 0 & fail
 \end{cases}
-\]
+$$
 
 ou reward contínuo derivado do ambiente.
 
@@ -790,23 +790,23 @@ Isso reduz dependência de judge subjetivo, mas somente para propriedades cobert
 
 Para um prompt, gere grupo:
 
-\[
+```math
 \{y_1,\ldots,y_G\}
-\]
+```
 
 Rewards:
 
-\[
+```math
 r_1,\ldots,r_G
-\]
+```
 
 Uma vantagem group-normalized conceitual:
 
-\[
+```math
 \hat A_i
 =
 \frac{r_i-\mu_G}{\sigma_G+\epsilon}
-\]
+```
 
 A vantagem relativa reduz necessidade de critic explícito.
 
@@ -814,9 +814,9 @@ Failure surface importante:
 
 se:
 
-\[
+```math
 \sigma_G\approx0
-\]
+```
 
 há pouco sinal relativo no grupo.
 
@@ -828,11 +828,11 @@ DAPO surgiu como uma evolução prática de large-scale RL, combinando decisões
 
 A lição generalizável:
 
-\[
+```math
 RL\ performance
 \neq
 PolicyObjective\ only
-\]
+```
 
 Ela depende de:
 
@@ -849,18 +849,18 @@ Ela depende de:
 
 GSPO substitui razão token-level por uma razão normalizada no nível da sequência:
 
-\[
+```math
 s_i(\theta)
 =
 \left(
 \frac{\pi_\theta(y_i|x)}
 {\pi_{old}(y_i|x)}
 \right)^{1/|y_i|}
-\]
+```
 
 ou:
 
-\[
+```math
 \log s_i
 =
 \frac1{|y_i|}
@@ -871,7 +871,7 @@ ou:
 }{
 \pi_{old}(y_{i,t}|x,y_{i,<t})
 }
-\]
+```
 
 Isso é especialmente relevante para MoE RL, onde token-level routing differences podem tornar importance ratios frágeis.
 
@@ -885,9 +885,9 @@ Snapshot 2026: GSPO permanece um exemplo importante de como **unidade estatísti
 
 Dados vêm da policy atual:
 
-\[
+```math
 y\sim\pi_\theta
-\]
+```
 
 Pros:
 
@@ -903,9 +903,9 @@ Cons:
 
 Dados pré-coletados:
 
-\[
+```math
 D=\{x,y,r\}
-\]
+```
 
 Pros:
 
@@ -923,17 +923,17 @@ Cons:
 
 Se reward model é proxy:
 
-\[
+```math
 R_{proxy}\neq U_{true}
-\]
+```
 
 então aumentar otimização pode eventualmente produzir:
 
-\[
+```math
 R_{proxy}\uparrow
 \quad
 U_{true}\downarrow
-\]
+```
 
 Esse é um caso de Goodhart.
 
@@ -945,11 +945,11 @@ Veja [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md)
 
 Full fine-tuning:
 
-\[
+```math
 W\rightarrow W+\Delta W
-\]
+```
 
-com \(\Delta W\) irrestrito.
+com $`\Delta W`$ irrestrito.
 
 PEFT restringe a atualização a um subespaço parametrizado menor.
 
@@ -959,37 +959,37 @@ PEFT restringe a atualização a um subespaço parametrizado menor.
 
 Para:
 
-\[
+```math
 W\in\mathbb R^{d_{out}\times d_{in}}
-\]
+```
 
 LoRA usa:
 
-\[
+```math
 \Delta W=BA
-\]
+```
 
 com:
 
-\[
+```math
 B\in\mathbb R^{d_{out}\times r}
-\]
+```
 
-\[
+```math
 A\in\mathbb R^{r\times d_{in}}
-\]
+```
 
 onde:
 
-\[
+```math
 r\ll\min(d_{in},d_{out})
-\]
+```
 
 Update:
 
-\[
+```math
 W'=W+\frac{\alpha}{r}BA
-\]
+```
 
 ou scaling variante conforme implementação.
 
@@ -999,20 +999,20 @@ ou scaling variante conforme implementação.
 
 Aproximadamente:
 
-\[
+```math
 N_{LoRA}
 =r(d_{in}+d_{out})
-\]
+```
 
 por matriz alvo.
 
 Logo:
 
-\[
+```math
 N_{LoRA}\ll d_{in}d_{out}
-\]
+```
 
-se \(r\) é pequeno.
+se $`r`$ é pequeno.
 
 ---
 
@@ -1044,17 +1044,17 @@ Em Transformer podem incluir:
 
 Mais módulos:
 
-\[
+```math
 Capacity\uparrow
-\]
+```
 
 mas também:
 
-\[
+```math
 TrainableParams\uparrow,
 Memory\uparrow,
 OverfitRisk\uparrow
-\]
+```
 
 ---
 
@@ -1072,15 +1072,15 @@ train LoRA adapters
 
 Assim:
 
-\[
+```math
 \nabla W_{base}=0
-\]
+```
 
 mas:
 
-\[
+```math
 \nabla A,\nabla B\neq0
-\]
+```
 
 QLoRA reduz drasticamente memória do frozen base, mas treino continua exigindo:
 
@@ -1091,9 +1091,9 @@ QLoRA reduz drasticamente memória do frozen base, mas treino continua exigindo:
 
 Logo:
 
-\[
+```math
 FileSize_{Q4}\neq TrainingVRAM
-\]
+```
 
 ---
 
@@ -1103,9 +1103,9 @@ DoRA separa magnitude e direção do peso.
 
 Conceitualmente:
 
-\[
+```math
 W=m\frac{V}{\|V\|}
-\]
+```
 
 A direção recebe adaptação low-rank; magnitude é aprendida separadamente.
 
@@ -1131,11 +1131,11 @@ Implementações modernas suportam estratégias como:
 
 A escolha pode afetar:
 
-\[
+```math
 Convergence,
 QuantizationError,
 InitialPerturbation
-\]
+```
 
 Portanto “LoRA” não define sozinho a dinâmica.
 
@@ -1152,11 +1152,11 @@ Adapters podem ser:
 
 A soma linear:
 
-\[
+```math
 \Delta W
 =
 \sum_i\lambda_i\Delta W_i
-\]
+```
 
 pode gerar interferência.
 
@@ -1166,15 +1166,15 @@ Não assuma composicionalidade perfeita.
 
 # 34. Model merging — espaço de parâmetros
 
-Com checkpoints \(\theta_i\):
+Com checkpoints $`\theta_i`$:
 
 ## Linear merge
 
-\[
+```math
 \theta_{merge}
 =
 \sum_i\alpha_i\theta_i
-\]
+```
 
 com pesos normalmente normalizados.
 
@@ -1182,20 +1182,20 @@ com pesos normalmente normalizados.
 
 # 35. Task vectors
 
-Com base \(\theta_0\):
+Com base $`\theta_0`$:
 
-\[
+```math
 \tau_i=\theta_i-\theta_0
-\]
+```
 
 Merge:
 
-\[
+```math
 \theta^*
 =
 \theta_0+
 \sum_i\lambda_i\tau_i
-\]
+```
 
 Essa visão permite tratar fine-tuning como vetor de deslocamento no parameter space.
 
@@ -1213,9 +1213,9 @@ DARE usa random drop + rescaling de deltas antes de merge.
 
 A ideia geral:
 
-\[
+```math
 Interference(\tau_i,\tau_j)
-\]
+```
 
 pode tornar média simples destrutiva.
 
@@ -1225,15 +1225,15 @@ pode tornar média simples destrutiva.
 
 SLERP interpola em uma geometria esférica entre vetores.
 
-Para dois vetores unitários com ângulo \(\omega\):
+Para dois vetores unitários com ângulo $`\omega`$:
 
-\[
+```math
 SLERP(t)
 =
 \frac{\sin((1-t)\omega)}{\sin\omega}v_0
 +
 \frac{\sin(t\omega)}{\sin\omega}v_1
-\]
+```
 
 Útil quando linear interpolation não preserva bem magnitude/direção.
 
@@ -1251,11 +1251,11 @@ Antes de fundir modelos, verificar:
 - normalization;
 - base lineage.
 
-\[
+```math
 SameParameterCount
 \not\Rightarrow
 CompatibleParameterSemantics
-\]
+```
 
 ---
 
@@ -1263,19 +1263,19 @@ CompatibleParameterSemantics
 
 Teacher:
 
-\[
+```math
 q_T(y|x)
-\]
+```
 
 Student:
 
-\[
+```math
 p_\theta(y|x)
-\]
+```
 
 Uma loss típica:
 
-\[
+```math
 \mathcal L
 =
 \lambda\mathcal L_{hard}
@@ -1283,9 +1283,9 @@ Uma loss típica:
 (1-\lambda)T^2
 D_{KL}
 (q_T^{(T)}\|p_\theta^{(T)})
-\]
+```
 
-Aqui \(T\) é **distillation temperature**, novamente diferente de sampling temperature.
+Aqui $`T`$ é **distillation temperature**, novamente diferente de sampling temperature.
 
 ---
 
@@ -1293,15 +1293,15 @@ Aqui \(T\) é **distillation temperature**, novamente diferente de sampling temp
 
 Em modelos generativos, frequentemente teacher produz trajectories:
 
-\[
+```math
 y\sim Teacher(x)
-\]
+```
 
 que viram dados para student:
 
-\[
+```math
 (x,y)\rightarrow SFT
-\]
+```
 
 Isso é behavior distillation, mesmo sem logits do teacher.
 
@@ -1311,23 +1311,23 @@ Isso é behavior distillation, mesmo sem logits do teacher.
 
 Teacher gera:
 
-\[
+```math
 problem
 \rightarrow
 reasoning\ trace
 \rightarrow
 answer
-\]
+```
 
 Student aprende traces ou respostas filtradas.
 
 Risco:
 
-\[
+```math
 TeacherError
 \rightarrow
 StudentTrainingSignal
-\]
+```
 
 Por isso verifier/filtering é central.
 
@@ -1341,15 +1341,15 @@ Vantagem:
 
 reduz mismatch entre:
 
-\[
+```math
 D_{teacher}
-\]
+```
 
 e:
 
-\[
+```math
 D_{student}
-\]
+```
 
 É uma tendência forte em toolkits modernos de post-training.
 
@@ -1359,15 +1359,15 @@ D_{student}
 
 Em vez de comprimir apenas o modelo, tenta-se construir dataset compacto:
 
-\[
+```math
 D_{small}
-\]
+```
 
 tal que treino nele aproxime treino em:
 
-\[
+```math
 D_{large}
-\]
+```
 
 Esse é um eixo separado de knowledge distillation.
 
@@ -1377,15 +1377,15 @@ Esse é um eixo separado de knowledge distillation.
 
 Mask:
 
-\[
+```math
 W'=M\odot W
-\]
+```
 
 com:
 
-\[
+```math
 M_{ij}\in\{0,1\}
-\]
+```
 
 ## Unstructured
 
@@ -1407,45 +1407,45 @@ Structured pruning tende a mapear melhor para hardware comum.
 
 # 45. Sparsity não implica speedup
 
-\[
+```math
 Sparsity\uparrow
 \not\Rightarrow
 Latency\downarrow
-\]
+```
 
 se kernels/hardware não explorarem o padrão de sparsity.
 
 Sempre distinguir:
 
-\[
+```math
 ParameterCount
-\]
+```
 
 de:
 
-\[
+```math
 ExecutedFLOPs
-\]
+```
 
 e:
 
-\[
+```math
 WallClockLatency
-\]
+```
 
 ---
 
 # 46. Continual learning
 
-Nova distribuição \(D_{new}\) pode melhorar tarefa nova e prejudicar antiga.
+Nova distribuição $`D_{new}`$ pode melhorar tarefa nova e prejudicar antiga.
 
 Catastrophic forgetting:
 
-\[
+```math
 Perf_{old}(\theta_{new})
 <
 Perf_{old}(\theta_{old})
-\]
+```
 
 Contramedidas incluem:
 
@@ -1462,9 +1462,9 @@ Contramedidas incluem:
 
 Distribuição de dados varia com tempo:
 
-\[
+```math
 P_t(x)
-\]
+```
 
 em vez de ser constante.
 
@@ -1519,9 +1519,9 @@ Podemos:
 
 Cada escolha muda:
 
-\[
+```math
 TrainableParams
-\]
+```
 
 e risco de destroying pretrained representations.
 
@@ -1610,15 +1610,15 @@ Nunca acompanhar apenas loss.
 
 # 53. Loss curve ≠ capability curve
 
-\[
+```math
 \mathcal L_{train}\downarrow
-\]
+```
 
 não garante:
 
-\[
+```math
 TaskQuality\uparrow
-\]
+```
 
 especialmente em:
 
@@ -1680,9 +1680,9 @@ Diversidade diminui.
 
 ## Overfitting
 
-\[
+```math
 Train\uparrow,Eval\downarrow
-\]
+```
 
 ## Merge interference
 
@@ -1720,11 +1720,11 @@ mas cada modelo e sequence length altera a curva.
 
 Calcule antes:
 
-\[
+```math
 M_{train}
 =
 weights+grads+optimizer+activations+workspace
-\]
+```
 
 ---
 
@@ -1835,7 +1835,7 @@ A fotografia relevante em outubro de 2026 é menos “qual algoritmo venceu” e
 
 # 61. Resumo mecânico
 
-\[
+```math
 \boxed{
 ModelBehavior
 =
@@ -1849,7 +1849,7 @@ Optimization
 \circ
 PostTraining
 }
-\]
+```
 
 A arquitetura define o **espaço possível**.
 

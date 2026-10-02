@@ -10,21 +10,21 @@ updated: 2026-10-01
 
 ## 1. Fundamental loop
 
-\[
+```math
 o_t=Observe(s_t)
-\]
+```
 
-\[
+```math
 a_t\sim\pi_\theta(a\mid h_t,o_t,C)
-\]
+```
 
-\[
+```math
 s_{t+1}=Environment(s_t,a_t)
-\]
+```
 
-\[
+```math
 h_{t+1}=Update(h_t,o_t,a_t,result_t)
-\]
+```
 
 This is a feedback-driven dynamical system.
 
@@ -34,15 +34,15 @@ This is a feedback-driven dynamical system.
 
 ## 2. Action space
 
-\[
+```math
 \mathcal A=\{text,tool_1,tool_2,computer\_action,stop,\ldots\}
-\]
+```
 
 Each tool has a schema:
 
-\[
+```math
 a=(tool\_name,args)
-\]
+```
 
 ### There is no universal “invocation threshold”
 
@@ -64,9 +64,9 @@ Possible regimes:
 
 This restricts the action space:
 
-\[
+```math
 \mathcal A'\subseteq\mathcal A
-\]
+```
 
 ---
 
@@ -76,23 +76,23 @@ This restricts the action space:
 
 Set of valid strings:
 
-\[
+```math
 L(Schema)
-\]
+```
 
 During decoding:
 
-\[
+```math
 p(x_t)=0\quad\forall x_t\notin ValidPrefix(Schema)
-\]
+```
 
 Depending on the implementation, this can strongly guarantee syntactic/structural validity.
 
 ### But:
 
-\[
+```math
 SchemaValid\neq SemanticallyValid
-\]
+```
 
 Example: `{"amount": 1000000}` may be perfect JSON under the schema and still represent an absurd or unauthorized action.
 
@@ -105,9 +105,9 @@ Example: `{"amount": 1000000}` may be perfect JSON under the schema and still re
 3. **Semantic** — do the arguments make sense?
 4. **Authorization/Safety** — should the action be executed?
 
-\[
+```math
 V=V_{syntax}\land V_{schema}\land V_{semantic}\land V_{auth}
-\]
+```
 
 ---
 
@@ -117,9 +117,9 @@ V=V_{syntax}\land V_{schema}\land V_{semantic}\land V_{auth}
 
 Useful state may include:
 
-\[
+```math
 h_t=\{conversation,tool\ results,files,IDs,plans,environment\ state,memory\}
-\]
+```
 
 History should be treated as a **state representation**, not simply a fixed number of messages.
 
@@ -129,15 +129,15 @@ History should be treated as a **state representation**, not simply a fixed numb
 
 Long-running agents need to compress:
 
-\[
+```math
 H_{raw}\rightarrow H_{compact}
-\]
+```
 
 Risk:
 
-\[
+```math
 Compression\uparrow\Rightarrow ContextCost\downarrow\ but\ InformationLoss\uparrow
-\]
+```
 
 Preserving IDs, handles, invariants, and decisions is generally safer than summarizing everything into prose.
 
@@ -149,15 +149,15 @@ Preserving IDs, handles, invariants, and decisions is generally safer than summa
 
 Explicit plan:
 
-\[
+```math
 P=(a_1,a_2,\ldots,a_n)
-\]
+```
 
 Reactive policy:
 
-\[
+```math
 a_t=\pi(s_t)
-\]
+```
 
 Robust agents often combine a plan with replanning after observation.
 
@@ -171,15 +171,15 @@ Forcing visible chain-of-thought is not a universal requirement for better plann
 
 As the number of steps grows:
 
-\[
+```math
 P(success_{all})\approx\prod_tP(success_t\mid history)
-\]
+```
 
 Even 99% success per step:
 
-\[
+```math
 0.99^{100}\approx0.366
-\]
+```
 
 Long trajectories amplify small error rates.
 
@@ -208,9 +208,9 @@ Define:
 
 Repeating a non-idempotent action:
 
-\[
+```math
 E(E(s,a),a)\neq E(s,a)
-\]
+```
 
 may duplicate payments, messages, uploads, and so on.
 
@@ -220,9 +220,9 @@ may duplicate payments, messages, uploads, and so on.
 
 Ideal case:
 
-\[
+```math
 E(E(s,a),a)=E(s,a)
-\]
+```
 
 When that is impossible, use an idempotency key/transaction ID and inspect state before retrying.
 
@@ -234,9 +234,9 @@ When that is impossible, use an idempotency key/transaction ID and inspect state
 
 For critical actions:
 
-\[
+```math
 Plan\rightarrow DryRun\rightarrow Validate\rightarrow Approve\rightarrow Commit
-\]
+```
 
 Separate action generation from execution.
 
@@ -244,9 +244,9 @@ Separate action generation from execution.
 
 If the operation has an inverse:
 
-\[
+```math
 a^{-1}(a(s))\approx s
-\]
+```
 
 record it as part of the plan.
 
@@ -262,15 +262,15 @@ Not simply one global `True/False` toggle.
 
 Define:
 
-\[
+```math
 Risk(a)=Impact(a)\times Probability(error)\times Irreversibility(a)
-\]
+```
 
 Require approval when:
 
-\[
+```math
 Risk(a)>\tau
-\]
+```
 
 or based on capability class.
 
@@ -291,11 +291,11 @@ or based on capability class.
 
 A policy should not receive tools it does not need.
 
-\[
+```math
 Capabilities_{agent}\subseteq Capabilities_{required}
-\]
+```
 
-The larger \(|\mathcal A|\), the larger the decision space and attack surface.
+The larger $`|\mathcal A|`$, the larger the decision space and attack surface.
 
 ---
 
@@ -322,9 +322,9 @@ Web pages, emails, documents, and tool results are potentially adversarial input
 
 Principle:
 
-\[
+```math
 UntrustedData\not\Rightarrow Authority
-\]
+```
 
 The agent must preserve instruction/capability hierarchy outside retrieved content.
 
@@ -336,21 +336,21 @@ The agent must preserve instruction/capability hierarchy outside retrieved conte
 
 Visual observation:
 
-\[
+```math
 o_t=Vision(screen_t)
-\]
+```
 
 Action:
 
-\[
+```math
 a_t=(mouse/keyboard/navigation)
-\]
+```
 
 New state:
 
-\[
+```math
 screen_{t+1}=App(screen_t,a_t)
-\]
+```
 
 ### Sources of error
 
@@ -369,15 +369,15 @@ Computer use has lower observability than a structured API. Prefer APIs/tools wh
 
 ## 18. Correct pipeline
 
-\[
+```math
 audio\rightarrow VAD\rightarrow ASR\rightarrow agent/policy\rightarrow tool\rightarrow environment
-\]
+```
 
 Total latency:
 
-\[
+```math
 T=T_{VAD}+T_{ASR}+T_{LLM}+T_{tool}+T_{feedback}
-\]
+```
 
 VAD is an input subsystem, not a “LAM” parameter.
 
@@ -395,15 +395,15 @@ In the **2026-07-28** spec, the core protocol became stateless, added Multi Roun
 
 Separate:
 
-\[
+```math
 Agent\ policy
-\]
+```
 
 from
 
-\[
+```math
 Tool\ transport/protocol
-\]
+```
 
 MCP addresses interoperability and lifecycle/protocol concerns; decision-making and security still belong to the agentic system.
 
@@ -428,9 +428,9 @@ MCP addresses interoperability and lifecycle/protocol concerns; decision-making 
 
 ### Do not confuse
 
-\[
+```math
 ToolCallRate\neq TaskSuccess
-\]
+```
 
 An “active” agent may simply be failing a lot.
 

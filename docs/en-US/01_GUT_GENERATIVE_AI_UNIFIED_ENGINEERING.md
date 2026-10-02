@@ -16,56 +16,56 @@ This version definitively abandons the simplistic “Transformer vs Diffusion”
 
 Describe a system as:
 
-\[
+```math
 \boxed{
 M=(R,O,B,C,I,S,D,\Omega)
 }
-\]
+```
 
 | Symbol | Axis | Question |
 |---|---|---|
-| \(R\) | Representation | What space does the state live in? |
-| \(O\) | Objective | What does training teach the network to predict or optimize? |
-| \(B\) | Backbone | Which architecture parameterizes the transformation? |
-| \(C\) | Conditioning | How do context, intent, and observations enter? |
-| \(I\) | Inference operator | How does the state advance, or how is a decision made? |
-| \(S\) | Persistent state | What persists or grows during inference? |
-| \(D\) | Decoder / decision map | How do we return to an observable domain or action? |
-| \(\Omega\) | Modality topology | How many modalities enter/leave, and how are they aligned? |
+| $`R`$ | Representation | What space does the state live in? |
+| $`O`$ | Objective | What does training teach the network to predict or optimize? |
+| $`B`$ | Backbone | Which architecture parameterizes the transformation? |
+| $`C`$ | Conditioning | How do context, intent, and observations enter? |
+| $`I`$ | Inference operator | How does the state advance, or how is a decision made? |
+| $`S`$ | Persistent state | What persists or grows during inference? |
+| $`D`$ | Decoder / decision map | How do we return to an observable domain or action? |
+| $`\Omega`$ | Modality topology | How many modalities enter/leave, and how are they aligned? |
 
 The key rule:
 
-\[
+```math
 \boxed{B\perp O\perp R}
-\]
+```
 
 A Transformer can be autoregressive, masked, diffusion-like, an embedding encoder, a reranker, a reward model, a graph processor, or a policy backbone.
 
 ## 1.1 The model is not the entire lifecycle
 
-The tuple \(M\) primarily describes **the learned system and its execution**. By itself, it does not describe how the weights were produced, how evidence was measured, or how operational risk is controlled.
+The tuple $`M`$ primarily describes **the learned system and its execution**. By itself, it does not describe how the weights were produced, how evidence was measured, or how operational risk is controlled.
 
-For that, we wrap \(M\) in a lifecycle envelope:
+For that, we wrap $`M`$ in a lifecycle envelope:
 
-\[
+```math
 \boxed{
 \Gamma=(\mathcal D,\mathcal T,\mathcal A,\mathcal E,\mathcal S)
 }
-\]
+```
 
 | Symbol | Lifecycle axis | Question |
 |---|---|---|
-| \(\mathcal D\) | Data | What distribution fed training/adaptation? |
-| \(\mathcal T\) | Training | Which losses/optimizers produced \(\theta\)? |
-| \(\mathcal A\) | Alignment/Adaptation | SFT, preference, RL, PEFT, distillation, merge? |
-| \(\mathcal E\) | Evaluation | Which protocol supports the performance claims? |
-| \(\mathcal S\) | Security/Robustness | Which trust boundaries and failure surfaces constrain deployment? |
+| $`\mathcal D`$ | Data | What distribution fed training/adaptation? |
+| $`\mathcal T`$ | Training | Which losses/optimizers produced $`\theta`$? |
+| $`\mathcal A`$ | Alignment/Adaptation | SFT, preference, RL, PEFT, distillation, merge? |
+| $`\mathcal E`$ | Evaluation | Which protocol supports the performance claims? |
+| $`\mathcal S`$ | Security/Robustness | Which trust boundaries and failure surfaces constrain deployment? |
 
 So the complete unit of the collection becomes:
 
-\[
+```math
 \boxed{System=(M,\Gamma,Runtime)}
-\]
+```
 
 See [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md), [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md), [18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET](18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md), and [09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET](09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md).
 
@@ -75,9 +75,9 @@ See [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTATIO
 
 ## 2.1 Discrete sequence
 
-\[
+```math
 x=(x_1,\ldots,x_T),\quad x_t\in\{1,\ldots,V\}
-\]
+```
 
 Examples:
 
@@ -90,15 +90,15 @@ Examples:
 
 ## 2.2 Continuous latent
 
-\[
+```math
 Z\in\mathbb R^{N\times d}
-\]
+```
 
 or, for images:
 
-\[
+```math
 Z\in\mathbb R^{B\times C\times H_l\times W_l}
-\]
+```
 
 Examples:
 
@@ -113,15 +113,15 @@ Examples:
 
 Image:
 
-\[
+```math
 X\in\mathbb R^{H\times W\times C}
-\]
+```
 
 Video:
 
-\[
+```math
 X\in\mathbb R^{T\times H\times W\times C}
-\]
+```
 
 State dimensionality changes the cost of attention dramatically.
 
@@ -129,9 +129,9 @@ State dimensionality changes the cost of attention dramatically.
 
 ## 2.4 Numerical time series
 
-\[
+```math
 X\in\mathbb R^{T\times D}
-\]
+```
 
 Time has physical order; it is not merely textual position.
 
@@ -139,9 +139,9 @@ Time has physical order; it is not merely textual position.
 
 ## 2.5 Structured table
 
-\[
+```math
 X\in\mathbb R^{N\times D}
-\]
+```
 
 Row/column order does not necessarily carry the semantics of a sentence. Missingness, heterogeneous types, and small-data priors make the problem structurally different.
 
@@ -149,9 +149,9 @@ Row/column order does not necessarily carry the semantics of a sentence. Missing
 
 ## 2.6 Graph
 
-\[
+```math
 G=(V,E,X_V,X_E)
-\]
+```
 
 There is no natural sequential order. Relational structure is part of the data itself.
 
@@ -159,15 +159,15 @@ There is no natural sequential order. Relational structure is part of the data i
 
 ## 2.7 Physical / embodied state
 
-\[
+```math
 s_t=(vision_t,proprioception_t,language_t,world\ state_t)
-\]
+```
 
 The output may be a continuous action:
 
-\[
+```math
 a_t\in\mathbb R^m
-\]
+```
 
 ---
 
@@ -175,9 +175,9 @@ a_t\in\mathbb R^m
 
 ## 3.1 Autoregression
 
-\[
+```math
 p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{<t},C)
-\]
+```
 
 Training: next-element prediction.  
 Inference: each step conditions the next.
@@ -186,11 +186,11 @@ Inference: each step conditions the next.
 
 ## 3.2 Masked prediction / discrete denoising
 
-Choose a masked set \(M\):
+Choose a masked set $`M`$:
 
-\[
+```math
 \mathcal L=-\sum_{i\in M}\log p(x_i|x_{\setminus M})
-\]
+```
 
 This can support parallel filling and iterative refinement.
 
@@ -200,9 +200,9 @@ This can support parallel filling and iterative refinement.
 
 Simplified forward process:
 
-\[
+```math
 x_t=\alpha_tx_0+\sigma_t\epsilon
-\]
+```
 
 The network learns noise, score, the clean sample, or an equivalent parameterization.
 
@@ -210,9 +210,9 @@ The network learns noise, score, the clean sample, or an equivalent parameteriza
 
 ## 3.4 Flow matching / rectified flow
 
-\[
+```math
 \frac{dx_t}{dt}=v_\theta(x_t,t,C)
-\]
+```
 
 Inference approximates/integrates the learned vector field.
 
@@ -220,14 +220,14 @@ Inference approximates/integrates the learned vector field.
 
 ## 3.5 Contrastive representation learning
 
-For positive query/document pair \(d^+\) and negatives \(d_j\):
+For positive query/document pair $`d^+`$ and negatives $`d_j`$:
 
-\[
+```math
 \mathcal L=
 -\log
 \frac{e^{sim(q,d^+)/\tau}}
 {\sum_j e^{sim(q,d_j)/\tau}}
-\]
+```
 
 The objective is not to generate; it is to **organize geometry**.
 
@@ -237,13 +237,13 @@ The objective is not to generate; it is to **organize geometry**.
 
 Pairwise:
 
-\[
+```math
 P(A>B)=\sigma(r_A-r_B)
-\]
+```
 
-\[
+```math
 \mathcal L=-\log\sigma(r_{chosen}-r_{rejected})
-\]
+```
 
 The model learns an evaluation operator, not necessarily a generative one.
 
@@ -251,15 +251,15 @@ The model learns an evaluation operator, not necessarily a generative one.
 
 ## 3.7 Transition dynamics / world modeling
 
-\[
+```math
 p(s_{t+1}|s_t,a_t)
-\]
+```
 
 or deterministic/latent:
 
-\[
+```math
 \hat s_{t+1}=f_\theta(s_t,a_t)
-\]
+```
 
 Learning the “plant” radically changes the decision topology.
 
@@ -267,7 +267,7 @@ Learning the “plant” radically changes the decision topology.
 
 # 4. Backbones
 
-The function \(f_\theta\) can be parameterized by:
+The function $`f_\theta`$ can be parameterized by:
 
 - Transformer;
 - DiT / MMDiT;
@@ -285,9 +285,9 @@ Do not infer the objective from the architecture alone.
 
 # 5. Conditioning — the actual “universal prompt”
 
-\[
+```math
 C=\{C_{text},C_{image},C_{audio},C_{video},C_{retrieved},C_{state},C_{graph},C_{tool},\ldots\}
-\]
+```
 
 Mechanisms:
 
@@ -306,53 +306,53 @@ Mechanisms:
 
 It is not universal. Under classic CFG:
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
 where “unconditional” may be empty, negative, or another reference conditioning signal.
 
 ---
 
-# 6. Modality topology \(\Omega\)
+# 6. Modality topology $`\Omega`$
 
 ## 6.1 Unimodal
 
-\[
+```math
 Text\rightarrow Text
-\]
+```
 
 or:
 
-\[
+```math
 Image\rightarrow Image
-\]
+```
 
 ## 6.2 Multimodal input
 
-\[
+```math
 Text+Image\rightarrow Text
-\]
+```
 
 ## 6.3 Multimodal output
 
-\[
+```math
 Text\rightarrow Text+Audio/Image
-\]
+```
 
 ## 6.4 Omni
 
-\[
+```math
 \{Text,Image,Audio,Video\}_{in}
 \rightarrow
 \{Text,Audio,\ldots\}_{out}
-\]
+```
 
 The main challenge stops being merely “LLM capacity” and starts including:
 
-\[
+```math
 Alignment(Modality_i,Modality_j)
-\]
+```
 
 across space, time, and semantics.
 
@@ -364,55 +364,55 @@ See [10_MULTIMODAL_VLM_OMNI_DATASHEET](10_MULTIMODAL_VLM_OMNI_DATASHEET.md).
 
 ## 7.1 Categorical decode
 
-\[
+```math
 z\rightarrow p(x)\rightarrow sample/argmax
-\]
+```
 
 ## 7.2 Constrained decode
 
-\[
+```math
 V_t\rightarrow V_t^{valid}
-\]
+```
 
 ## 7.3 ODE/SDE-style integration
 
-\[
+```math
 x_{k+1}=\Phi(x_k,f_\theta(x_k,t_k),\Delta t_k)
-\]
+```
 
 ## 7.4 Retrieval
 
-\[
+```math
 q\rightarrow z_q\rightarrow ANN(z_q)\rightarrow TopK
-\]
+```
 
 ## 7.5 Ranking
 
-\[
+```math
 (q,d_i)\rightarrow score_i\rightarrow sort
-\]
+```
 
 ## 7.6 Message passing
 
-\[
+```math
 h_v^{l+1}=\phi\left(h_v^l,\bigoplus_{u\in\mathcal N(v)}\psi(h_v^l,h_u^l,e_{uv})\right)
-\]
+```
 
 ## 7.7 Policy rollout
 
-\[
+```math
 a_t\sim\pi_\theta(a|s_t)
-\]
+```
 
 ## 7.8 Planning with learned dynamics
 
-\[
+```math
 \hat s_{t+1}=f_\theta(\hat s_t,a_t)
-\]
+```
 
-\[
+```math
 a^*_{1:H}=\arg\max\sum_{t=1}^{H}R(\hat s_t,a_t)
-\]
+```
 
 ---
 
@@ -440,15 +440,15 @@ The word “temperature” appears in several distinct contexts.
 
 ### Sampling temperature
 
-\[
+```math
 p_i(T)=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}
-\]
+```
 
 ### Contrastive temperature
 
-\[
+```math
 \exp(sim/\tau)
-\]
+```
 
 Controls how concentrated the loss is during embedding training.
 
@@ -479,16 +479,16 @@ Never treat a behavioral analogy as mathematical equivalence.
 
 # 11. Seed: initial state, not a determinism contract
 
-\[
+```math
 Reproducibility=
 F(W,input,seed,dtype,kernel,backend,hardware,parallelism,version)
-\]
+```
 
 Therefore:
 
-\[
+```math
 fixed\ seed\not\Rightarrow bitwise\ determinism
-\]
+```
 
 ---
 
@@ -496,15 +496,15 @@ fixed\ seed\not\Rightarrow bitwise\ determinism
 
 Keep these separate:
 
-\[
+```math
 Capacity=f(N_{params},architecture,training,data)
-\]
+```
 
 from:
 
-\[
+```math
 InferenceBudget=f(tokens,steps,rollouts,K,retrieval\ depth,verifier\ calls)
-\]
+```
 
 Examples:
 
@@ -519,7 +519,7 @@ Examples:
 
 With the added domains, the modern chain can be expressed as:
 
-\[
+```math
 \boxed{
 PERCEIVE
 \rightarrow
@@ -537,7 +537,7 @@ PREDICT\ WORLD
 \rightarrow
 PERCEIVE
 }
-\]
+```
 
 ### Perceive
 
@@ -569,7 +569,7 @@ PERCEIVE
 
 | Class | Example | Operation |
 |---|---|---|
-| Conditioning | prompt, image, retrieved context | modifies \(C\) |
+| Conditioning | prompt, image, retrieved context | modifies $`C`$ |
 | Distribution shaping | temperature, penalties | modifies logits/probabilities |
 | Support restriction | top-k, min-p, grammar | restricts candidate domain |
 | Guidance | CFG, STG | combines predictions |
@@ -590,45 +590,45 @@ A SOTA++ datasheet must separate **controls** from **observables**.
 
 ## LLM
 
-\[
+```math
 logits,\ entropy,\ support\ size,\ KV,\ promptTPS,\ decodeTPS
-\]
+```
 
 ## Retrieval
 
-\[
+```math
 Recall@K,\ Precision@K,\ MRR,\ nDCG,\ ANN\ latency
-\]
+```
 
 ## Reward/Judge
 
-\[
+```math
 agreement,\ calibration,\ ECE,\ win\ rate,\ rank\ correlation
-\]
+```
 
 ## Speech
 
-\[
+```math
 WER,\ CER,\ RTF,\ TTFT,\ timestamp\ error
-\]
+```
 
 ## Time series
 
-\[
+```math
 MAE,\ RMSE,\ CRPS,\ coverage,\ calibration
-\]
+```
 
 ## Graph
 
-\[
+```math
 node/edge/graph\ metrics,\ neighborhood\ fanout,\ memory/node
-\]
+```
 
 ## World/VLA
 
-\[
+```math
 success\ rate,\ return,\ horizon,\ model\ error,\ action\ latency
-\]
+```
 
 ---
 
@@ -697,7 +697,7 @@ data → train/adapt → model → infer/system → evaluate → failure analysi
 
 Formally:
 
-\[
+```math
 \theta_{k+1}
 =
 Update(
@@ -706,7 +706,7 @@ Evidence_k,
 Failures_k,
 Data_k
 )
-\]
+```
 
 This is why training, evaluation, and security are **horizontal layers**, not new backbone types.
 
@@ -720,14 +720,14 @@ When a “new type” of model appears, do not start with the product name.
 
 Ask:
 
-1. What is \(R\)?
-2. What is \(O\)?
-3. What is \(B\)?
-4. How does \(C\) enter?
-5. What is \(I\)?
-6. What persistent state \(S\) survives?
-7. How does output leave through \(D\)?
-8. What is the modality topology \(\Omega\)?
+1. What is $`R`$?
+2. What is $`O`$?
+3. What is $`B`$?
+4. How does $`C`$ enter?
+5. What is $`I`$?
+6. What persistent state $`S`$ survives?
+7. How does output leave through $`D`$?
+8. What is the modality topology $`\Omega`$?
 
 If you can answer those questions, the “new paradigm” almost always stops looking like magic and goes back to being engineering.
 

@@ -15,7 +15,7 @@ updated: 2026-10-01
 
 Um novo arquivo de domínio só é justificado quando muda de forma material ao menos um destes eixos:
 
-\[
+```math
 \boxed{
 Representation
 \lor
@@ -25,7 +25,7 @@ InferenceTopology
 \lor
 StateDynamics
 }
-\]
+```
 
 Não criar arquivo separado apenas porque existe:
 
@@ -106,9 +106,9 @@ Verdade por definição.
 
 Exemplo:
 
-\[
+```math
 Recall@K=RelevantRetrieved@K/TotalRelevant
-\]
+```
 
 ## Architecture fact
 
@@ -126,9 +126,9 @@ Modelo útil de engenharia.
 
 Exemplo:
 
-\[
+```math
 M_{KV}\approx2LTn_{kv}d_hbB
-\]
+```
 
 Declarar hipóteses quando necessário.
 
@@ -158,9 +158,9 @@ Dois knobs podem produzir percepção parecida sem serem equivalentes.
 
 Exemplo:
 
-\[
+```math
 Temperature\neq CFG
-\]
+```
 
 mesmo que ambos possam alterar percepção de “liberdade”.
 
@@ -174,15 +174,15 @@ Símbolos são locais ao domínio quando houver colisão.
 
 Regras:
 
-- \(\mathcal L\) reservado para loss sempre que possível;
-- \(\theta\) para learned parameters;
-- \(B\) para batch;
-- \(T\) para comprimento/tempo, sempre contextualizado;
-- \(d\) para dimension;
-- \(r\) para low-rank rank quando em PEFT;
-- \(\eta\) para learning rate em training;
-- \(\tau\) para contrastive/calibration temperature quando definido;
-- \(s\) para CFG/guidance quando definido.
+- $`\mathcal L`$ reservado para loss sempre que possível;
+- $`\theta`$ para learned parameters;
+- $`B`$ para batch;
+- $`T`$ para comprimento/tempo, sempre contextualizado;
+- $`d`$ para dimension;
+- $`r`$ para low-rank rank quando em PEFT;
+- $`\eta`$ para learning rate em training;
+- $`\tau`$ para contrastive/calibration temperature quando definido;
+- $`s`$ para CFG/guidance quando definido.
 
 Ver colisões em [19_PARAMETER_GLOSSARY_AND_REGISTRY](19_PARAMETER_GLOSSARY_AND_REGISTRY.md).
 
@@ -196,21 +196,21 @@ Preferências:
 
 ## Sequência
 
-\[
+```math
 [B,T,d]
-\]
+```
 
 ## Imagem latente
 
-\[
+```math
 [B,C,H,W]
-\]
+```
 
 ## Vídeo
 
-\[
+```math
 [B,T,C,H,W]
-\]
+```
 
 ou outra ordem **desde que declarada**.
 
@@ -224,9 +224,9 @@ Não assumir automaticamente convenção de framework.
 
 Preferir GiB/MiB quando calculada em base binária.
 
-\[
+```math
 1GiB=2^{30}\ bytes
-\]
+```
 
 ## Storage comercial
 
@@ -415,9 +415,9 @@ Exemplo:
 
 Sampling Temperature:
 
-\[
+```math
 T>0
-\]
+```
 
 é domínio matemático.
 
@@ -435,7 +435,7 @@ como lei universal.
 
 Usar:
 
-\[
+```math
 Reproducibility
 =f(
 weights,
@@ -448,7 +448,7 @@ hardware,
 parallelism,
 versions
 )
-\]
+```
 
 ---
 
@@ -465,9 +465,9 @@ Sempre que parâmetro aumentar dimensão relevante, tentar mostrar impacto em:
 
 Exemplo:
 
-\[
+```math
 \frac{\partial M_{KV}}{\partial T}
-\]
+```
 
 é mais útil que simplesmente “context aumenta VRAM”.
 
@@ -491,12 +491,12 @@ Toda seção de controles deveria, quando possível, apontar para variável mens
 
 Ideal:
 
-\[
+```math
 Control
 \rightarrow StatePerturbation
 \rightarrow Observable
 \rightarrow Output
-\]
+```
 
 Isso transforma tuning em experimento.
 
@@ -592,7 +592,7 @@ A coleção não deve responder apenas:
 
 Ela deve permitir reconstruir:
 
-\[
+```math
 \boxed{
 Architecture
 \rightarrow
@@ -608,11 +608,11 @@ Output
 \rightarrow
 Cost
 }
-\]
+```
 
 E, no lifecycle completo:
 
-\[
+```math
 \boxed{
 Data
 \rightarrow
@@ -626,6 +626,6 @@ Evaluation
 \rightarrow
 Security/Monitoring
 }
-\]
+```
 
 Esse é o contrato epistemológico da coleção.

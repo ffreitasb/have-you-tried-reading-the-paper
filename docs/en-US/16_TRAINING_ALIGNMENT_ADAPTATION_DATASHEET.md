@@ -7,15 +7,15 @@ updated: 2026-10-01
 
 # Training, Alignment & Adaptation Datasheet — SOTA++ 2026
 
-> Inference starts at \(\theta\). This document explains **how \(\theta\) got there**: data, objectives, optimization, SFT, preference optimization, RL, PEFT, distillation, merging, pruning, and continual adaptation.
+> Inference starts at $`\theta`$. This document explains **how $`\theta`$ got there**: data, objectives, optimization, SFT, preference optimization, RL, PEFT, distillation, merging, pruning, and continual adaptation.
 
 The conceptual boundary is:
 
-\[
+```math
 \boxed{
 Architecture \neq Weights \neq Training \neq PostTraining \neq Inference
 }
-\]
+```
 
 The same backbone can produce radically different behavior depending on the dataset, objective, optimizer trajectory, and post-training.
 
@@ -67,19 +67,19 @@ There is no single “training step.” There are **multiple update operators** 
 
 # 2. The universal update equation
 
-For parameters \(\theta\), loss \(\mathcal L\), and learning rate \(\eta\):
+For parameters $`\theta`$, loss $`\mathcal L`$, and learning rate $`\eta`$:
 
-\[
+```math
 \theta_{t+1}=\theta_t-\eta_t\,\hat g_t
-\]
+```
 
 where:
 
-\[
+```math
 \hat g_t \approx \nabla_\theta \mathcal L(\theta_t;B_t)
-\]
+```
 
-is an estimate of the gradient over minibatch \(B_t\).
+is an estimate of the gradient over minibatch $`B_t`$.
 
 The loss defines **what is desirable**.
 
@@ -89,9 +89,9 @@ The dataset defines **which regions of that space receive learning signal**.
 
 Therefore:
 
-\[
+```math
 Behavior = f(Architecture,Data,Objective,Optimization,PostTraining)
-\]
+```
 
 ---
 
@@ -99,21 +99,21 @@ Behavior = f(Architecture,Data,Objective,Optimization,PostTraining)
 
 ## 3.1 Dataset mixture
 
-Consider datasets \(D_i\) with mixture weights \(w_i\):
+Consider datasets $`D_i`$ with mixture weights $`w_i`$:
 
-\[
+```math
 P(x)=\sum_i w_iP_i(x)
-\]
+```
 
 with:
 
-\[
+```math
 \sum_i w_i=1
-\]
+```
 
 Mixture weights are a **behavioral hyperparameter**.
 
-Changing \(w_i\) changes the distribution the model learns from.
+Changing $`w_i`$ changes the distribution the model learns from.
 
 ---
 
@@ -123,7 +123,7 @@ More tokens do not automatically mean more useful information.
 
 A conceptual decomposition is:
 
-\[
+```math
 EffectiveData
 =f(
 N_{tokens},
@@ -133,7 +133,7 @@ Novelty,
 Coverage,
 Duplication
 )
-\]
+```
 
 Excessive duplication reduces novelty and may increase memorization.
 
@@ -151,9 +151,9 @@ Deduplication can happen at different granularities:
 
 The goal is to reduce:
 
-\[
+```math
 P(repeated\ evidence)
-\]
+```
 
 without destroying semantically legitimate repetition.
 
@@ -161,11 +161,11 @@ without destroying semantically legitimate repetition.
 
 ## 3.4 Contamination
 
-If an evaluation item \(e\), or a near-equivalent transformation of it, appears in training:
+If an evaluation item $`e`$, or a near-equivalent transformation of it, appears in training:
 
-\[
+```math
 P(e\in D_{train})>0
-\]
+```
 
 then the benchmark no longer measures pure generalization.
 
@@ -179,21 +179,21 @@ See [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMARK_
 
 Typical pipeline:
 
-\[
+```math
 SeedData
 \xrightarrow{Teacher}
 SyntheticCandidates
 \xrightarrow{Filter/Verifier}
 TrainingSet
-\]
+```
 
 The gain depends on:
 
-\[
+```math
 Q_{synthetic}
 \times Diversity
 \times Coverage
-\]
+```
 
 Risks include:
 
@@ -209,24 +209,24 @@ Risks include:
 
 After tokenization:
 
-\[
+```math
 x\rightarrow(t_1,\ldots,t_T)
-\]
+```
 
-Training typically uses windows of length \(L\).
+Training typically uses windows of length $`L`$.
 
 Without efficient packing, padding wastes compute:
 
-\[
+```math
 Efficiency=
 \frac{UsefulTokens}{TotalProcessedTokens}
-\]
+```
 
 Sequence packing concatenates examples to drive:
 
-\[
+```math
 Efficiency\rightarrow1
-\]
+```
 
 but requires care around:
 
@@ -241,10 +241,10 @@ but requires care around:
 
 ## 5.1 Causal language modeling
 
-\[
+```math
 \mathcal L_{CLM}
 =-\sum_{t=1}^{T}\log p_\theta(x_t|x_{<t})
-\]
+```
 
 This is the classic objective for decoder-only autoregressive models.
 
@@ -252,12 +252,12 @@ This is the classic objective for decoder-only autoregressive models.
 
 ## 5.2 Masked modeling
 
-For a set of masked positions \(M\):
+For a set of masked positions $`M`$:
 
-\[
+```math
 \mathcal L_{mask}
 =-\sum_{i\in M}\log p_\theta(x_i|x_{\setminus M})
-\]
+```
 
 See [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md).
 
@@ -265,14 +265,14 @@ See [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATASH
 
 ## 5.3 Contrastive learning
 
-\[
+```math
 \mathcal L=
 -\log
 \frac{\exp(sim(q,d^+)/\tau)}
 {\sum_j\exp(sim(q,d_j)/\tau)}
-\]
+```
 
-Here \(\tau\) is **contrastive temperature**, not sampling temperature.
+Here $`\tau`$ is **contrastive temperature**, not sampling temperature.
 
 See [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -282,25 +282,25 @@ See [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_
 
 Diffusion-style:
 
-\[
+```math
 x_t=\alpha_tx_0+\sigma_t\epsilon
-\]
+```
 
 Training may minimize:
 
-\[
+```math
 \mathbb E\|\epsilon-\epsilon_\theta(x_t,t,c)\|^2
-\]
+```
 
 or an equivalent parameterization.
 
 Flow matching:
 
-\[
+```math
 \mathcal L_{FM}
 =
 \mathbb E\|v_\theta(x_t,t,c)-u_t(x_t)\|^2
-\]
+```
 
 See [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md).
 
@@ -310,19 +310,19 @@ See [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSION
 
 ## 6.1 Effective batch
 
-With microbatch \(B_m\), gradient accumulation \(G\), and data-parallel world size \(W\):
+With microbatch $`B_m`$, gradient accumulation $`G`$, and data-parallel world size $`W`$:
 
-\[
+```math
 B_{effective}=B_mGW
-\]
+```
 
 In tokens:
 
-\[
+```math
 Tokens/update
 \approx
 B_{effective}\times L_{avg}
-\]
+```
 
 It is often more meaningful to compare training runs by **tokens per update** than by nominal “batch size.”
 
@@ -330,17 +330,17 @@ It is often more meaningful to compare training runs by **tokens per update** th
 
 ## 6.2 Learning rate
 
-\[
+```math
 \eta_t
-\]
+```
 
 is one of the most sensitive knobs in the system.
 
 Too low:
 
-\[
+```math
 |\Delta\theta|\rightarrow0
-\]
+```
 
 Too high can produce:
 
@@ -355,11 +355,11 @@ Too high can produce:
 
 One linear form is:
 
-\[
+```math
 \eta_t=
 \eta_{max}\frac{t}{T_w}
 \qquad t<T_w
-\]
+```
 
 Warmup reduces aggressive updates while optimizer statistics and activations are still stabilizing.
 
@@ -369,17 +369,17 @@ Warmup reduces aggressive updates while optimizer statistics and activations are
 
 Moments:
 
-\[
+```math
 m_t=\beta_1m_{t-1}+(1-\beta_1)g_t
-\]
+```
 
-\[
+```math
 v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2
-\]
+```
 
 Simplified update:
 
-\[
+```math
 \theta_{t+1}
 =
 \theta_t
@@ -387,15 +387,15 @@ Simplified update:
 \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
 -
 \eta\lambda\theta_t
-\]
+```
 
 Fundamental parameters:
 
-- learning rate \(\eta\);
-- \(\beta_1\);
-- \(\beta_2\);
-- \(\epsilon\);
-- weight decay \(\lambda\).
+- learning rate $`\eta`$;
+- $`\beta_1`$;
+- $`\beta_2`$;
+- $`\epsilon`$;
+- weight decay $`\lambda`$.
 
 ---
 
@@ -403,11 +403,11 @@ Fundamental parameters:
 
 Global norm:
 
-\[
+```math
 g'=
  g\cdot
 \min\left(1,\frac{c}{\|g\|}\right)
-\]
+```
 
 This limits extreme updates.
 
@@ -419,12 +419,12 @@ It does not fix a badly specified loss.
 
 Different states may live at different precisions:
 
-\[
+```math
 W_{storage},
 W_{compute},
 Gradients,
 OptimizerStates
-\]
+```
 
 Examples:
 
@@ -442,26 +442,26 @@ Mixed precision aims to reduce memory/compute while preserving numerical stabili
 
 The naive rule:
 
-\[
+```math
 M=N_{params}\times bytes
-\]
+```
 
 is not enough.
 
 Training requires approximately:
 
-\[
+```math
 M_{train}
 =
 M_W+M_G+M_{opt}+M_A+M_{comm}+M_{workspace}
-\]
+```
 
 where:
 
-- \(M_W\): weights;
-- \(M_G\): gradients;
-- \(M_{opt}\): optimizer state;
-- \(M_A\): activations.
+- $`M_W`$: weights;
+- $`M_G`$: gradients;
+- $`M_{opt}`$: optimizer state;
+- $`M_A`$: activations.
 
 With Adam-like optimizers, optimizer states may exceed the size of the weights themselves.
 
@@ -475,11 +475,11 @@ Without checkpointing, many intermediate activations are retained.
 
 Checkpointing trades memory for recomputation:
 
-\[
+```math
 Memory\downarrow
 \quad\Longleftrightarrow\quad
 Compute\uparrow
-\]
+```
 
 This is a **training-runtime** lever, not a change in the objective function.
 
@@ -509,11 +509,11 @@ Shard:
 
 Communication topology becomes a major part of the cost:
 
-\[
+```math
 T_{step}
 =
 T_{compute}+T_{communication}+T_{sync}
-\]
+```
 
 ---
 
@@ -521,20 +521,20 @@ T_{compute}+T_{communication}+T_{sync}
 
 Dataset:
 
-\[
+```math
 D=\{(x_i,y_i)\}
-\]
+```
 
 Loss:
 
-\[
+```math
 \mathcal L_{SFT}
 =-\sum_i\sum_t
 m_{i,t}
 \log p_\theta(y_{i,t}|x_i,y_{i,<t})
-\]
+```
 
-where \(m\) determines which tokens contribute to the loss.
+where $`m`$ determines which tokens contribute to the loss.
 
 ---
 
@@ -542,13 +542,13 @@ where \(m\) determines which tokens contribute to the loss.
 
 If prompt tokens receive a zero mask:
 
-\[
+$$
 m_t=
 \begin{cases}
 0 & prompt\\
 1 & answer
 \end{cases}
-\]
+$$
 
 this avoids training the model to predict the prompt itself when the objective is instruction following.
 
@@ -560,10 +560,10 @@ Messages are serialized into special tokens.
 
 Therefore:
 
-\[
+```math
 Template_{train}
 eq Template_{infer}
-\]
+```
 
 can cause meaningful regression.
 
@@ -585,15 +585,15 @@ It is less reliable as the primary mechanism for factual knowledge injection.
 
 A useful conceptual approximation is:
 
-\[
+```math
 SFT\rightarrow BehaviorPrior
-\]
+```
 
 more than:
 
-\[
+```math
 SFT\rightarrow ExactDatabase
-\]
+```
 
 For mutable knowledge, retrieval is often the better mechanism.
 
@@ -603,14 +603,14 @@ For mutable knowledge, retrieval is often the better mechanism.
 
 A pairwise sample is:
 
-\[
+```math
 (x,y_w,y_l)
-\]
+```
 
 where:
 
-- \(y_w\): preferred/chosen;
-- \(y_l\): rejected.
+- $`y_w`$: preferred/chosen;
+- $`y_l`$: rejected.
 
 The data does not encode only “quality.” It also encodes the preference distribution of the annotator/judge.
 
@@ -622,32 +622,32 @@ See [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
 Reward model:
 
-\[
+```math
 r_\phi(x,y)\in\mathbb R
-\]
+```
 
 Bradley–Terry:
 
-\[
+```math
 P(y_w\succ y_l)
 =
 \sigma(r_w-r_l)
-\]
+```
 
 Loss:
 
-\[
+```math
 \mathcal L_{RM}
 =-\log\sigma(r_w-r_l)
-\]
+```
 
 The reward is a **learned proxy objective**.
 
 Therefore:
 
-\[
+```math
 MaxReward\neq MaxTrueUtility
-\]
+```
 
 necessarily.
 
@@ -671,12 +671,12 @@ aligned policy
 
 An abstract objective:
 
-\[
+```math
 \max_\theta
 \mathbb E_{y\sim\pi_\theta}[r_\phi(x,y)]
 -
 \beta D_{KL}(\pi_\theta\|\pi_{ref})
-\]
+```
 
 The KL term limits policy drift.
 
@@ -686,15 +686,15 @@ The KL term limits policy drift.
 
 PPO uses a clipped policy ratio.
 
-\[
+```math
 r_t(\theta)=
 \frac{\pi_\theta(a_t|s_t)}
 {\pi_{old}(a_t|s_t)}
-\]
+```
 
 Simplified objective:
 
-\[
+```math
 L^{CLIP}
 =
 \mathbb E
@@ -704,7 +704,7 @@ r_tA_t,
 clip(r_t,1-\epsilon,1+\epsilon)A_t
 )
 \right]
-\]
+```
 
 Historically important, although the actor/critic/reward/reference infrastructure makes the pipeline complex.
 
@@ -716,7 +716,7 @@ DPO removes the explicit reward model from the optimization loop.
 
 A canonical form is:
 
-\[
+```math
 \mathcal L_{DPO}
 =
 -
@@ -729,11 +729,11 @@ A canonical form is:
 \log\frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}
 \right)
 \right]
-\]
+```
 
 Fundamental knobs:
 
-- \(\beta\);
+- $`\beta`$;
 - preference dataset;
 - reference policy;
 - sequence length;
@@ -764,13 +764,13 @@ The taxonomy will outlive the acronym.
 
 For tasks with a checker:
 
-\[
+$$
 R(y)=
 \begin{cases}
 1 & verified\\
 0 & fail
 \end{cases}
-\]
+$$
 
 or a continuous reward derived from the environment.
 
@@ -789,23 +789,23 @@ This reduces dependence on a subjective judge, but only for properties covered b
 
 For a prompt, generate a group:
 
-\[
+```math
 \{y_1,\ldots,y_G\}
-\]
+```
 
 Rewards:
 
-\[
+```math
 r_1,\ldots,r_G
-\]
+```
 
 A conceptual group-normalized advantage is:
 
-\[
+```math
 \hat A_i
 =
 \frac{r_i-\mu_G}{\sigma_G+\epsilon}
-\]
+```
 
 The relative advantage reduces the need for an explicit critic.
 
@@ -813,9 +813,9 @@ Important failure surface:
 
 if:
 
-\[
+```math
 \sigma_G\approx0
-\]
+```
 
 there is very little relative signal inside the group.
 
@@ -827,11 +827,11 @@ DAPO emerged as a practical evolution of large-scale RL, combining decisions aro
 
 The generalizable lesson is:
 
-\[
+```math
 RL\ performance
 \neq
 PolicyObjective\ only
-\]
+```
 
 It depends on:
 
@@ -848,18 +848,18 @@ It depends on:
 
 GSPO replaces a token-level ratio with a sequence-normalized ratio:
 
-\[
+```math
 s_i(\theta)
 =
 \left(
 \frac{\pi_\theta(y_i|x)}
 {\pi_{old}(y_i|x)}
 \right)^{1/|y_i|}
-\]
+```
 
 or:
 
-\[
+```math
 \log s_i
 =
 \frac1{|y_i|}
@@ -870,7 +870,7 @@ or:
 }{
 \pi_{old}(y_{i,t}|x,y_{i,<t})
 }
-\]
+```
 
 This is especially relevant to MoE RL, where token-level routing differences can make importance ratios fragile.
 
@@ -884,9 +884,9 @@ This is especially relevant to MoE RL, where token-level routing differences can
 
 Data comes from the current policy:
 
-\[
+```math
 y\sim\pi_\theta
-\]
+```
 
 Pros:
 
@@ -902,9 +902,9 @@ Cons:
 
 Use pre-collected data:
 
-\[
+```math
 D=\{x,y,r\}
-\]
+```
 
 Pros:
 
@@ -922,17 +922,17 @@ Cons:
 
 If the reward model is a proxy:
 
-\[
+```math
 R_{proxy}\neq U_{true}
-\]
+```
 
 then stronger optimization can eventually produce:
 
-\[
+```math
 R_{proxy}\uparrow
 \quad
 U_{true}\downarrow
-\]
+```
 
 This is a case of Goodhart's law.
 
@@ -944,11 +944,11 @@ See [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
 Full fine-tuning:
 
-\[
+```math
 W\rightarrow W+\Delta W
-\]
+```
 
-with unrestricted \(\Delta W\).
+with unrestricted $`\Delta W`$.
 
 PEFT constrains the update to a smaller parameterized subspace.
 
@@ -958,37 +958,37 @@ PEFT constrains the update to a smaller parameterized subspace.
 
 For:
 
-\[
+```math
 W\in\mathbb R^{d_{out}\times d_{in}}
-\]
+```
 
 LoRA uses:
 
-\[
+```math
 \Delta W=BA
-\]
+```
 
 with:
 
-\[
+```math
 B\in\mathbb R^{d_{out}\times r}
-\]
+```
 
-\[
+```math
 A\in\mathbb R^{r\times d_{in}}
-\]
+```
 
 where:
 
-\[
+```math
 r\ll\min(d_{in},d_{out})
-\]
+```
 
 Update:
 
-\[
+```math
 W'=W+\frac{\alpha}{r}BA
-\]
+```
 
 or a variant scaling rule, depending on the implementation.
 
@@ -998,20 +998,20 @@ or a variant scaling rule, depending on the implementation.
 
 Approximately:
 
-\[
+```math
 N_{LoRA}
 =r(d_{in}+d_{out})
-\]
+```
 
 per target matrix.
 
 Therefore:
 
-\[
+```math
 N_{LoRA}\ll d_{in}d_{out}
-\]
+```
 
-when \(r\) is small.
+when $`r`$ is small.
 
 ---
 
@@ -1043,17 +1043,17 @@ In a Transformer these may include:
 
 More modules:
 
-\[
+```math
 Capacity\uparrow
-\]
+```
 
 but also:
 
-\[
+```math
 TrainableParams\uparrow,
 Memory\uparrow,
 OverfitRisk\uparrow
-\]
+```
 
 ---
 
@@ -1071,15 +1071,15 @@ train LoRA adapters
 
 Thus:
 
-\[
+```math
 \nabla W_{base}=0
-\]
+```
 
 but:
 
-\[
+```math
 \nabla A,\nabla B\neq0
-\]
+```
 
 QLoRA dramatically reduces the memory footprint of the frozen base, but training still requires:
 
@@ -1090,9 +1090,9 @@ QLoRA dramatically reduces the memory footprint of the frozen base, but training
 
 Therefore:
 
-\[
+```math
 FileSize_{Q4}\neq TrainingVRAM
-\]
+```
 
 ---
 
@@ -1102,9 +1102,9 @@ DoRA separates weight magnitude from direction.
 
 Conceptually:
 
-\[
+```math
 W=m\frac{V}{\|V\|}
-\]
+```
 
 The direction receives a low-rank adaptation; magnitude is learned separately.
 
@@ -1130,11 +1130,11 @@ Modern implementations support strategies such as:
 
 The choice can affect:
 
-\[
+```math
 Convergence,
 QuantizationError,
 InitialPerturbation
-\]
+```
 
 So “LoRA” alone does not fully specify the adaptation dynamics.
 
@@ -1151,11 +1151,11 @@ Adapters can be:
 
 A linear combination:
 
-\[
+```math
 \Delta W
 =
 \sum_i\lambda_i\Delta W_i
-\]
+```
 
 can produce interference.
 
@@ -1165,15 +1165,15 @@ Do not assume perfect compositionality.
 
 # 34. Model merging — parameter space
 
-Given checkpoints \(\theta_i\):
+Given checkpoints $`\theta_i`$:
 
 ## Linear merge
 
-\[
+```math
 \theta_{merge}
 =
 \sum_i\alpha_i\theta_i
-\]
+```
 
 with weights typically normalized.
 
@@ -1181,20 +1181,20 @@ with weights typically normalized.
 
 # 35. Task vectors
 
-Given base \(\theta_0\):
+Given base $`\theta_0`$:
 
-\[
+```math
 \tau_i=\theta_i-\theta_0
-\]
+```
 
 Merge:
 
-\[
+```math
 \theta^*
 =
 \theta_0+
 \sum_i\lambda_i\tau_i
-\]
+```
 
 This view treats fine-tuning as a displacement vector in parameter space.
 
@@ -1212,9 +1212,9 @@ DARE applies random dropping plus rescaling to deltas before merging.
 
 The general idea is that:
 
-\[
+```math
 Interference(\tau_i,\tau_j)
-\]
+```
 
 can make a simple average destructive.
 
@@ -1224,15 +1224,15 @@ can make a simple average destructive.
 
 SLERP interpolates along spherical geometry between vectors.
 
-For two unit vectors separated by angle \(\omega\):
+For two unit vectors separated by angle $`\omega`$:
 
-\[
+```math
 SLERP(t)
 =
 \frac{\sin((1-t)\omega)}{\sin\omega}v_0
 +
 \frac{\sin(t\omega)}{\sin\omega}v_1
-\]
+```
 
 Useful when linear interpolation does not preserve magnitude/direction well.
 
@@ -1250,11 +1250,11 @@ Before merging models, verify:
 - normalization;
 - base lineage.
 
-\[
+```math
 SameParameterCount
 \not\Rightarrow
 CompatibleParameterSemantics
-\]
+```
 
 ---
 
@@ -1262,19 +1262,19 @@ CompatibleParameterSemantics
 
 Teacher:
 
-\[
+```math
 q_T(y|x)
-\]
+```
 
 Student:
 
-\[
+```math
 p_\theta(y|x)
-\]
+```
 
 A typical loss:
 
-\[
+```math
 \mathcal L
 =
 \lambda\mathcal L_{hard}
@@ -1282,9 +1282,9 @@ A typical loss:
 (1-\lambda)T^2
 D_{KL}
 (q_T^{(T)}\|p_\theta^{(T)})
-\]
+```
 
-Here \(T\) is **distillation temperature**, again distinct from sampling temperature.
+Here $`T`$ is **distillation temperature**, again distinct from sampling temperature.
 
 ---
 
@@ -1292,15 +1292,15 @@ Here \(T\) is **distillation temperature**, again distinct from sampling tempera
 
 For generative models, the teacher often produces trajectories:
 
-\[
+```math
 y\sim Teacher(x)
-\]
+```
 
 which become training data for the student:
 
-\[
+```math
 (x,y)\rightarrow SFT
-\]
+```
 
 This is behavior distillation even when the teacher's logits are unavailable.
 
@@ -1310,23 +1310,23 @@ This is behavior distillation even when the teacher's logits are unavailable.
 
 The teacher generates:
 
-\[
+```math
 problem
 \rightarrow
 reasoning\ trace
 \rightarrow
 answer
-\]
+```
 
 The student learns from traces or filtered answers.
 
 Risk:
 
-\[
+```math
 TeacherError
 \rightarrow
 StudentTrainingSignal
-\]
+```
 
 This is why verifier/filtering quality is central.
 
@@ -1340,15 +1340,15 @@ Advantage:
 
 it reduces mismatch between:
 
-\[
+```math
 D_{teacher}
-\]
+```
 
 and:
 
-\[
+```math
 D_{student}
-\]
+```
 
 This is a strong trend in modern post-training toolkits.
 
@@ -1358,15 +1358,15 @@ This is a strong trend in modern post-training toolkits.
 
 Instead of compressing only the model, dataset distillation tries to construct a compact dataset:
 
-\[
+```math
 D_{small}
-\]
+```
 
 such that training on it approximates training on:
 
-\[
+```math
 D_{large}
-\]
+```
 
 This is a separate axis from knowledge distillation.
 
@@ -1376,15 +1376,15 @@ This is a separate axis from knowledge distillation.
 
 Mask:
 
-\[
+```math
 W'=M\odot W
-\]
+```
 
 with:
 
-\[
+```math
 M_{ij}\in\{0,1\}
-\]
+```
 
 ## Unstructured
 
@@ -1406,44 +1406,44 @@ Structured pruning tends to map better onto conventional hardware.
 
 # 45. Sparsity does not imply speedup
 
-\[
+```math
 Sparsity\uparrow
 \not\Rightarrow
 Latency\downarrow
-\]
+```
 
 if the kernels/hardware cannot exploit the sparsity pattern.
 
 Always distinguish:
 
-\[
+```math
 ParameterCount
-\]
+```
 
 from:
 
-\[
+```math
 ExecutedFLOPs
-\]
+```
 
 and:
 
-\[
+```math
 WallClockLatency
-\]
+```
 
 ---
 # 46. Continual learning
 
-A new distribution \(D_{new}\) may improve the new task while degrading old ones.
+A new distribution $`D_{new}`$ may improve the new task while degrading old ones.
 
 Catastrophic forgetting:
 
-\[
+```math
 Perf_{old}(\theta_{new})
 <
 Perf_{old}(\theta_{old})
-\]
+```
 
 Countermeasures include:
 
@@ -1460,9 +1460,9 @@ Countermeasures include:
 
 The data distribution changes over training time:
 
-\[
+```math
 P_t(x)
-\]
+```
 
 instead of remaining constant.
 
@@ -1517,9 +1517,9 @@ We may:
 
 Each choice changes:
 
-\[
+```math
 TrainableParams
-\]
+```
 
 and the risk of destroying pretrained representations.
 
@@ -1608,15 +1608,15 @@ Never monitor loss alone.
 
 # 53. Loss curve ≠ capability curve
 
-\[
+```math
 \mathcal L_{train}\downarrow
-\]
+```
 
 does not guarantee:
 
-\[
+```math
 TaskQuality\uparrow
-\]
+```
 
 especially under:
 
@@ -1678,9 +1678,9 @@ Diversity decreases.
 
 ## Overfitting
 
-\[
+```math
 Train\uparrow,Eval\downarrow
-\]
+```
 
 ## Merge interference
 
@@ -1718,11 +1718,11 @@ but each model and sequence length shifts the curve.
 
 Calculate first:
 
-\[
+```math
 M_{train}
 =
 weights+grads+optimizer+activations+workspace
-\]
+```
 
 ---
 
@@ -1831,7 +1831,7 @@ The relevant picture in October 2026 is less “which algorithm won?” and more
 
 # 61. Mechanical summary
 
-\[
+```math
 \boxed{
 ModelBehavior
 =
@@ -1845,7 +1845,7 @@ Optimization
 \circ
 PostTraining
 }
-\]
+```
 
 Architecture defines the **space of what is possible**.
 

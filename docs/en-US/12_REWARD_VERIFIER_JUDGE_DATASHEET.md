@@ -16,26 +16,26 @@ Related: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UNIFIED
 
 ## 1.1 Scalar Reward Model
 
-\[
+```math
 r_\theta(x,y)\in\mathbb R
-\]
+```
 
-Input: prompt/context \(x\) + response/action \(y\).  
+Input: prompt/context $`x`$ + response/action $`y`$.  
 Output: scalar.
 
 ---
 
 ## 1.2 Pairwise Preference Model
 
-\[
+```math
 P(y_A\succ y_B|x)
-\]
+```
 
 A latent score can induce preference:
 
-\[
+```math
 P(A>B)=\sigma(r_A-r_B)
-\]
+```
 
 ---
 
@@ -43,15 +43,15 @@ P(A>B)=\sigma(r_A-r_B)
 
 Decides a verifiable property:
 
-\[
+```math
 V(x,y)\rightarrow\{0,1\}
-\]
+```
 
 or a probability:
 
-\[
+```math
 P(correct|x,y)
-\]
+```
 
 It may be:
 
@@ -66,9 +66,9 @@ It may be:
 
 More general system:
 
-\[
+```math
 J(x,y,criteria)\rightarrow score/rank/critique
-\]
+```
 
 It may be a generative LLM, not necessarily a specialized reward head.
 
@@ -76,22 +76,22 @@ It may be a generative LLM, not necessarily a specialized reward head.
 
 # 2. Bradley–Terry preference model
 
-If \(r_A,r_B\) are utilities:
+If $`r_A,r_B`$ are utilities:
 
-\[
+```math
 P(A>B)=
 \frac{e^{r_A}}{e^{r_A}+e^{r_B}}
 =
 \sigma(r_A-r_B)
-\]
+```
 
 Loss for chosen/rejected pair:
 
-\[
+```math
 \mathcal L
 =
 -\log\sigma(r_{chosen}-r_{rejected})
-\]
+```
 
 Training learns **relative differences**, not necessarily a calibrated absolute scale.
 
@@ -103,9 +103,9 @@ A reward of `7.4` does not mean a 74% chance of correctness.
 
 To turn a score into a reliable probability, we need calibration:
 
-\[
+```math
 P(correct|r)
-\]
+```
 
 estimated/validated separately.
 
@@ -122,9 +122,9 @@ Possible techniques:
 
 Evaluates the final answer:
 
-\[
+```math
 R_{outcome}=R(x,y_{final})
-\]
+```
 
 Advantages:
 
@@ -143,15 +143,15 @@ Limitations:
 
 Evaluates intermediate steps:
 
-\[
+```math
 r_t=R(x,y_{1:t})
-\]
+```
 
 or transitions:
 
-\[
+```math
 r_t=R(s_t,a_t,s_{t+1})
-\]
+```
 
 This enables:
 
@@ -164,9 +164,9 @@ This enables:
 
 If every step requires evaluation:
 
-\[
+```math
 C_{PRM}\propto N_{steps}\times C_{verifier}
-\]
+```
 
 Process supervision improves observability but costs far more inference/annotation.
 
@@ -176,15 +176,15 @@ Process supervision improves observability but costs far more inference/annotati
 
 Evaluating a step from the prefix alone can be ambiguous:
 
-\[
+```math
 P(correct\ step|prefix)
-\]
+```
 
 Continuation/outcome information can be incorporated:
 
-\[
+```math
 P(step\ valid|prefix,suffix/outcome)
-\]
+```
 
 This reduces myopia, but creates leakage if used incorrectly in an online setting.
 
@@ -194,7 +194,7 @@ This reduces myopia, but creates leakage if used incorrectly in an online settin
 
 Instead of a scalar head:
 
-\[
+```math
 (x,y)
 \rightarrow
 LLM
@@ -202,26 +202,26 @@ LLM
 analysis/critique
 \rightarrow
 verdict
-\]
+```
 
 It may use tools/environment:
 
-\[
+```math
 Verifier
 \rightarrow Tool
 \rightarrow Evidence
 \rightarrow Verdict
-\]
+```
 
 In 2026, environment-aware generative PRMs are appearing specifically to catch silent failures that do not surface as exceptions.
 
 ### Trade-off
 
-\[
+```math
 VerifierCapability\uparrow
 \leftrightarrow
 Latency/Cost/Variance\uparrow
-\]
+```
 
 ---
 
@@ -229,9 +229,9 @@ Latency/Cost/Variance\uparrow
 
 When a deterministic checker exists:
 
-\[
+```math
 V(y)=1[y\in\mathcal S_{valid}]
-\]
+```
 
 Examples:
 
@@ -250,21 +250,21 @@ This class provides high-precision reward **within the covered domain**, but tha
 
 Policy:
 
-\[
+```math
 y\sim\pi_\theta(y|x)
-\]
+```
 
 Verifier:
 
-\[
+```math
 r=V(x,y)
-\]
+```
 
 RL optimizes:
 
-\[
+```math
 \max_\theta E_{y\sim\pi_\theta}[r]
-\]
+```
 
 The bottleneck becomes verifier coverage.
 
@@ -276,9 +276,9 @@ Generative verifiers broaden the domain, but trade deterministic certainty for m
 
 Evaluation prompt:
 
-\[
+```math
 J(prompt,response,rubric)\rightarrow judgment
-\]
+```
 
 Outputs may include:
 
@@ -293,9 +293,9 @@ Outputs may include:
 
 The judge is another model with its own priors.
 
-\[
+```math
 JudgeError\neq0
-\]
+```
 
 ---
 
@@ -303,9 +303,9 @@ JudgeError\neq0
 
 Given A/B:
 
-\[
+```math
 J(x,A,B)\rightarrow A>B\text{ or }B>A
-\]
+```
 
 Advantage: relative comparison is often cognitively easier than absolute scoring.
 
@@ -313,9 +313,9 @@ Problem: **position bias**.
 
 Swap test:
 
-\[
+```math
 J(x,A,B)\stackrel{?}{=}inverse(J(x,B,A))
-\]
+```
 
 If not, the judge is positionally unstable.
 
@@ -329,9 +329,9 @@ Preference for the first/second option.
 
 ## Verbosity bias
 
-\[
+```math
 P(win|longer) > P(win|quality\ equivalent)
-\]
+```
 
 ## Style bias
 
@@ -349,26 +349,26 @@ A flawed reference can pull the judge toward the wrong conclusion.
 
 # 13. Calibration
 
-If the judge returns confidence \(p_i\):
+If the judge returns confidence $`p_i`$:
 
 Ideal calibration:
 
-\[
+```math
 P(correct|p=0.8)\approx0.8
-\]
+```
 
 ### Brier score
 
-\[
+```math
 BS=\frac1N\sum_i(p_i-y_i)^2
-\]
+```
 
 ### Expected Calibration Error
 
-\[
+```math
 ECE=\sum_b\frac{|B_b|}{N}
 |acc(B_b)-conf(B_b)|
-\]
+```
 
 High accuracy does not imply good calibration.
 
@@ -380,10 +380,10 @@ If a judge has imperfect sensitivity/specificity, its raw judgment rate may be a
 
 Conceptually:
 
-\[
+```math
 ObservedScore
 =F(TrueQuality,JudgeQuality,Calibration)
-\]
+```
 
 When judge quality shifts across models/domains, direct score comparisons can reverse conclusions.
 
@@ -401,25 +401,25 @@ but:
 
 The generator produces:
 
-\[
+```math
 Y=\{y_1,\ldots,y_N\}
-\]
+```
 
 The verifier selects:
 
-\[
+```math
 y^*=\arg\max_iR(x,y_i)
-\]
+```
 
-If the probability of producing at least one good solution rises with \(N\), the verifier converts compute into quality.
+If the probability of producing at least one good solution rises with $`N`$, the verifier converts compute into quality.
 
 But:
 
-\[
+```math
 Quality_{selected}
 \le
 Quality_{oracle-best}
-\]
+```
 
 as a function of verifier error.
 
@@ -429,19 +429,19 @@ as a function of verifier error.
 
 Approximate cost:
 
-\[
+```math
 C_{total}
 =N\cdot C_{generation}
 +N\cdot C_{verification}
-\]
+```
 
 If the verifier is itself a large generative model, selection may cost as much as generation.
 
 Evaluate marginal gain:
 
-\[
+```math
 \frac{\Delta Quality}{\Delta Compute}
-\]
+```
 
 ---
 
@@ -449,19 +449,19 @@ Evaluate marginal gain:
 
 For discrete answers:
 
-\[
+```math
 \hat y=mode(y_1,\ldots,y_N)
-\]
+```
 
 Works when errors are sufficiently independent.
 
 If outputs share a systematic bias:
 
-\[
+```math
 Corr(error_i,error_j)\uparrow
 \Rightarrow
 benefit\downarrow
-\]
+```
 
 Ensemble diversity matters.
 
@@ -473,15 +473,15 @@ Verification does not need to inspect only final surface text.
 
 If a reasoning trace has hidden states:
 
-\[
+```math
 h_{start},h_{end}
-\]
+```
 
 we can define:
 
-\[
+```math
 \Delta h=h_{end}-h_{start}
-\]
+```
 
 and classify trajectories using internal geometry.
 
@@ -495,15 +495,15 @@ This expands “verifier” beyond surface text.
 
 Rubric:
 
-\[
+```math
 R=\{criterion_1,\ldots,criterion_m\}
-\]
+```
 
 A judge may decompose:
 
-\[
+```math
 score(y)=\sum_iw_i score_i(y)
-\]
+```
 
 Advantage: auditability.
 
@@ -515,21 +515,21 @@ Risk: a poor rubric creates **structured misguidance** — a wrong criterion con
 
 The policy optimizes a proxy:
 
-\[
+```math
 \max R_{proxy}
-\]
+```
 
 but we want:
 
-\[
+```math
 \max U_{true}
-\]
+```
 
 If:
 
-\[
+```math
 R_{proxy}\neq U_{true}
-\]
+```
 
 the policy may exploit flaws.
 
@@ -543,9 +543,9 @@ Goodhart:
 
 Even a reasonable reward model can fail out of distribution when the policy is pushed toward extremes:
 
-\[
+```math
 \pi_{new}\gg\pi_{training\ distribution}
-\]
+```
 
 The harder you optimize against an imperfect RM, the more likely you are to exploit uncalibrated regions.
 
@@ -555,26 +555,26 @@ The harder you optimize against an imperfect RM, the more likely you are to expl
 
 Reasoning tree:
 
-\[
+```math
 s_0\rightarrow\{s_1^1,\ldots,s_1^k\}
-\]
+```
 
 PRM/verifier scores:
 
-\[
+```math
 R(s_t^i)
-\]
+```
 
 Beam/search keeps the top candidates.
 
 Trade-off:
 
-\[
+```math
 BranchingFactor\uparrow
 \Rightarrow
 SearchCoverage\uparrow,
 Compute\uparrow
-\]
+```
 
 ---
 
@@ -582,17 +582,17 @@ Compute\uparrow
 
 In code:
 
-\[
+```math
 code\rightarrow compiler/tests\rightarrow result
-\]
+```
 
 This is an excellent external verifier for the properties it covers.
 
 But:
 
-\[
+```math
 TestsPass\not\Rightarrow ProgramCorrect\ universally
-\]
+```
 
 Test coverage limits the evidence.
 
@@ -604,9 +604,9 @@ See [03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET](03_CODE_GENERATION_AND_AGE
 
 For trajectory:
 
-\[
+```math
 \tau=(s_0,a_0,s_1,a_1,\ldots)
-\]
+```
 
 An environment-aware PRM can verify:
 
@@ -623,15 +623,15 @@ This moves evaluation closer to control systems rather than text alone.
 
 ## Pairwise accuracy
 
-\[
+```math
 Acc=\frac{correct\ preferences}{total}
-\]
+```
 
-## Kendall \(\tau\)
+## Kendall $`\tau`$
 
 Ordinal correlation.
 
-## Spearman \(\rho\)
+## Spearman $`\rho`$
 
 Rank correlation.
 

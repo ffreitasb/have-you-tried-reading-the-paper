@@ -6,21 +6,21 @@ updated: 2026-10-01
 
 # Video Generation — Spatiotemporal Latent Datasheet v2.0
 
-> Vídeo não é “imagem + motion slider”. É geração sobre um estado espaço-temporal comprimido, onde identidade, geometria, câmera, movimento e eventualmente áudio precisam permanecer coerentes através de \(T\).
+> Vídeo não é “imagem + motion slider”. É geração sobre um estado espaço-temporal comprimido, onde identidade, geometria, câmera, movimento e eventualmente áudio precisam permanecer coerentes através de $`T`$.
 
 ## 1. Tensor fundamental
 
 Pixels:
 
-\[
+```math
 X\in\mathbb{R}^{B\times T\times H\times W\times C}
-\]
+```
 
 Após codec/VAE espaço-temporal:
 
-\[
+```math
 Z\in\mathbb{R}^{B\times T_l\times H_l\times W_l\times C_l}
-\]
+```
 
 ---
 
@@ -28,13 +28,13 @@ Z\in\mathbb{R}^{B\times T_l\times H_l\times W_l\times C_l}
 
 Defina:
 
-\[
+```math
 r_s=\frac{H}{H_l}=\frac{W}{W_l}
-\]
+```
 
-\[
+```math
 r_t=\frac{T}{T_l}
-\]
+```
 
 Quanto maior a compressão, menor o custo do denoiser/DiT, mas maior a carga colocada no decoder para reconstruir detalhes/movimento.
 
@@ -48,15 +48,15 @@ A resolução observável `1920×1080×N frames` não é a dimensão diretamente
 
 Se o latent é patchificado:
 
-\[
+```math
 N=T_pH_pW_p
-\]
+```
 
 Atenção global ingênua:
 
-\[
+```math
 O(N^2)
-\]
+```
 
 Por isso vídeo exige:
 
@@ -75,9 +75,9 @@ Por isso vídeo exige:
 
 Todos os frames/latentes fazem parte do mesmo estado:
 
-\[
+```math
 Z_t=[z_t^1,z_t^2,\ldots,z_t^T]
-\]
+```
 
 O modelo pode denoise/transportar a sequência conjuntamente.
 
@@ -91,15 +91,15 @@ Não existe lei matemática “último frame sempre é pior”.
 
 Quando blocos futuros dependem explicitamente de outputs anteriores:
 
-\[
+```math
 Z_{chunk,k+1}\sim p(Z\mid Z_{chunk,\le k},C)
-\]
+```
 
 erros podem acumular:
 
-\[
+```math
 e_{k+1}=f(e_k,\ldots)
-\]
+```
 
 Aqui drift temporal acumulado é uma preocupação estrutural real.
 
@@ -123,9 +123,9 @@ maior a dificuldade de manter correspondência temporal.
 
 ### Heurística, não lei
 
-\[
+```math
 Motion\ complexity\uparrow\Rightarrow Coherence\ risk\uparrow
-\]
+```
 
 mas a força da relação depende da arquitetura e do treino.
 
@@ -135,9 +135,9 @@ mas a força da relação depende da arquitetura e do treino.
 
 Para um ponto/feature:
 
-\[
+```math
 (x_t,y_t)\rightarrow(x_{t+1},y_{t+1})
-\]
+```
 
 O modelo precisa inferir simultaneamente:
 
@@ -155,21 +155,21 @@ O modelo precisa inferir simultaneamente:
 
 ## 8. Text-to-video
 
-\[
+```math
 C=C_{text}
-\]
+```
 
 ### Image-to-video
 
-\[
+```math
 C=\{C_{text},C_{image}\}
-\]
+```
 
 ### Start/end/keyframe conditioning
 
-\[
+```math
 C=\{frame_{start},frame_{end},keyframes,\ldots\}
-\]
+```
 
 ### Camera conditioning
 
@@ -200,11 +200,11 @@ Classificar como `MODEL/PIPE`.
 
 Mesma formulação geral:
 
-\[
+```math
 f_g=f_u+s(f_c-f_u)
-\]
+```
 
-mas agora \(f\) atua sobre tensor espaço-temporal.
+mas agora $`f`$ atua sobre tensor espaço-temporal.
 
 Guidance alto pode intensificar prompt adherence e simultaneamente amplificar inconsistências/oversharpening/flicker dependendo do modelo.
 
@@ -214,9 +214,9 @@ Guidance alto pode intensificar prompt adherence e simultaneamente amplificar in
 
 Pipelines modernos podem criar uma prediction “degradada” perturbando self-attention/blocos e afastar a trajetória dela:
 
-\[
+```math
 f_{guided}=f_{base}+s_{stg}(f_{base}-f_{perturbed})
-\]
+```
 
 A ideia é fortalecer estrutura/coerência espaço-temporal usando uma direção diferencial, análoga em espírito ao CFG mas com outra perturbação.
 
@@ -228,9 +228,9 @@ LTX-2.x expõe STG como controle explícito.
 
 Em modelos conjuntos vídeo+áudio, uma prediction pode ser obtida com cross-modality attention desligada e usada como referência fraca:
 
-\[
+```math
 f_{guided}=f+ s_m(f-f_{isolated})
-\]
+```
 
 Isso mostra que guidance é uma família geral de **contrastes entre predictions**, não apenas prompt positivo vs negativo.
 
@@ -242,11 +242,11 @@ Isso mostra que guidance é uma família geral de **contrastes entre predictions
 
 FPS é uma propriedade do output:
 
-\[
+```math
 Duration=Frames/FPS
-\]
+```
 
-Mas custo do modelo depende de \(T_l\), não diretamente do FPS final quando há temporal compression/interpolation.
+Mas custo do modelo depende de $`T_l`$, não diretamente do FPS final quando há temporal compression/interpolation.
 
 ### Não confundir
 
@@ -262,9 +262,9 @@ São pipelines matematicamente diferentes.
 
 Modelo separado pode estimar frames intermediários:
 
-\[
+```math
 I_{t+\alpha}=F(I_t,I_{t+1},\alpha)
-\]
+```
 
 Isso não aumenta a informação temporal original do generative core da mesma forma que gerar mais latent frames.
 
@@ -274,27 +274,27 @@ Isso não aumenta a informação temporal original do generative core da mesma f
 
 ## 15. Duração
 
-\[
+```math
 T=FPS\cdot duration
-\]
+```
 
 Mas latent frames:
 
-\[
+```math
 T_l\approx T/r_t
-\]
+```
 
 Long videos podem usar janelas:
 
-\[
+```math
 W_1,W_2,\ldots,W_k
-\]
+```
 
 com overlap:
 
-\[
+```math
 |W_i\cap W_{i+1}|>0
-\]
+```
 
 Maior overlap aumenta continuidade e compute.
 
@@ -321,9 +321,9 @@ A solução correta depende da topology, não de uma regra como “cortar o últ
 
 Idealmente decompor:
 
-\[
+```math
 Motion_{observed}=Motion_{camera}+Motion_{objects}+deformation
-\]
+```
 
 Promptar tudo como uma frase deixa o modelo inferir a decomposição. Control representations podem reduzir ambiguidade.
 
@@ -333,21 +333,21 @@ Promptar tudo como uma frase deixa o modelo inferir a decomposição. Control re
 
 ## 18. Token count
 
-\[
+```math
 N=T_pH_pW_p
-\]
+```
 
 Dobrar duração mantendo tudo:
 
-\[
+```math
 N\approx2N
-\]
+```
 
 Atenção global ingênua:
 
-\[
+```math
 N^2\rightarrow4N^2
-\]
+```
 
 Esse é o motivo estrutural para compressão e atenção fatorada.
 
@@ -357,9 +357,9 @@ Esse é o motivo estrutural para compressão e atenção fatorada.
 
 CFG + STG + modality guidance podem exigir múltiplos forwards por step.
 
-\[
+```math
 Cost\approx NFE\times passes_{guidance}\times C_{forward}
-\]
+```
 
 Um slider de guidance pode portanto alterar **qualidade e custo**.
 
