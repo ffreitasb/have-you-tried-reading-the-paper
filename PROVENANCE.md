@@ -131,7 +131,7 @@ See [`LICENSE`](LICENSE) for the full license text.
 
 If this repository materially contributes to academic, scientific, educational, or technical work, please cite it using the metadata in [`CITATION.cff`](CITATION.cff).
 
-A DOI-backed archived citation is planned for a future release through Zenodo.
+The immutable v1.0.0 release is archived through Zenodo with DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486). The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions.
 
 ---
 

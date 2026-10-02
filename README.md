@@ -8,6 +8,7 @@
 
 [**English**](README.md) · [**Português (Brasil)**](README.pt-BR.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23092485.svg)](https://doi.org/10.5281/zenodo.23092485)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/license-CC%20BY--SA%204.0-1769aa)](LICENSE)
 [![Repository integrity](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml/badge.svg?branch=main)](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml)
 ![Languages](https://img.shields.io/badge/languages-English%20%7C%20Portugu%C3%AAs-0969da)
@@ -321,7 +322,9 @@ Third-party quotations, cited papers, trademarks, linked materials, figures, scr
 
 If this repository materially contributes to academic, scientific, educational, or technical work, please cite it.
 
-The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. A DOI-backed archived citation is planned for a future release through Zenodo.
+The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. For the exact archived release, cite **v1.0.0** using DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486). The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions.
+
+[Archived release on Zenodo →](https://zenodo.org/records/23092486) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
 
 **[Citation metadata →](CITATION.cff)**
 

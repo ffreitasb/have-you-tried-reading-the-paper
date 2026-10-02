@@ -2,8 +2,7 @@ cff-version: 1.2.0
 message: >-
   If this repository materially contributes to your academic, scientific,
   educational, or technical work, please cite it using these metadata.
-  A DOI-backed preferred citation may be added after archived releases are
-  published through Zenodo.
+  The preferred citation identifies the immutable archived release on Zenodo.
 title: "Have You Tried Reading the Paper?"
 authors:
   - family-names: "Braga"
@@ -48,6 +47,11 @@ keywords:
   - open knowledge
 version: "1.0.0"
 date-released: "2026-10-01"
+doi: "10.5281/zenodo.23092486"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23092485"
+    description: "All versions of the project"
 preferred-citation:
   type: manual
   title: "Have You Tried Reading the Paper?"
@@ -60,3 +64,4 @@ preferred-citation:
   year: 2026
   version: "1.0.0"
   url: "https://github.com/ffreitasb/have-you-tried-reading-the-paper"
+  doi: "10.5281/zenodo.23092486"

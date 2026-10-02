@@ -131,7 +131,7 @@ Consulte [`LICENSE`](LICENSE) para o texto integral da licença.
 
 Se este repositório contribuir materialmente para um trabalho acadêmico, científico, educacional ou técnico, utilize os metadados disponíveis em [`CITATION.cff`](CITATION.cff) para citá-lo.
 
-Uma citação arquivada com DOI está planejada para uma release futura via Zenodo.
+A release imutável v1.0.0 foi arquivada via Zenodo com DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486). O [DOI do projeto](https://doi.org/10.5281/zenodo.23092485) representa todas as versões.
 
 ---
 
