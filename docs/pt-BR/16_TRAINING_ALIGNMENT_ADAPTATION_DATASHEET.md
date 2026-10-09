@@ -243,7 +243,7 @@ mas exige cuidado com:
 
 ```math
 \mathcal L_{CLM}
-=-\sum_{t=1}^{T}\log p_\theta(x_t|x_{<t})
+=-\sum_{t=1}^{T}\log p_\theta(x_t|x_{\lt t})
 ```
 
 É o objective clássico de decoder-only AR.
@@ -358,7 +358,7 @@ Uma forma linear:
 ```math
 \eta_t=
 \eta_{max}\frac{t}{T_w}
-\qquad t<T_w
+\qquad t\lt T_w
 ```
 
 Reduz passos agressivos enquanto optimizer statistics e activations ainda se estabilizam.
@@ -531,7 +531,7 @@ Loss:
 \mathcal L_{SFT}
 =-\sum_i\sum_t
 m_{i,t}
-\log p_\theta(y_{i,t}|x_i,y_{i,<t})
+\log p_\theta(y_{i,t}|x_i,y_{i,\lt t})
 ```
 
 onde $`m`$ define quais tokens participam da loss.
@@ -867,9 +867,9 @@ ou:
 \sum_t
 \log
 \frac{
-\pi_\theta(y_{i,t}|x,y_{i,<t})
+\pi_\theta(y_{i,t}|x,y_{i,\lt t})
 }{
-\pi_{old}(y_{i,t}|x,y_{i,<t})
+\pi_{old}(y_{i,t}|x,y_{i,\lt t})
 }
 ```
 
@@ -1443,7 +1443,7 @@ Catastrophic forgetting:
 
 ```math
 Perf_{old}(\theta_{new})
-<
+\lt
 Perf_{old}(\theta_{old})
 ```
 

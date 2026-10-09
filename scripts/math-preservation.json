@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source_commit": "7fca0402a01cf2fe273bcaa3d1ca7a9d231fde53",
-  "policy": "Exact prose and ordered TeX bodies; only reviewed registry bar aliases normalize. Formatting correction does not alter archived v1.0.0.",
+  "policy": "Exact prose and ordered TeX bodies; only reviewed registry bar aliases and exact display-body aliases in math-aliases.json normalize. Formatting correction does not alter archived v1.0.0.",
   "files": {
     "docs/en-US/00_README_INDEX.md": {
       "outside_sha256": "05389bfeb11e791790957ff0ce2b3794c16803d61e963078935d3b5460eb7a7b",

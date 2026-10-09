@@ -393,7 +393,7 @@ O estado não é uma sequência natural; qualquer serialização impõe ordem ar
 Uma serialização possível:
 
 ```math
-p(G)=\prod_t p(action_t|action_{<t})
+p(G)=\prod_t p(action_t|action_{\lt t})
 ```
 
 com ações:

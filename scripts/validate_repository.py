@@ -57,6 +57,7 @@ REQUIRED = (
     ".github/workflows/external-links.yml",
     "scripts/validate_repository.py", "scripts/requirements-validation.txt",
     "scripts/math-preservation.json", "scripts/math_rendering.py",
+    "scripts/math-aliases.json",
     "scripts/verify_math_rendering.py", "scripts/requirements-rendering.txt",
 )
 LOCAL_STATE = {".claude-flow", ".repowise", ".kilo", ".claude", ".venv", "__pycache__", "validation-output"}

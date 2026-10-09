@@ -119,7 +119,7 @@ X^{(0)},X^{(1)},\ldots,X^{(L)}
 com:
 
 ```math
-T_{l+1}<T_l
+T_{l+1}\lt T_l
 ```
 
 Fine scale captura spikes; coarse scale captura tendência/regime.
@@ -342,7 +342,7 @@ e_t=|x_t-\hat x_t|
 ### Forecast surprise
 
 ```math
-score_t=-\log p(x_t|x_{<t})
+score_t=-\log p(x_t|x_{\lt t})
 ```
 
 ### Representation distance

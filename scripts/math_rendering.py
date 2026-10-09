@@ -11,6 +11,7 @@ import html
 import json
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -25,6 +26,22 @@ CASES = {
     "\nm_t=\n\\begin{cases}\n0 & prompt\\\\\n1 & answer\n\\end{cases}\n",
     "\nR(y)=\n\\begin{cases}\n1 & verified\\\\\n0 & fail\n\\end{cases}\n",
 }
+
+
+@lru_cache(maxsize=1)
+def reviewed_less_than_aliases() -> dict[str, dict[str, str]]:
+    """Exact body aliases approved on 2026-10-09, not a general TeX rewrite."""
+    data = json.loads(Path(__file__).with_name("math-aliases.json").read_text(encoding="utf-8"))
+    if data.get("schema") != 1 or not isinstance(data.get("files"), dict):
+        raise ValueError("invalid reviewed math aliases")
+    for pairs in data["files"].values():
+        if not isinstance(pairs, dict) or len(set(pairs.values())) != len(pairs):
+            raise ValueError("ambiguous reviewed math aliases")
+        for original, replacement in pairs.items():
+            expected = re.sub(r"<([A-Za-z]?)", lambda m: r"\lt" + (" " if m[1] else "") + m[1], original)
+            if "<" not in original or replacement != expected:
+                raise ValueError("reviewed alias may only replace less-than operators")
+    return data["files"]
 
 
 @dataclass(frozen=True)
@@ -126,13 +143,17 @@ def replace_formulas(text: str, items: list[Formula], replacements: list[str]) -
 
 
 def convert_legacy(text: str, filename: str) -> str:
-    """One-shot conversion; only the six reviewed table aliases are permitted."""
+    """One-shot conversion using only the reviewed table and display aliases."""
     items = formulas(text)
     replacements = []
     for item in items:
         if not item.syntax.startswith("legacy-"):
             raise ValueError("conversion requires original legacy markup")
         body = ALIASES.get(item.body, item.body) if filename == REGISTRY else item.body
+        if item.kind == "display":
+            body = reviewed_less_than_aliases().get(filename, {}).get(body, body)
+            if "<" in body:
+                raise ValueError("unreviewed less-than expression in display math")
         if item.kind == "inline":
             replacements.append("$`" + body + "`$")
         elif item.body in CASES and filename == TRAINING:
@@ -162,14 +183,15 @@ def to_arithmatex(text: str) -> str:
 def fingerprint(text: str, filename: str) -> dict:
     """Hash external bytes and each TeX body independent of approved wrappers.
 
-    Resolve only the exact registry aliases back to their original spellings.
+    Resolve only the exact reviewed aliases back to their original spellings.
     No whitespace, Unicode, operator, or prose normalization is performed.
     """
     items = formulas(text)
     outside = replace_formulas(text, items, ["\0" + x.kind + "\0" for x in items])
     inverse = {v: k for k, v in ALIASES.items()} if filename == REGISTRY else {}
+    display_inverse = {v: k for k, v in reviewed_less_than_aliases().get(filename, {}).items()}
     digest = lambda value: hashlib.sha256(value.encode("utf-8")).hexdigest()
-    bodies = [[x.kind, inverse.get(x.body, x.body)] for x in items]
+    bodies = [[x.kind, (display_inverse if x.kind == "display" else inverse).get(x.body, x.body)] for x in items]
     return {"outside_sha256": digest(outside), "tex_sha256": digest(json.dumps(bodies, ensure_ascii=False)),
             "inline": sum(x.kind == "inline" for x in items), "display": sum(x.kind == "display" for x in items)}
 
@@ -188,6 +210,8 @@ def check_corpus(root: Path) -> list[str]:
             if fingerprint(text, path.name) != baseline:
                 errors.append(f"{relative}: protected prose or TeX differs from reviewed baseline")
             for item in items:
+                if item.kind == "display" and "<" in item.body:
+                    errors.append(f"{relative}:{item.line}: literal less-than can be truncated by the GitHub HTML renderer; use a reviewed TeX alias")
                 if item.syntax.startswith("legacy-"):
                     errors.append(f"{relative}:{item.line}: math markup is not GitHub-compatible")
                 if item.syntax == "dollars" and (path.name != TRAINING or item.body not in CASES):

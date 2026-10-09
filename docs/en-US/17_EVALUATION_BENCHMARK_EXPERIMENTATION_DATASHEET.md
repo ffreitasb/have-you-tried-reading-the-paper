@@ -343,7 +343,7 @@ PPL=
 \exp\left(
 -\frac1T
 \sum_t
-\log p(x_t|x_{<t})
+\log p(x_t|x_{\lt t})
 \right)
 ```
 
@@ -715,7 +715,7 @@ If:
 
 ```math
 |\Delta_{models}|
-<
+\lt
 \sigma_{seed}
 ```
 
@@ -827,7 +827,7 @@ A 2026 study analyzing 60 benchmarks found saturation across a large and growing
 The lesson:
 
 ```math
-BenchmarkHalfLife<\infty
+BenchmarkHalfLife\lt\infty
 ```
 
 ---
@@ -1283,7 +1283,7 @@ Mean_A>Mean_B
 while:
 
 ```math
-A<B
+A\lt B
 ```
 
 on the slice that actually matters in production.
@@ -1469,11 +1469,11 @@ Accept\ A
 subject to:
 
 ```math
-Memory<M_{max}
+Memory\lt M_{max}
 ```
 
 ```math
-Latency<L_{max}
+Latency\lt L_{max}
 ```
 
 This reduces post-hoc rationalization.

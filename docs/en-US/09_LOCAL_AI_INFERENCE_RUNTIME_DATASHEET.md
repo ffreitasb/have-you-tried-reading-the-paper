@@ -236,7 +236,7 @@ n_{kv}=n_q
 ### GQA
 
 ```math
-n_{kv}<n_q
+n_{kv}\lt n_q
 ```
 
 ### MQA

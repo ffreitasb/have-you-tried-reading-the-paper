@@ -8,11 +8,38 @@ from pathlib import Path
 from math_rendering import (
     ALIASES, CASES, REGISTRY, TRAINING, check_corpus, check_rendering,
     convert_legacy, fingerprint, formulas, to_arithmatex,
+    reviewed_less_than_aliases,
 )
 import mkdocs_math
 
 
 class PreservationTests(unittest.TestCase):
+    def test_less_than_aliases_are_exact_and_context_specific(self):
+        aliases = reviewed_less_than_aliases()
+        self.assertEqual(sum(map(len, aliases.values())), 26)
+        for filename, pairs in aliases.items():
+            for original, replacement in pairs.items():
+                with self.subTest(file=filename, body=original):
+                    source = '```math' + original + '```\n'
+                    candidate = '```math' + replacement + '```\n'
+                    self.assertEqual(fingerprint(source, filename), fingerprint(candidate, filename))
+                    self.assertNotEqual(fingerprint(source, 'other.md'), fingerprint(candidate, 'other.md'))
+                    self.assertNotEqual(fingerprint(source, filename), fingerprint(candidate.replace(r'\lt', r'\le'), filename))
+                    self.assertNotEqual(fingerprint(source, filename), fingerprint(candidate.replace(r'\lt', '>'), filename))
+                    check_rendering(candidate)
+                    self.assertEqual(convert_legacy(r'\[' + original + '\\]\n', filename), candidate)
+
+    def test_literal_less_than_rejected_even_when_baseline_matches(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'scripts').mkdir()
+            source = '```math\nn_{kv}<n_q\n```\n'
+            (root / 'scripts/math-preservation.json').write_text(json.dumps({'files': {'example.md': fingerprint(source, 'example.md')}}), encoding='utf-8')
+            (root / 'example.md').write_bytes(source.encode('utf-8'))
+            self.assertTrue(any('literal less-than' in error for error in check_corpus(root)))
+        with self.assertRaises(ValueError):
+            convert_legacy('\\[\nx<y\n\\]\n', 'other.md')
+
     def test_code_and_front_matter_untouched(self):
         text = '---\nexample: "\\(x\\)"\n---\n~~~md\n\\[\nx\n\\]\n~~~\n`\\(y\\)`\n\\(z\\)\n'
         candidate = convert_legacy(text, 'example.md')
@@ -83,12 +110,20 @@ class PreservationTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         self.assertEqual(check_corpus(root), [])
         count = 0
+        changed_less_than_bodies = 0
+        less_than_operators = 0
         for path in sorted((root / 'docs').glob('*/*.md')):
             with self.subTest(file=path.name, locale=path.parent.name):
                 text = path.read_bytes().decode('utf-8')
                 check_rendering(text)
                 count += len(formulas(text))
+                for item in formulas(text):
+                    if item.kind == 'display' and item.body in reviewed_less_than_aliases().get(path.name, {}).values():
+                        changed_less_than_bodies += 1
+                        less_than_operators += item.body.count(r'\lt')
         self.assertEqual(count, 2775)
+        self.assertEqual(changed_less_than_bodies, 52)
+        self.assertEqual(less_than_operators, 54)
 
 
 class HookTests(unittest.TestCase):

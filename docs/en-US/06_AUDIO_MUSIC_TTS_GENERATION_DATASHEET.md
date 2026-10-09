@@ -124,7 +124,7 @@ Stable Audio 3 uses a semantic-acoustic autoencoder to reduce sequence length dr
 ## 6. Next audio token
 
 ```math
-p(a_{1:T})=\prod_tp(a_t\mid a_{<t},C)
+p(a_{1:T})=\prod_tp(a_t\mid a_{\lt t},C)
 ```
 
 The usual controls apply:
@@ -599,7 +599,7 @@ h_t=Encoder(X)_t
 Prediction network over previous output:
 
 ```math
-g_u=Pred(y_{<u})
+g_u=Pred(y_{\lt u})
 ```
 
 Joint network:
@@ -639,7 +639,7 @@ H=Encoder(audio)
 ```
 
 ```math
-P(y_{1:U}|H)=\prod_uP(y_u|y_{<u},H)
+P(y_{1:U}|H)=\prod_uP(y_u|y_{\lt u},H)
 ```
 
 Whisper-like topology is the classic example.
@@ -817,7 +817,7 @@ RTF=\frac{processing\ time}{audio\ duration}
 ```
 
 ```math
-RTF<1
+RTF\lt1
 ```
 
 means faster-than-real-time processing for batch/offline workloads.

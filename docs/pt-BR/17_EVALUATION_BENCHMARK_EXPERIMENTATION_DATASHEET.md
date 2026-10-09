@@ -343,7 +343,7 @@ PPL=
 \exp\left(
 -\frac1T
 \sum_t
-\log p(x_t|x_{<t})
+\log p(x_t|x_{\lt t})
 \right)
 ```
 
@@ -716,7 +716,7 @@ Se:
 
 ```math
 |\Delta_{models}|
-<
+\lt
 \sigma_{seed}
 ```
 
@@ -830,7 +830,7 @@ Pesquisa de 2026 analisando 60 benchmarks encontrou saturação em uma parcela g
 A lição:
 
 ```math
-BenchmarkHalfLife<\infty
+BenchmarkHalfLife\lt\infty
 ```
 
 ---
@@ -1287,7 +1287,7 @@ Mean_A>Mean_B
 mas:
 
 ```math
-A<B
+A\lt B
 ```
 
 no slice crítico para produção.
@@ -1473,11 +1473,11 @@ Accept\ A
 sujeito a:
 
 ```math
-Memory<M_{max}
+Memory\lt M_{max}
 ```
 
 ```math
-Latency<L_{max}
+Latency\lt L_{max}
 ```
 
 Isso reduz post-hoc rationalization.

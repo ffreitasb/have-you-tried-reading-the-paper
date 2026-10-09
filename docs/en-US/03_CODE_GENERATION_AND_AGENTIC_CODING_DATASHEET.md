@@ -13,7 +13,7 @@ updated: 2026-10-01
 ### A. Completion engine
 
 ```math
-p(code_t\mid code_{<t},context)
+p(code_t\mid code_{\lt t},context)
 ```
 
 ### B. Coding agent
@@ -35,7 +35,7 @@ Final quality depends on the entire loop, not just the probability of the next t
 ## 2. Left-to-right completion
 
 ```math
-P(x_{1:T})=\prod_tP(x_t\mid x_{<t})
+P(x_{1:T})=\prod_tP(x_t\mid x_{\lt t})
 ```
 
 Suitable for:

@@ -145,7 +145,7 @@ n_{kv}=n_q
 ### Grouped-Query Attention
 
 ```math
-n_{kv}<n_q
+n_{kv}\lt n_q
 ```
 
 Várias query heads compartilham K/V.
@@ -679,7 +679,7 @@ Relacionados: [01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING](01_GUT_GENERATIVE_AI_UN
 ## 35. Autoregressive factorization — baseline
 
 ```math
-p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{<t})
+p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{\lt t})
 ```
 
 Inferência:
@@ -941,7 +941,7 @@ Cada implementação precisa ser mapeada para sua equação.
 Em refinamento ideal:
 
 ```math
-H(X^{(k+1)})<H(X^{(k)})
+H(X^{(k+1)})\lt H(X^{(k)})
 ```
 
 em média, conforme incerteza é removida.

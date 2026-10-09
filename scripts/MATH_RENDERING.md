@@ -4,8 +4,12 @@ The corpus uses GitHub's protected inline math (`$` followed by a backtick,
 the TeX expression, a backtick, and `$`) and fenced `math` blocks.
 Four `cases` expressions in document 16 use `$$` to preserve TeX row breaks.
 The six registry expressions with table pipes use equivalent `\vert` and
-`\Vert` commands. Other TeX bodies and all text outside mathematics were
-preserved byte for byte in the approved formatting correction.
+`\Vert` commands. An approved follow-up replaces 54 literal less-than operators
+with `\lt` in 52 display expressions: the GitHub client otherwise interprets
+parts such as `<t` as HTML, dropping terms or failing to render. The exact
+whole-body aliases are in `math-aliases.json`; their original and replacement
+TeX produced identical MathML. All other TeX bodies and all text outside
+mathematics were preserved byte for byte.
 
 ## Offline checks
 
@@ -18,9 +22,11 @@ python scripts/verify_math_rendering.py
 
 `math-preservation.json` records format-independent hashes of the 44 reviewed
 documents: external text and ordered TeX bodies. Only the three exact registry
-bar aliases normalize for comparison. Whitespace and operators do not normalize.
+bar aliases and the reviewed display aliases normalize for comparison.
+No general whitespace or operator normalization is performed.
 The source commit is the snapshot before the correction. The validator rejects
-content drift, legacy delimiters, unsafe table bars and unreviewed row breaks.
+content drift, legacy delimiters, unsafe table bars, literal less-than in display
+math and unreviewed row breaks. Inline less-than remains protected by its wrapper.
 Do not regenerate the manifest automatically to make a failed check pass.
 An intentional future content edit requires a reviewed baseline update.
 

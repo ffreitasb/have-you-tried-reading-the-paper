@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "approved_on": "2026-10-09",
+  "scope": "54 less-than operators in 52 display expressions across 20 files; original TeX and proposed TeX produce identical MathML. Exact whole-body aliases only.",
+  "files": {
+    "01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md": {
+      "\np(x_{1:T})=\\prod_{t=1}^{T}p(x_t|x_{<t},C)\n": "\np(x_{1:T})=\\prod_{t=1}^{T}p(x_t|x_{\\lt t},C)\n"
+    },
+    "02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md": {
+      "\nn_{kv}<n_q\n": "\nn_{kv}\\lt n_q\n",
+      "\np(x_{1:T})=\\prod_{t=1}^{T}p(x_t|x_{<t})\n": "\np(x_{1:T})=\\prod_{t=1}^{T}p(x_t|x_{\\lt t})\n",
+      "\nH(X^{(k+1)})<H(X^{(k)})\n": "\nH(X^{(k+1)})\\lt H(X^{(k)})\n"
+    },
+    "03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md": {
+      "\np(code_t\\mid code_{<t},context)\n": "\np(code_t\\mid code_{\\lt t},context)\n",
+      "\nP(x_{1:T})=\\prod_tP(x_t\\mid x_{<t})\n": "\nP(x_{1:T})=\\prod_tP(x_t\\mid x_{\\lt t})\n"
+    },
+    "06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md": {
+      "\np(a_{1:T})=\\prod_tp(a_t\\mid a_{<t},C)\n": "\np(a_{1:T})=\\prod_tp(a_t\\mid a_{\\lt t},C)\n",
+      "\ng_u=Pred(y_{<u})\n": "\ng_u=Pred(y_{\\lt u})\n",
+      "\nP(y_{1:U}|H)=\\prod_uP(y_u|y_{<u},H)\n": "\nP(y_{1:U}|H)=\\prod_uP(y_u|y_{\\lt u},H)\n",
+      "\nRTF<1\n": "\nRTF\\lt1\n"
+    },
+    "09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md": {
+      "\nn_{kv}<n_q\n": "\nn_{kv}\\lt n_q\n"
+    },
+    "13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md": {
+      "\nP(A)=\\prod_tp(a_t|a_{<t},C)\n": "\nP(A)=\\prod_tp(a_t|a_{\\lt t},C)\n"
+    },
+    "14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md": {
+      "\nT_{l+1}<T_l\n": "\nT_{l+1}\\lt T_l\n",
+      "\nscore_t=-\\log p(x_t|x_{<t})\n": "\nscore_t=-\\log p(x_t|x_{\\lt t})\n"
+    },
+    "15_GRAPH_FOUNDATION_MODELS_DATASHEET.md": {
+      "\np(G)=\\prod_t p(action_t|action_{<t})\n": "\np(G)=\\prod_t p(action_t|action_{\\lt t})\n"
+    },
+    "16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md": {
+      "\n\\mathcal L_{CLM}\n=-\\sum_{t=1}^{T}\\log p_\\theta(x_t|x_{<t})\n": "\n\\mathcal L_{CLM}\n=-\\sum_{t=1}^{T}\\log p_\\theta(x_t|x_{\\lt t})\n",
+      "\n\\eta_t=\n\\eta_{max}\\frac{t}{T_w}\n\\qquad t<T_w\n": "\n\\eta_t=\n\\eta_{max}\\frac{t}{T_w}\n\\qquad t\\lt T_w\n",
+      "\n\\mathcal L_{SFT}\n=-\\sum_i\\sum_t\nm_{i,t}\n\\log p_\\theta(y_{i,t}|x_i,y_{i,<t})\n": "\n\\mathcal L_{SFT}\n=-\\sum_i\\sum_t\nm_{i,t}\n\\log p_\\theta(y_{i,t}|x_i,y_{i,\\lt t})\n",
+      "\n\\log s_i\n=\n\\frac1{|y_i|}\n\\sum_t\n\\log\n\\frac{\n\\pi_\\theta(y_{i,t}|x,y_{i,<t})\n}{\n\\pi_{old}(y_{i,t}|x,y_{i,<t})\n}\n": "\n\\log s_i\n=\n\\frac1{|y_i|}\n\\sum_t\n\\log\n\\frac{\n\\pi_\\theta(y_{i,t}|x,y_{i,\\lt t})\n}{\n\\pi_{old}(y_{i,t}|x,y_{i,\\lt t})\n}\n",
+      "\nPerf_{old}(\\theta_{new})\n<\nPerf_{old}(\\theta_{old})\n": "\nPerf_{old}(\\theta_{new})\n\\lt\nPerf_{old}(\\theta_{old})\n"
+    },
+    "17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md": {
+      "\nPPL=\n\\exp\\left(\n-\\frac1T\n\\sum_t\n\\log p(x_t|x_{<t})\n\\right)\n": "\nPPL=\n\\exp\\left(\n-\\frac1T\n\\sum_t\n\\log p(x_t|x_{\\lt t})\n\\right)\n",
+      "\n|\\Delta_{models}|\n<\n\\sigma_{seed}\n": "\n|\\Delta_{models}|\n\\lt\n\\sigma_{seed}\n",
+      "\nBenchmarkHalfLife<\\infty\n": "\nBenchmarkHalfLife\\lt\\infty\n",
+      "\nA<B\n": "\nA\\lt B\n",
+      "\nMemory<M_{max}\n": "\nMemory\\lt M_{max}\n",
+      "\nLatency<L_{max}\n": "\nLatency\\lt L_{max}\n"
+    }
+  }
+}

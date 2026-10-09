@@ -340,7 +340,7 @@ Em engenharia:
 # 13. Autoregressive action policy
 
 ```math
-P(A)=\prod_tp(a_t|a_{<t},C)
+P(A)=\prod_tp(a_t|a_{\lt t},C)
 ```
 
 Prós:

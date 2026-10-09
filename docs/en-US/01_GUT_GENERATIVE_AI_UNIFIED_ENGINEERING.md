@@ -176,7 +176,7 @@ a_t\in\mathbb R^m
 ## 3.1 Autoregression
 
 ```math
-p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{<t},C)
+p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{\lt t},C)
 ```
 
 Training: next-element prediction.  
