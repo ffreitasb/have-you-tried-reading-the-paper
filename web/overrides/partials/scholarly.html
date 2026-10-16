@@ -1,0 +1,8 @@
+{% set s = config.extra.scholar %}
+<aside class="scholarly" aria-label="{{ 'Fonte, licença e proveniência' if is_pt else 'Source, license and provenance' }}">
+  <p class="eyebrow">OPEN_TECHNICAL_REFERENCE</p>
+  <p>{{ 'Este site acompanha a edição viva do repositório. O DOI identifica o arquivo científico versionado.' if is_pt else 'This site follows the living repository edition. The DOI identifies the versioned scientific archive.' }}</p>
+  <p><a href="{{ source_url }}">{{ 'Fonte desta página' if is_pt else 'Page source' }}</a> · <a href="{{ page.canonical_url }}">{{ 'Link permanente' if is_pt else 'Permalink' }}</a> · <a href="https://doi.org/{{ s.concept_doi }}">Zenodo / DOI</a> · <a href="{{ s.repository }}/blob/main/LICENSE">CC BY-SA 4.0</a></p>
+  <p>{{ 'Dirigido por humano, assistido por IA.' if is_pt else 'Human-directed, AI-assisted.' }} <a href="{{ s.repository }}/blob/main/{{ 'PROVENANCE.pt-BR.md' if is_pt else 'PROVENANCE.md' }}">{{ 'Proveniência' if is_pt else 'Provenance' }}</a> · <a href="{{ s.repository }}/blob/main/{{ 'CONTRIBUTING.pt-BR.md' if is_pt else 'CONTRIBUTING.md' }}">{{ 'Contribuir' if is_pt else 'Contribute' }}</a></p>
+  <p class="ecosystem"><a href="https://ffreitasb.cc/">ffreitasb.cc</a> / <a href="https://ffreitasb.cc/flogao/">TRANSMISSION_LOG</a></p>
+</aside>

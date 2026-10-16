@@ -24,6 +24,9 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 validation-output/
+site/
+.site/
+.cache/
 lychee-report.md
 *.tmp
 .env

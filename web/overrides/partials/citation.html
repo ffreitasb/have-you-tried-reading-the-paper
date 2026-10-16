@@ -1,0 +1,13 @@
+{% set s = config.extra.scholar %}
+<section class="citation-record" aria-label="{{ 'Metadados da citação' if is_pt else 'Citation metadata' }}">
+  <p class="eyebrow">ARCHIVE_RECORD // v{{ s.version }}</p>
+  <dl>
+    <dt>{{ 'Autor' if is_pt else 'Author' }}</dt><dd><a href="{{ s.orcid }}">{{ s.author }}</a></dd>
+    <dt>{{ 'Título' if is_pt else 'Title' }}</dt><dd>{{ s.title }}</dd>
+    <dt>{{ 'Versão e data' if is_pt else 'Version and date' }}</dt><dd>{{ s.version }} · {{ s.date }}</dd>
+    <dt>DOI {{ 'desta versão' if is_pt else 'of this version' }}</dt><dd><a href="https://doi.org/{{ s.doi }}">{{ s.doi }}</a></dd>
+    <dt>{{ 'Todas as versões' if is_pt else 'All versions' }}</dt><dd><a href="https://doi.org/{{ s.concept_doi }}">{{ s.concept_doi }}</a></dd>
+    <dt>{{ 'Licença' if is_pt else 'License' }}</dt><dd><a href="https://creativecommons.org/licenses/by-sa/4.0/">{{ s.license }}</a></dd>
+  </dl>
+  <p><a href="{{ s.repository }}/blob/main/CITATION.cff">CITATION.cff</a> · <a href="{{ s.repository }}/releases/tag/v{{ s.version }}">{{ 'Release arquivada' if is_pt else 'Archived release' }}</a></p>
+</section>

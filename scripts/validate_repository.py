@@ -42,6 +42,8 @@ DOCUMENTS = (
     "CHANGELOG.md",
     "CONVENTIONS.md",
 )
+SITE_DOCUMENTS = ("index.md", "citation.md")
+PAGES_DEPLOY_GUARD = "github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')"
 REQUIRED = (
     "README.md", "README.pt-BR.md", "LICENSE", "CITATION.cff",
     "PROVENANCE.md", "PROVENANCE.pt-BR.md", "CONTRIBUTING.md",
@@ -59,9 +61,13 @@ REQUIRED = (
     "scripts/math-preservation.json", "scripts/math_rendering.py",
     "scripts/math-aliases.json", "scripts/content-revisions.json",
     "scripts/verify_math_rendering.py", "scripts/requirements-rendering.txt",
+    "SITE.md", "requirements-docs.txt", "mkdocs.base.yml", "mkdocs.yml",
+    "mkdocs.pt-BR.yml", ".github/workflows/pages.yml", "scripts/build_site.py",
+    "scripts/site_hooks.py", "scripts/site_assets.py", "scripts/validate_site.py",
+    "web/assets.lock.json", "web/overrides/main.html", "web/social/f0xtrot.yml",
 )
-LOCAL_STATE = {".claude-flow", ".repowise", ".kilo", ".claude", ".venv", "__pycache__", "validation-output"}
-TEXT_SUFFIXES = {".md", ".cff", ".json", ".yaml", ".yml", ".py", ".txt"}
+LOCAL_STATE = {".claude-flow", ".repowise", ".kilo", ".claude", ".venv", "__pycache__", "validation-output", "site", ".site", ".cache"}
+TEXT_SUFFIXES = {".md", ".cff", ".json", ".yaml", ".yml", ".py", ".txt", ".css", ".js", ".svg", ".html"}
 PATH_ARTIFACTS = re.compile(r"/mnt/data/|/tmp/|sandbox:/|file://|[A-Za-z]:\\Users\\")
 # Any intentional technical example needs a reviewed file/line/token entry here.
 PATH_ALLOWLIST: set[tuple[str, int, str]] = set()
@@ -278,6 +284,35 @@ def check_metadata(root: Path, errors: list[str]) -> None:
         errors.append(".zenodo.json: description must state the bilingual scope")
 
 
+def workflow_errors(config: dict, pages: bool = False) -> list[str]:
+    """Only the guarded Pages deployment may receive deployment permissions."""
+    errors = []
+    if config.get("permissions") != {"contents": "read"}:
+        errors.append("require read-only contents permissions")
+    if "pull_request_target" in config.get("on", {}):
+        errors.append("pull_request_target is forbidden")
+    for name, job in config.get("jobs", {}).items():
+        permissions = job.get("permissions", {"contents": "read"})
+        if pages and name == "deploy":
+            if permissions != {"pages": "write", "id-token": "write"}:
+                errors.append("Pages deploy requires only pages/id-token write")
+            if job.get("if") != PAGES_DEPLOY_GUARD or job.get("needs") != "build":
+                errors.append("Pages deploy must depend on build and reject PR/non-main events")
+            if job.get("environment", {}).get("name") != "github-pages":
+                errors.append("Pages deploy requires github-pages environment")
+        elif permissions != {"contents": "read"}:
+            errors.append(f"{name}: only Pages deploy may elevate job permissions")
+    if pages:
+        if set(config.get("jobs", {})) != {"build", "deploy"}:
+            errors.append("Pages workflow requires exactly build and deploy jobs")
+        if set(config.get("on", {})) != {"push", "pull_request", "workflow_dispatch"}:
+            errors.append("Pages workflow requires push, PR and manual triggers")
+        for step in config.get("jobs", {}).get("build", {}).get("steps", []):
+            if any(action in step.get("uses", "") for action in ("configure-pages", "deploy-pages")):
+                errors.append("Pages build may not configure or deploy Pages")
+    return errors
+
+
 def validate(root: Path) -> tuple[list[str], int]:
     from ruamel.yaml import YAML
 
@@ -288,8 +323,9 @@ def validate(root: Path) -> tuple[list[str], int]:
     for locale in LOCALES:
         folder = root / "docs" / locale
         names = {p.name for p in folder.iterdir()} if folder.is_dir() else set()
-        if names != set(DOCUMENTS):
-            errors.append(f"docs/{locale}: missing={sorted(set(DOCUMENTS) - names)}, unexpected={sorted(names - set(DOCUMENTS))}")
+        expected = set(DOCUMENTS + SITE_DOCUMENTS)
+        if names != expected:
+            errors.append(f"docs/{locale}: missing={sorted(expected - names)}, unexpected={sorted(names - expected)}")
         numbers = Counter(p.name[:2] for p in folder.glob("[0-9][0-9]_*.md"))
         if numbers != Counter(f"{i:02}" for i in range(20)):
             errors.append(f"docs/{locale}: require exactly one document numbered 00 through 19")
@@ -337,10 +373,7 @@ def validate(root: Path) -> tuple[list[str], int]:
                 if not isinstance(config, dict):
                     raise ValueError("expected a YAML mapping")
                 if path.parent.name == "workflows":
-                    if config.get("permissions") != {"contents": "read"}:
-                        errors.append(f"{relative}: require read-only contents permissions")
-                    if "pull_request_target" in config.get("on", {}):
-                        errors.append(f"{relative}: pull_request_target is forbidden")
+                    errors.extend(f"{relative}: {error}" for error in workflow_errors(config, relative == ".github/workflows/pages.yml"))
                     for action in re.findall(r"\buses:\s*([^\s#]+)", text):
                         if not re.fullmatch(r"[\w.-]+/[\w./-]+@[0-9a-f]{40}", action):
                             errors.append(f"{relative}: action must have an immutable SHA: {action}")
@@ -385,7 +418,7 @@ def main() -> int:
     if errors:
         print(f"FAIL: {len(errors)} error(s)")
         return 1
-    print(f"PASS: 44 knowledge files, bilingual inventory, UTF-8/LF, {count} Markdown links, CFF schema and metadata, governance, pinned read-only CI")
+    print(f"PASS: 44 protected knowledge files + 4 site pages, bilingual inventory, UTF-8/LF, {count} Markdown links, CFF schema and metadata, governance, pinned CI with scoped Pages deployment")
     print("External HTTP status is intentionally checked by the separate External links workflow.")
     return 0
 

@@ -1,0 +1,46 @@
+tags:
+  og:type: website
+  og:site_name: "{{ config.site_name }}"
+  og:title: "{{ page.meta.get('title', page.title) }}"
+  og:description: "{{ page.meta.description }}"
+  og:url: "{{ page.canonical_url }}"
+  og:image: "{{ image.url }}"
+  og:image:type: "{{ image.type }}"
+  og:image:width: "{{ image.width }}"
+  og:image:height: "{{ image.height }}"
+  twitter:card: summary_large_image
+  twitter:title: "{{ page.meta.get('title', page.title) }}"
+  twitter:description: "{{ page.meta.description }}"
+  twitter:image: "{{ image.url }}"
+size: { width: 1200, height: 630 }
+layers:
+  - background: { color: "#0D0D0D" }
+  - size: { width: 6, height: 510 }
+    offset: { x: 52, y: 60 }
+    background: { color: "#00FF41" }
+  - size: { width: 1040, height: 55 }
+    offset: { x: 88, y: 56 }
+    typography:
+      content: RTFM // OPEN TECHNICAL REFERENCE
+      color: "#00FF41"
+      font: { family: JetBrains Mono, style: Regular }
+  - size: { width: 1030, height: 310 }
+    offset: { x: 84, y: 146 }
+    typography:
+      content: "{{ page.meta.get('title', page.title) }}"
+      color: "#F0F0F0"
+      line: { amount: 4, height: 1.12 }
+      overflow: shrink
+      font: { family: Space Grotesk, style: Bold }
+  - size: { width: 1040, height: 35 }
+    offset: { x: 88, y: 485 }
+    typography:
+      content: "{{ 'Sem mágica. Só tensores.' if config.extra.locale == 'pt-BR' else 'No magic. Just tensors.' }}"
+      color: "#C0C0C0"
+      font: { family: JetBrains Mono, style: Regular }
+  - size: { width: 1040, height: 30 }
+    offset: { x: 88, y: 550 }
+    typography:
+      content: "rtfm.ffreitasb.cc // {{ config.extra.locale }} // CC BY-SA 4.0"
+      color: "#8B8B8B"
+      font: { family: JetBrains Mono, style: Regular }
