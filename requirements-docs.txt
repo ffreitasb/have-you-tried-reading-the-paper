@@ -7,4 +7,4 @@ Pillow==13.0.0
 CairoSVG==2.9.1
 # Direct imports in publication hooks and static-output validation.
 PyYAML==6.0.3
-beautifulsoup4==4.14.3
+beautifulsoup4==4.15.0
