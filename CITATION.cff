@@ -47,6 +47,7 @@ keywords:
   - open knowledge
 version: "1.1.0"
 date-released: "2026-10-16"
+doi: "10.5281/zenodo.23427536"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.23092485"
@@ -63,3 +64,4 @@ preferred-citation:
   year: 2026
   version: "1.1.0"
   url: "https://github.com/ffreitasb/have-you-tried-reading-the-paper"
+  doi: "10.5281/zenodo.23427536"

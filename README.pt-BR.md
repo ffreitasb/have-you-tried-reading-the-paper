@@ -330,9 +330,9 @@ Citações de terceiros, papers referenciados, marcas, materiais linkados, figur
 
 Se este repositório contribuir materialmente para um trabalho acadêmico, científico, educacional ou técnico, por favor cite-o.
 
-O repositório inclui um [`CITATION.cff`](CITATION.cff) legível por máquina, que o GitHub pode expor pelo recurso **Cite this repository** e converter para formatos padronizados de referência. A release **v1.1.0** consolida as correções científicas bilíngues e de renderização matemática. Ao citar uma release arquivada, use seu DOI específico de versão no Zenodo. O [DOI do projeto](https://doi.org/10.5281/zenodo.23092485) representa todas as versões; a v1.0.0 original continua disponível pelo DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486).
+O repositório inclui um [`CITATION.cff`](CITATION.cff) legível por máquina, que o GitHub pode expor pelo recurso **Cite this repository** e converter para formatos padronizados de referência. A release **v1.1.0** consolida as correções científicas bilíngues e de renderização matemática; cite seu snapshot arquivado exato pelo DOI [10.5281/zenodo.23427536](https://doi.org/10.5281/zenodo.23427536). O [DOI do projeto](https://doi.org/10.5281/zenodo.23092485) representa todas as versões; a v1.0.0 original continua disponível pelo DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486).
 
-[Release v1.1.0 →](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) · [Arquivos no Zenodo](https://doi.org/10.5281/zenodo.23092485) · [Proveniência da produção](PROVENANCE.pt-BR.md) · [CC BY-SA 4.0](LICENSE)
+[v1.1.0 arquivada no Zenodo →](https://zenodo.org/records/23427536) · [Release no GitHub](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) · [Proveniência da produção](PROVENANCE.pt-BR.md) · [CC BY-SA 4.0](LICENSE)
 
 Ao citar material de `main`, registre também o SHA do commit ou o permalink utilizado: um DOI de versão identifica apenas seu snapshot arquivado. O [changelog](docs/pt-BR/CHANGELOG.md) registra mudanças conceituais.
 

@@ -330,9 +330,9 @@ Third-party quotations, cited papers, trademarks, linked materials, figures, scr
 
 If this repository materially contributes to academic, scientific, educational, or technical work, please cite it.
 
-The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. Release **v1.1.0** consolidates the bilingual scientific and mathematical-rendering corrections. When citing an archived release, use its version-specific DOI from Zenodo. The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions; the original v1.0.0 remains available under DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486).
+The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. Release **v1.1.0** consolidates the bilingual scientific and mathematical-rendering corrections; cite its exact archived snapshot using DOI [10.5281/zenodo.23427536](https://doi.org/10.5281/zenodo.23427536). The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions; the original v1.0.0 remains available under DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486).
 
-[Release v1.1.0 →](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) · [Zenodo archives](https://doi.org/10.5281/zenodo.23092485) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
+[Archived v1.1.0 on Zenodo →](https://zenodo.org/records/23427536) · [GitHub release](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
 
 When citing material from `main`, also record the commit SHA or permalink used: a version DOI identifies only its archived snapshot. The [changelog](docs/en-US/CHANGELOG.md) records conceptual changes.
 
