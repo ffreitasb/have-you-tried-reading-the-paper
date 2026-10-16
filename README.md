@@ -330,11 +330,11 @@ Third-party quotations, cited papers, trademarks, linked materials, figures, scr
 
 If this repository materially contributes to academic, scientific, educational, or technical work, please cite it.
 
-The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. For the exact archived release, cite **v1.0.0** using DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486). The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions.
+The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which GitHub can expose through **Cite this repository** and render into standard citation formats. Release **v1.1.0** consolidates the bilingual scientific and mathematical-rendering corrections. When citing an archived release, use its version-specific DOI from Zenodo. The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions; the original v1.0.0 remains available under DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486).
 
-[Archived release on Zenodo →](https://zenodo.org/records/23092486) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
+[Release v1.1.0 →](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) · [Zenodo archives](https://doi.org/10.5281/zenodo.23092485) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
 
-The living reference includes corrections made after v1.0.0. When citing material from `main`, also record the commit SHA or permalink used: the archived release DOI identifies its original snapshot. The [changelog](docs/en-US/CHANGELOG.md) records subsequent conceptual changes.
+When citing material from `main`, also record the commit SHA or permalink used: a version DOI identifies only its archived snapshot. The [changelog](docs/en-US/CHANGELOG.md) records conceptual changes.
 
 **[Citation metadata →](CITATION.cff)**
 

@@ -45,9 +45,8 @@ keywords:
   - AI security
   - open education
   - open knowledge
-version: "1.0.0"
-date-released: "2026-10-01"
-doi: "10.5281/zenodo.23092486"
+version: "1.1.0"
+date-released: "2026-10-16"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.23092485"
@@ -62,6 +61,5 @@ preferred-citation:
       email: "contact@ffreitasb.cc"
       orcid: "https://orcid.org/0009-0006-9142-5072"
   year: 2026
-  version: "1.0.0"
+  version: "1.1.0"
   url: "https://github.com/ffreitasb/have-you-tried-reading-the-paper"
-  doi: "10.5281/zenodo.23092486"

@@ -154,7 +154,7 @@ If this repository materially contributes to academic, scientific, educational, 
 
 Zenodo archival and DOI-based citation are implemented. The immutable v1.0.0 release is published in the [Zenodo archive](https://zenodo.org/records/23092486) with DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486), which identifies that exact version. The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions.
 
-The living reference contains formatting and scientific corrections made after v1.0.0. They do not retroactively change that archive or its citation metadata. When referring to material from `main`, also record the commit SHA or a permalink identifying the revision used; the v1.0.0 DOI alone does not identify later corrections.
+Release [v1.1.0](https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0) consolidates the subsequent formatting and scientific corrections described above, without adding chapters. It does not retroactively change v1.0.0 or its citation metadata. Each archived release has its own version DOI; use the DOI of the version actually consulted. When referring to material from `main`, also record the commit SHA or a permalink identifying the revision used.
 
 ---
 

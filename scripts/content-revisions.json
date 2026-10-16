@@ -616,6 +616,12 @@
         "https://arxiv.org/html/1503.02531",
         "https://arxiv.org/pdf/1707.06347"
       ]
+    },
+    "RELEASE-1.1.0": {
+      "subject": "Maintainer-authorized release label and scope for v1.1.0; no scientific payload changes",
+      "sources": [
+        "https://github.com/ffreitasb/have-you-tried-reading-the-paper/releases/tag/v1.1.0"
+      ]
     }
   },
   "revisions": [
@@ -1587,6 +1593,47 @@
             "FND-08",
             "FND-C06",
             "REVIEW-DATE"
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-v1.1.0-changelog-2026-10-16",
+      "source_commit": "8cd3a89449ccb30d07b33d95ca87536fd3ae20c6",
+      "reviewed_on": "2026-10-16",
+      "files": {
+        "docs/en-US/CHANGELOG.md": {
+          "before": {
+            "outside_sha256": "443d2bd77512d5038773a2a7b2d4b1a3143d2ee4db80596d046d995f8205b373",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "after": {
+            "outside_sha256": "e6135d95ec638662d304a72e71e0fe1784e6fce37300bea7ddcc560083c8670c",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "review_ids": [
+            "RELEASE-1.1.0"
+          ]
+        },
+        "docs/pt-BR/CHANGELOG.md": {
+          "before": {
+            "outside_sha256": "42f437712c8206c7c2f1c3ae5e5a72b8d8cad95c5163c3f13f0627f6815b6e40",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "after": {
+            "outside_sha256": "b4df43a05a055152460d421db0773edc901655f3d25ce0916770b80743ca92e7",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "review_ids": [
+            "RELEASE-1.1.0"
           ]
         }
       }

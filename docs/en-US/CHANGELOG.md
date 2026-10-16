@@ -11,7 +11,7 @@ updated: 2026-10-16
 
 ---
 
-# 2026-10-16 — Bilingual technical corrections
+# 2026-10-16 — v1.1.0: Bilingual technical corrections
 
 ## Corrected and clarified
 
@@ -23,7 +23,7 @@ updated: 2026-10-16
 - Corrected graph-generation and link-prediction task definitions, schema-prefix constraints, retrieval conventions, and the strength of a cited time-series claim.
 - Aligned terminology, conditioning tags, portable-link conventions, and relevant English/Portuguese wording while preserving each edition's editorial voice.
 
-These are corrections to the living reference. The archived v1.0.0 release and its DOI remain unchanged. The review and corrections were AI-assisted and checked against primary sources and reproducible examples; they do not constitute a guarantee that no further errors remain.
+Release v1.1.0 consolidates these corrections and the preceding mathematical-rendering repairs without adding chapters. The archived v1.0.0 release and its DOI remain unchanged. The review and corrections were AI-assisted and checked against primary sources and reproducible examples; they do not constitute a guarantee that no further errors remain.
 
 ---
 

@@ -11,7 +11,7 @@ updated: 2026-10-16
 
 ---
 
-# 2026-10-16 — Correções técnicas bilíngues
+# 2026-10-16 — v1.1.0: Correções técnicas bilíngues
 
 ## Corrigido e esclarecido
 
@@ -23,7 +23,7 @@ updated: 2026-10-16
 - Corrigidas definições de geração de grafos e link prediction, restrições de prefixo de schema, convenções de retrieval e a força de uma afirmação citada sobre séries temporais.
 - Alinhadas terminologia, tags de condicionamento, convenções de links portáveis e formulações relevantes em inglês/português, preservando a voz editorial de cada edição.
 
-Estas são correções da referência viva. A release arquivada v1.0.0 e seu DOI permanecem inalterados. A revisão e as correções tiveram assistência de IA e foram conferidas com fontes primárias e exemplos reproduzíveis; não constituem garantia de ausência de outros erros.
+A release v1.1.0 consolida estas correções e os reparos anteriores de renderização matemática sem acrescentar capítulos. A release arquivada v1.0.0 e seu DOI permanecem inalterados. A revisão e as correções tiveram assistência de IA e foram conferidas com fontes primárias e exemplos reproduzíveis; não constituem garantia de ausência de outros erros.
 
 ---
 
