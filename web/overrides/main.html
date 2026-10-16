@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block htmltitle %}
+  {% if page and page.is_homepage %}<title>{{ config.site_name }}</title>{% else %}{{ super() }}{% endif %}
+{% endblock %}
+{% block extrahead %}
+  {{ super() }}
+  {% if page %}
+  <meta property="og:locale" content="{{ 'pt_BR' if is_pt else 'en_US' }}">
+  <meta property="og:locale:alternate" content="{{ 'en_US' if is_pt else 'pt_BR' }}">
+  <script type="application/ld+json">{{ structured_data | safe }}</script>
+  {% endif %}
+{% endblock %}
+{% block content %}
+  {% if page and page.meta.is_registry %}
+    <form class="registry-filter" role="search" data-registry-filter hidden>
+      <label for="registry-query">{{ 'Filtrar o Parameter Registry' if is_pt else 'Filter the Parameter Registry' }}</label>
+      <p id="registry-help">{{ 'Busca nesta página por nome, domínio, tag ou definição. O texto de contexto permanece disponível.' if is_pt else 'Search this page by name, domain, tag or definition. Explanatory context remains available.' }}</p>
+      <div class="registry-input"><input id="registry-query" type="search" aria-describedby="registry-help" autocomplete="off"><button type="reset">{{ 'Limpar' if is_pt else 'Clear' }}</button></div>
+      <p role="status" aria-live="polite" data-registry-count data-locale="{{ config.extra.locale }}"></p>
+    </form>
+  {% endif %}
+  {{ super() }}
+  {% if page and page.file.src_uri == 'citation.md' %}{% include "partials/citation.html" %}{% endif %}
+  {% if page %}{% include "partials/scholarly.html" %}{% endif %}
+{% endblock %}

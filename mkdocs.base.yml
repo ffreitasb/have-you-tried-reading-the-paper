@@ -1,0 +1,62 @@
+site_name: Have You Tried Reading the Paper?
+site_author: Felipe Freitas Braga
+repo_url: https://github.com/ffreitasb/have-you-tried-reading-the-paper
+repo_name: GitHub
+copyright: CC BY-SA 4.0 · Felipe Freitas Braga
+strict: true
+use_directory_urls: true
+theme:
+  name: material
+  custom_dir: web/overrides
+  font: false
+  favicon: assets/favicon.svg
+  logo: assets/favicon.svg
+  palette:
+    scheme: slate
+    primary: black
+    accent: green
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - content.action.view
+    - content.action.edit
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - search.share
+plugins:
+  - search
+  - privacy
+  - social:
+      cards_layout_dir: web/social
+      cards_layout: f0xtrot
+hooks:
+  - scripts/mkdocs_math.py
+  - scripts/site_hooks.py
+markdown_extensions:
+  - tables
+  - attr_list
+  - md_in_html
+  - admonition
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.highlight
+  - pymdownx.details
+  - pymdownx.snippets
+extra_css:
+  - assets/f0xtrot.css
+extra_javascript:
+  - assets/mathjax-config.js
+  - assets/vendor/mathjax/tex-chtml.js
+  - assets/registry.js
+  - assets/reading.js
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    unrecognized_links: warn
+    anchors: warn

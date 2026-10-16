@@ -1,0 +1,47 @@
+INHERIT: mkdocs.base.yml
+site_url: https://rtfm.ffreitasb.cc/
+site_description: An open, bilingual reference for understanding foundation models beneath the interface. No magic.
+  Just tensors.
+docs_dir: docs/en-US
+site_dir: .site/en
+edit_uri: edit/main/docs/en-US/
+theme:
+  language: en
+plugins:
+- search:
+    lang: en
+- privacy
+- social:
+    cards_layout_dir: web/social
+    cards_layout: f0xtrot
+nav:
+- Home: index.md
+- Start here:
+  - Technical index: 00_README_INDEX.md
+  - Unified engineering: 01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md
+- Model families:
+  - Language & Transformers: 02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md
+  - Code & coding agents: 03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md
+  - Image · diffusion & flow: 04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md
+  - Video: 05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md
+  - Audio · music · TTS: 06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md
+  - 3D generation: 07_3D_GENERATION_REPRESENTATION_DATASHEET.md
+  - Multimodal · VLM · omni: 10_MULTIMODAL_VLM_OMNI_DATASHEET.md
+  - Time series · tabular: 14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md
+  - Graph models: 15_GRAPH_FOUNDATION_MODELS_DATASHEET.md
+- Systems:
+  - Agents · action & control: 08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md
+  - Embedding · retrieval · reranking: 11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md
+  - Reward · verifier · judge: 12_REWARD_VERIFIER_JUDGE_DATASHEET.md
+  - World models · VLA: 13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md
+- Lifecycle:
+  - Training · alignment · adaptation: 16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md
+  - Evaluation · experiments: 17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md
+  - Security · robustness · failure modes: 18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md
+- Runtime:
+  - Local inference runtime: 09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md
+- Reference:
+  - Parameter Registry: 19_PARAMETER_GLOSSARY_AND_REGISTRY.md
+  - Conventions: CONVENTIONS.md
+  - Changelog: CHANGELOG.md
+  - Cite this work: citation.md

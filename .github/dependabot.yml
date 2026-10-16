@@ -9,3 +9,17 @@ updates:
       github-actions:
         patterns:
           - "*"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      documentation:
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: mkdocs
+        versions: [">=2.0.0a0"]
+      - dependency-name: mkdocs-material
+        versions: [">=9.8.0a0"]

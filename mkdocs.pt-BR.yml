@@ -1,0 +1,47 @@
+INHERIT: mkdocs.base.yml
+site_url: https://rtfm.ffreitasb.cc/pt-BR/
+site_description: Uma referência aberta e bilíngue para entender foundation models abaixo da interface. Sem mágica.
+  Só tensores.
+docs_dir: docs/pt-BR
+site_dir: .site/pt-BR
+edit_uri: edit/main/docs/pt-BR/
+theme:
+  language: pt
+plugins:
+- search:
+    lang: pt
+- privacy
+- social:
+    cards_layout_dir: web/social
+    cards_layout: f0xtrot
+nav:
+- Início: index.md
+- Comece aqui:
+  - Índice técnico: 00_README_INDEX.md
+  - Engenharia unificada: 01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md
+- Famílias de modelos:
+  - Linguagem & Transformers: 02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md
+  - Código & agentes de coding: 03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md
+  - Imagem · diffusion & flow: 04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md
+  - Vídeo: 05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md
+  - Áudio · música · TTS: 06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md
+  - Geração 3D: 07_3D_GENERATION_REPRESENTATION_DATASHEET.md
+  - Multimodal · VLM · omni: 10_MULTIMODAL_VLM_OMNI_DATASHEET.md
+  - Séries temporais · tabular: 14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md
+  - Modelos de grafos: 15_GRAPH_FOUNDATION_MODELS_DATASHEET.md
+- Sistemas:
+  - Agentes · ação & controle: 08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md
+  - Embedding · retrieval · reranking: 11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md
+  - Reward · verifier · judge: 12_REWARD_VERIFIER_JUDGE_DATASHEET.md
+  - World models · VLA: 13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md
+- Ciclo de vida:
+  - Treinamento · alinhamento · adaptação: 16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md
+  - Avaliação · experimentos: 17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md
+  - Segurança · robustez · modos de falha: 18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md
+- Runtime:
+  - Runtime de inferência local: 09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md
+- Referência:
+  - Parameter Registry: 19_PARAMETER_GLOSSARY_AND_REGISTRY.md
+  - Convenções: CONVENTIONS.md
+  - Histórico: CHANGELOG.md
+  - Citar este trabalho: citation.md
