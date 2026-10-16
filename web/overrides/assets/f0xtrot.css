@@ -391,7 +391,7 @@ mjx-container[jax=CHTML] {
   align-items:center;
   justify-content:center;
   min-height:2.3rem;
-  border:1px solid #555;
+  border:1px solid #666;
   border-radius:2px;
   padding:.6rem .8rem;
   font-size:.56rem;
@@ -799,6 +799,12 @@ mjx-container[jax=CHTML] {
   inset-inline-start:auto;
   inset-inline-end:0;
   max-width:calc(100vw - 1rem)
+}
+
+.md-select .md-select__inner,
+.md-select:hover .md-select__inner,
+.md-select:focus-within .md-select__inner {
+  transform:none;
 }
 
 .md-content__inner:has(.rtfm-home)>.md-content__button {
