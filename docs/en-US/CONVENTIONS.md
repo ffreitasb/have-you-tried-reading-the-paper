@@ -2,7 +2,7 @@
 title: Conventions & Maintenance Rules — Foundation Model Engineering Datasheets
 aliases: [Datasheet Conventions, Editorial Conventions]
 tags: [ai, reference, governance, conventions, knowledge-management]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Conventions & Maintenance Rules
@@ -81,6 +81,7 @@ PEFT
 DISTILL
 MERGE
 GEN
+COND
 INF
 STATE
 BACKEND
@@ -91,6 +92,8 @@ SEC
 UI
 HEURISTIC
 ```
+
+`COND` identifies inputs or representations that condition the prediction, such as a speaker embedding or reference image.
 
 A variable may carry more than one tag when it crosses layers.
 
@@ -129,6 +132,8 @@ Example:
 ```math
 M_{KV}\approx2LTn_{kv}d_hbB
 ```
+
+Here, b is bytes per cached element, B is batch size, T is cached length per sequence, L is the number of layers, n_kv is the number of KV heads, and d_h is their dimension. This estimates K/V tensor payload for a dense, uniform MHA/GQA/MQA cache with equal K and V dimensions, excluding allocator/metadata overhead. Sliding-window, MLA, compressed caches, or variable lengths require adapting the estimate.
 
 State assumptions when necessary.
 
@@ -289,15 +294,15 @@ Avoid using a secondary post as the primary source when the original exists.
 
 # 11. Cross-link policy
 
-All files live at the root of the same directory.
+Each language edition has its own directory: `docs/en-US/` or `docs/pt-BR/`.
 
-Use Obsidian wikilinks without `.md`:
+Use Markdown links with relative destinations and the `.md` extension:
 
 ```text
 [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md)
 ```
 
-Do not use relative paths while all files remain at the root.
+Resolve each destination relative to the current file; keep links within the same edition unless a language switch is intended.
 
 ---
 
@@ -324,7 +329,7 @@ CHANGELOG.md
 
 Do not rename an existing file without:
 
-1. updating all wikilinks;
+1. updating all Markdown links;
 2. recording the change in the CHANGELOG;
 3. ideally retaining an alias or migration note.
 
@@ -579,7 +584,7 @@ Before considering it complete:
 - [ ] cross-links;
 - [ ] dated snapshot;
 - [ ] references;
-- [ ] valid wikilinks;
+- [ ] valid relative Markdown links;
 - [ ] balanced formulas/fences.
 
 ---

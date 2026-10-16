@@ -1,7 +1,7 @@
 ---
 title: World Model / VLA / Embodied AI Datasheet v1.0
 tags: [ai, world-model, vla, robotics, embodied-ai, control, policy, planning]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # World Model / VLA / Embodied AI Datasheet v1.0
@@ -130,7 +130,7 @@ z_t\rightarrow \hat v_t
 Prediz imagem/vídeo futuro:
 
 ```math
-p(I_{t+1:t+H}|I_{\le t},a_{t:t+H})
+p(I_{t+1:t+H}|I_{\le t},a_{t:t+H-1})
 ```
 
 Prós:
@@ -177,13 +177,13 @@ s_{t+1}\sim p_\theta(s|s_t,a_t)
 
 Mundos reais têm múltiplos futuros plausíveis.
 
-Quando incerteza importa, um único mean prediction pode ser perigoso:
+Quando incerteza importa, um único mean prediction pode ser perigoso. Uma falha possível com conjunto não convexo de estados viáveis é:
 
 ```math
 E[s_{t+1}]\notin feasible\ states
 ```
 
-em distribuições multimodais.
+Multimodalidade, por si só, não implica essa falha; a viabilidade depende do suporte e das restrições de estado.
 
 ---
 
@@ -199,19 +199,19 @@ Erro recursivo:
 e_{t+k}\approx F(e_{t+k-1},model\ error)
 ```
 
-Quanto maior horizon:
+Uma tendência possível quando erros de rollout se acumulam:
 
 ```math
 H\uparrow\Rightarrow accumulated\ model\ error\uparrow
 ```
 
-não necessariamente linearmente.
+O crescimento não precisa ser linear nem monotônico; dinâmicas estáveis podem atenuar erros. Trata-se de tendência de falha, não de limite universal.
 
 ---
 
 # 8. Planning / MPC analogy
 
-Queremos:
+Objetivo esquemático de horizonte finito sob dinâmica predita determinística:
 
 ```math
 a^*_{t:t+H-1}
@@ -220,7 +220,7 @@ a^*_{t:t+H-1}
 \sum_{k=0}^{H-1}\gamma^kR(\hat s_{t+k},a_{t+k})
 ```
 
-Executa-se tipicamente apenas a primeira ação e replaneja-se:
+O rollout começa na estimativa atual de estado e segue a dinâmica aprendida. Esse objetivo, sozinho, não garante estabilidade ou segurança; essas garantias exigem restrições, tratamento de incerteza e hipóteses de controle adequados. Executa-se tipicamente apenas a primeira ação e replaneja-se:
 
 ```math
 MPC: plan\rightarrow act\rightarrow observe\rightarrow replan
@@ -309,27 +309,21 @@ Permite usar autoregressive categorical decoder.
 A_t=(a_t,a_{t+1},\ldots,a_{t+K-1})
 ```
 
-Reduz frequência de chamadas do backbone e pode suavizar controle.
+Prever um chunk pode suavizar controle. A frequência de chamadas do backbone diminui somente se mais ações forem executadas entre atualizações da policy.
 
 ---
 
 # 12. Action chunking trade-off
 
-Chunk maior:
+Separe o horizonte previsto $`K`$ do número de ações executadas antes de nova atualização da policy, $`1\le K_{exec}\le K`$. Com taxa de controle fixa e execução síncrona em malha aberta entre atualizações:
 
 ```math
-K\uparrow
-\Rightarrow
-InferenceFrequency\downarrow
+f_{replan}\approx\frac{f_{control}}{K_{exec}}
 ```
 
-mas:
+Aumentar $`K_{exec}`$ reduz a frequência de atualização da policy e atrasa a incorporação de novas observações por ela. Isso não reduz necessariamente a amostragem dos sensores nem o feedback dos servos de baixo nível. Chunks previstos maiores, sozinhos, não precisam reduzir o replanejamento: chunks sobrepostos e temporal ensembling, como no ACT, permitem atualizar a policy a cada passo de controle.
 
-```math
-FeedbackFrequency\downarrow
-```
-
-Logo há trade-off entre throughput e closed-loop responsiveness.
+O trade-off entre throughput e capacidade de resposta depende, portanto, do esquema de execução.
 
 Em engenharia:
 
@@ -340,7 +334,7 @@ Em engenharia:
 # 13. Autoregressive action policy
 
 ```math
-P(A)=\prod_tp(a_t|a_{\lt t},C)
+p(A\mid C)=\prod_tp(a_t\mid a_{\lt t},C)
 ```
 
 Prós:
@@ -352,7 +346,7 @@ Contras:
 
 - sequential latency;
 - error propagation;
-- ações contínuas exigem tokenização ou mixture outputs.
+- ações contínuas requerem uma cabeça de saída contínua apropriada (por exemplo, gaussiana, mixture ou flow), ou podem ser discretizadas em tokens.
 
 ---
 
@@ -492,7 +486,7 @@ a_t^{raw}=\pi(s_t)
 Safety filter:
 
 ```math
-a_t=\Pi_{\mathcal A_{safe}}(a_t^{raw})
+a_t=\Pi_{\mathcal A_{safe}(s_t)}(a_t^{raw})
 ```
 
 Pode incluir:
@@ -503,6 +497,8 @@ Pode incluir:
 - workspace boundaries;
 - human proximity;
 - forbidden actions.
+
+Aqui $`\mathcal A_{safe}(s_t)`$ deve representar restrições adequadas ao estado atual e à dinâmica; sob observação parcial, use um conjunto $`\mathcal A_{safe}(b_t)`$ que considere belief/incerteza. A projeção é esquemática: métrica, existência e eventual solução não única precisam de política definida. Se o conjunto estiver vazio ou o filtro falhar, acione um controlador de emergência/fallback especificado separadamente; simplesmente parar não é seguro para todo plant. Limites instantâneos de ação, sozinhos, não estabelecem segurança da trajetória resultante.
 
 Uma policy segura não deve depender apenas de prompt.
 

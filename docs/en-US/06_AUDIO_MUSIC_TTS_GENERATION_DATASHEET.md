@@ -1,7 +1,7 @@
 ---
 title: Audio, Speech, Music & TTS Model Datasheet v3.0
 tags: [ai, audio, speech, music, tts, asr, codec, diffusion, streaming]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Audio, Speech, Music & TTS Model Datasheet v3.0
@@ -70,19 +70,25 @@ Codec frame rate:
 r_c=\frac{frames}{second}
 ```
 
-With $`K`$ codebooks:
+With $`K`$ codebooks, each emitting one code per codec frame:
 
 ```math
-tokens/sec\approx r_cK
+codes/sec\approx r_cK
 ```
 
 Duration:
 
 ```math
-T_{tokens}\approx D\,r_cK
+N_{codes}\approx D\,r_cK
 ```
 
-This directly links duration to sequence length.
+This counts code indices across all codebooks, not necessarily the autoregressive sequence length $`L_{AR}`$. Serial flattening gives $`L_{AR}\approx N_{codes}`$; parallel/delayed patterns can instead give:
+
+```math
+L_{AR}\approx D\,r_c+\Delta
+```
+
+where $`\Delta`$ is the pattern delay in autoregressive positions. [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md), for example, uses four 50 Hz codebooks but approximately 50 autoregressive steps per second with a delay pattern. KV/attention length follows the backbone sequence layout, not automatically the total code count.
 
 ---
 
@@ -124,7 +130,7 @@ Stable Audio 3 uses a semantic-acoustic autoencoder to reduce sequence length dr
 ## 6. Next audio token
 
 ```math
-p(a_{1:T})=\prod_tp(a_t\mid a_{\lt t},C)
+p(a_{1:T}\mid C)=\prod_tp(a_t\mid a_{\lt t},C)
 ```
 
 The usual controls apply:
@@ -142,13 +148,19 @@ Top-K does not “cut frequencies.” It filters **discrete codec/vocabulary tok
 
 ## 7. Duration
 
-For an autoregressive codec:
+For an autoregressive generator over codec codes, the number of sequential prediction steps follows the backbone sequence length:
 
 ```math
-Compute\propto T_{tokens}
+N_{AR}\approx L_{AR}
 ```
 
-KV/cache also grows with sequence length if the architecture is a conventional causal Transformer.
+Compute per step need not be constant. For $`L`$ layers of width $`d`$, FFN width proportional to $`d`$, a fixed conditioning prefix, and full causal attention with KV caching, the attention/FFN work scales as:
+
+```math
+C_{AR}=O\!\left(L\left(L_{AR}d^2+L_{AR}^2d\right)\right)
+```
+
+Each new query still attends to the growing prefix; caching avoids recomputing previous keys/values, not the quadratic total attention work. Linear compute in sequence length requires a fixed attention window, an appropriate architecture, or an explicit constant-cost-per-step approximation. KV/cache also grows with sequence length in a conventional full-attention causal Transformer.
 
 ---
 
@@ -391,6 +403,8 @@ No single metric replaces listening tests across all objectives.
 
 # PART XI — COUPLING MATRIX
 
+Qualitative tendencies within a suitable operating regime; arrows are not monotonic guarantees. Codec bitrate effects depend on the quantizer and the generator’s sequence layout.
+
 | Control ↑ | Diversity | Prompt adherence | Compute | Voice identity |
 |---|---:|---:|---:|---:|
 | AR temperature | ↑ | may ↓ | ~ | may ↓ |
@@ -398,7 +412,7 @@ No single metric replaces listening tests across all objectives.
 | CFG | ↓ | ↑ until useful regime | ↑ | depends |
 | duration | — | — | ↑ | drift risk ↑ |
 | reference strength | ↓ | — | varies | ↑ |
-| codec bitrate | reconstruction ↑ | — | token/decoder cost ↑ | potential ↑ |
+| codec bitrate | reconstruction may ↑ | — | depends on codec/LM layout | potential ↑ |
 
 ---
 
@@ -573,7 +587,7 @@ Blank $`\varnothing`$ represents “no new token.”
 Example path:
 
 ```text
--- h h - e - l l - o --
+-- h h - e - l - l - o --
 ```
 
 collapse:
@@ -609,7 +623,7 @@ z_{t,u}=Joint(h_t,g_u)
 ```
 
 ```math
-P(k|t,u)=softmax(z_{t,u})
+P(k\mid t,u)=[softmax(z_{t,u})]_k
 ```
 
 This jointly models acoustic time and the textual prefix.
@@ -745,7 +759,7 @@ Diarization error is not WER.
 
 ## 38. Speech contains more than text
 
-Signal:
+Conceptual dimensions of speech (the sum is schematic, not a linear decomposition of the waveform into independent signals):
 
 ```math
 Speech=
@@ -914,7 +928,7 @@ The architectural point is the convergence of **specialized speech recognition w
 
 ## Speech-XL
 
-Long-form speech is moving from “increase context” to **learned compression of acoustic state**.
+Speech-XL illustrates **learned compression of acoustic state** as an approach to long-form speech, rather than relying only on a larger uncompressed context.
 
 ## Fine-grained speech understanding
 

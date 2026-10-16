@@ -1,7 +1,7 @@
 ---
 title: AI GUT — Unified Foundation Model Engineering Datasheet v3.1
 tags: [ai, reference, gut, mathematics, architecture, foundation-models]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # AI GUT — Unified Foundation Model Engineering Datasheet v3.1
@@ -176,7 +176,7 @@ a_t\in\mathbb R^m
 ## 3.1 Autoregression
 
 ```math
-p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{\lt t},C)
+p(x_{1:T}|C)=\prod_{t=1}^{T}p(x_t|x_{\lt t},C)
 ```
 
 Training: next-element prediction.  
@@ -220,7 +220,7 @@ Inference approximates/integrates the learned vector field.
 
 ## 3.5 Contrastive representation learning
 
-For positive query/document pair $`d^+`$ and negatives $`d_j`$:
+A per-anchor **decoupled contrastive learning (DCL)** term, using query/anchor $`q`$, its positive $`d^+`$, and a nonempty set of negatives $`d_j`$. Here, $`sim`$ is the inner product of unit-L2-normalized embeddings and $`\tau>0`$:
 
 ```math
 \mathcal L=
@@ -228,6 +228,8 @@ For positive query/document pair $`d^+`$ and negatives $`d_j`$:
 \frac{e^{sim(q,d^+)/\tau}}
 {\sum_j e^{sim(q,d_j)/\tau}}
 ```
+
+The denominator contains only negatives; the positive and the anchor itself are excluded. This is the unweighted DCL term, not an InfoNCE probability normalization, and its value can be negative. Training aggregates such terms over anchors/pairs. See [Yeh et al., DCL, Proposition 2 and Eq. (6)](https://arxiv.org/abs/2110.06848).
 
 The objective is not to generate; it is to **organize geometry**.
 
@@ -379,6 +381,8 @@ V_t\rightarrow V_t^{valid}
 ```math
 x_{k+1}=\Phi(x_k,f_\theta(x_k,t_k),\Delta t_k)
 ```
+
+This is schematic: for an SDE, $`\Phi`$ also depends on diffusion coefficients and random increments, suppressed above. For an ODE, the update is deterministic given the inputs and fixed solver configuration. See [Song et al., SDE and probability-flow ODE](https://arxiv.org/abs/2011.13456).
 
 ## 7.4 Retrieval
 

@@ -1,7 +1,7 @@
 ---
 title: Graph Foundation Models Datasheet v1.0
 tags: [ai, graph, gnn, graph-transformer, foundation-models, message-passing]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Graph Foundation Models Datasheet v1.0
@@ -129,7 +129,7 @@ But neighborhood size can grow exponentially:
 |N_L(v)|\sim d^L
 ```
 
-for average degree $`d`$, before accounting for overlap.
+with $`d`$ an effective branching factor in an approximately homogeneous tree-like regime. Average degree alone does not bound a particular node neighborhood: a hub can be much larger. Bounds require maximum degree or explicit sampling fanouts, accounting for repeated nodes.
 
 This creates memory and sampling problems.
 
@@ -219,7 +219,7 @@ How\ is\ topology\ represented\ to\ attention?
 
 # 10. Laplacian positional encoding
 
-Adjacency $`A`$, degree $`D`$.
+For this construction, assume an undirected graph with symmetric nonnegative adjacency $`A`$, degrees $`d_i=\sum_jA_{ij}`$, and $`D=diag(d_i)`$. The inverse-degree formula below initially assumes $`d_i>0`$ for every node; signed or directed graphs require an appropriate separate construction.
 
 Graph Laplacian:
 
@@ -232,6 +232,14 @@ or normalized:
 ```math
 L_{sym}=I-D^{-1/2}AD^{-1/2}
 ```
+
+To include isolated vertices, define diagonal $`S`$ by $`S_{ii}=d_i^{-1/2}`$ when $`d_i>0`$ and $`S_{ii}=0`$ otherwise, then use:
+
+```math
+L_{sym}=S(D-A)S
+```
+
+This convention gives zero rows/columns at isolated vertices, including a zero diagonal; it agrees with the preceding formula on positive-degree nodes.
 
 Eigenvectors:
 
@@ -249,13 +257,13 @@ Eigenvectors have sign ambiguities and degeneracies; the architecture must accou
 
 # 11. Random-walk structural encoding
 
-Transition matrix:
+With nonnegative row weights $`A_{ij}`$, let $`D`$ contain row sums (out-degrees for a directed graph). If all out-degrees are positive, the transition matrix is:
 
 ```math
 P=D^{-1}A
 ```
 
-Return/visit probabilities after $`k`$ steps:
+If some out-degrees are zero, normalize each positive-degree row as $`P_{ij}=A_{ij}/d_i`$ and assign each zero-degree node an absorbing row: $`P_{ii}=1`$ and $`P_{ij}=0`$ for $`j\ne i`$. Other dangling-node policies must be declared. Every row then sums to one; signed edge weights cannot be used directly as transition probabilities. Entries below give transition probabilities after $`k`$ steps (diagonal entries are return probabilities):
 
 ```math
 P^k
@@ -327,8 +335,16 @@ Examples:
 # 15. Edge / link prediction
 
 ```math
-P((u,v)\in E|G)
+G_{obs}=(V,E_{obs},X),\quad Y_{uv}=\mathbf 1[(u,v)\in E_{target}]
 ```
+
+Here $`X`$ contains only attributes available to the predictor; $`E_{obs}`$ is its observed context and $`E_{target}`$ defines prediction labels. Model:
+
+```math
+p_\theta(Y_{uv}=1\mid G_{obs},u,v)
+```
+
+Declare train/validation/test edge splits and compute embeddings from the permitted context. Hide evaluated target edges, including reverse copies for undirected relations, from message passing and derived features. Temporal prediction uses only information available through the cutoff to predict later edges. Conditioning on the full graph that already contains the queried edge would make its membership known.
 
 Simple score:
 
@@ -390,10 +406,10 @@ The state has no natural sequential ordering; any serialization imposes an artif
 
 # 18. Autoregressive graph generation
 
-One possible serialization:
+For a valid terminating discrete serialization $`S=(action_1,\ldots,action_T)`$, including the stop action:
 
 ```math
-p(G)=\prod_t p(action_t|action_{\lt t})
+p(S)=\prod_{t=1}^{T}p(action_t|action_{\lt t})
 ```
 
 with actions such as:
@@ -403,7 +419,13 @@ with actions such as:
 - set attribute;
 - stop.
 
-Problem: different action orders may represent the same graph.
+Different action orders may represent the same graph. For a model supported on valid terminating sequences, the graph marginal is:
+
+```math
+p(G)=\sum_{S:decode(S)=G}p(S)
+```
+
+The decoder must fix what counts as the same graph (including any equivalence under relabeling). Identifying this marginal with one sequence probability requires a canonical bijection and model support restricted to canonical sequences; choosing one training order alone does not establish that identity.
 
 ---
 
@@ -508,13 +530,19 @@ Fanout:
 K_1,K_2,\ldots,K_L
 ```
 
-Approximate sampled receptive field:
+For one root, the final sampled hop in a full sampling tree contains:
 
 ```math
-N_{sample}\sim\prod_lK_l
+N_{leaf}=\prod_{l=1}^{L}K_l
 ```
 
-before overlap.
+The total across all hops, including the root, is:
+
+```math
+N_{tree}=1+\sum_{l=1}^{L}\prod_{j=1}^{l}K_j
+```
+
+These are sampling-tree occurrences with every fanout filled. Distinct node counts can be smaller because of overlap, repeated samples, or insufficient degree; multiple roots can also share nodes. The last product alone is a dominant-order approximation only in suitable fanout/depth regimes.
 
 Trade-off:
 
@@ -555,7 +583,7 @@ Edge states:
 M_E\approx |E|d_eb
 ```
 
-Global attention over all nodes:
+Here $`b`$ is bytes per stored scalar. These estimates count one set of node/edge representations; layer activations, gradients, optimizer state, adjacency indices, and materialized messages are separate. Global attention over all nodes has a pair count of:
 
 ```math
 O(|V|^2)
@@ -563,13 +591,13 @@ O(|V|^2)
 
 quickly becomes infeasible.
 
-Graph structure enables sparse attention/message passing closer to:
+For width d and fixed layer/head counts, sparse attention mixing or aggregation over edges costs:
 
 ```math
 O(|E|d)
 ```
 
-in many regimes.
+This excludes projections, typically $`O(|V|d^2)`$, and learned message functions; a dense width-d MLP per edge can add $`O(|E|d^2)`$. Materializing all messages can use $`O(|E|d)`$ memory, while fused implementations may avoid that tensor. Compute and stored-state estimates are different quantities.
 
 ---
 

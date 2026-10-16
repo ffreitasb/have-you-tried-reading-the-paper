@@ -1,7 +1,7 @@
 ---
 title: GUT da IA — Unified Foundation Model Engineering Datasheet v3.1
 tags: [ai, referencia, gut, matematica, arquitetura, foundation-models]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # GUT da IA — Unified Foundation Model Engineering Datasheet v3.1
@@ -176,7 +176,7 @@ a_t\in\mathbb R^m
 ## 3.1 Autoregression
 
 ```math
-p(x_{1:T})=\prod_{t=1}^{T}p(x_t|x_{\lt t},C)
+p(x_{1:T}|C)=\prod_{t=1}^{T}p(x_t|x_{\lt t},C)
 ```
 
 Treino: next-element prediction.  
@@ -220,7 +220,7 @@ Inferência aproxima/integraliza o campo vetorial aprendido.
 
 ## 3.5 Contrastive representation learning
 
-Para query positiva $`d^+`$ e negativos $`d_j`$:
+Um termo de **decoupled contrastive learning (DCL)** por âncora, usando query/âncora $`q`$, seu positivo $`d^+`$ e um conjunto não vazio de negativos $`d_j`$. Aqui, $`sim`$ é o produto interno de embeddings normalizados para norma L2 unitária e $`\tau>0`$:
 
 ```math
 \mathcal L=
@@ -228,6 +228,8 @@ Para query positiva $`d^+`$ e negativos $`d_j`$:
 \frac{e^{sim(q,d^+)/\tau}}
 {\sum_j e^{sim(q,d_j)/\tau}}
 ```
+
+O denominador contém somente negativos; o positivo e a própria âncora são excluídos. Este é o termo DCL sem ponderação, não uma normalização de probabilidade InfoNCE, e seu valor pode ser negativo. O treino agrega esses termos sobre âncoras/pares. Ver [Yeh et al., DCL, Proposição 2 e Eq. (6)](https://arxiv.org/abs/2110.06848).
 
 Objetivo não é gerar: é **organizar geometria**.
 
@@ -379,6 +381,8 @@ V_t\rightarrow V_t^{valid}
 ```math
 x_{k+1}=\Phi(x_k,f_\theta(x_k,t_k),\Delta t_k)
 ```
+
+Este é um esquema: para uma SDE, $`\Phi`$ também depende dos coeficientes de difusão e de incrementos aleatórios, omitidos acima. Para uma ODE, a atualização é determinística dados os inputs e a configuração fixa do solver. Ver [Song et al., SDE e probability-flow ODE](https://arxiv.org/abs/2011.13456).
 
 ## 7.4 Retrieval
 

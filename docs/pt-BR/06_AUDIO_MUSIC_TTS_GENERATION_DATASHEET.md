@@ -1,7 +1,7 @@
 ---
 title: Audio, Speech, Music & TTS Model Datasheet v3.0
 tags: [ai, audio, speech, music, tts, asr, codec, diffusion, streaming]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Audio, Speech, Music & TTS Model Datasheet v3.0
@@ -70,19 +70,25 @@ Frame rate do codec:
 r_c=\frac{frames}{second}
 ```
 
-Com $`K`$ codebooks:
+Com $`K`$ codebooks, cada um emitindo um código por frame do codec:
 
 ```math
-tokens/sec\approx r_cK
+codes/sec\approx r_cK
 ```
 
 Duração:
 
 ```math
-T_{tokens}\approx D\,r_cK
+N_{codes}\approx D\,r_cK
 ```
 
-Isso liga diretamente duração a sequence length.
+Isso conta índices de código em todos os codebooks, não necessariamente o comprimento da sequência autoregressiva $`L_{AR}`$. Flattening serial dá $`L_{AR}\approx N_{codes}`$; padrões paralelos/com atraso podem, em vez disso, dar:
+
+```math
+L_{AR}\approx D\,r_c+\Delta
+```
+
+onde $`\Delta`$ é o atraso do padrão em posições autoregressivas. [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md), por exemplo, usa quatro codebooks de 50 Hz, mas aproximadamente 50 steps autoregressivos por segundo com um delay pattern. O comprimento de KV/atenção segue a organização da sequência do backbone, não automaticamente a contagem total de códigos.
 
 ---
 
@@ -124,7 +130,7 @@ Stable Audio 3 usa um semantic-acoustic autoencoder para reduzir fortemente o co
 ## 6. Próximo token de áudio
 
 ```math
-p(a_{1:T})=\prod_tp(a_t\mid a_{\lt t},C)
+p(a_{1:T}\mid C)=\prod_tp(a_t\mid a_{\lt t},C)
 ```
 
 Aplicam-se:
@@ -142,13 +148,19 @@ Top-K não “corta frequências”. Ele corta **tokens discretos do codec/vocab
 
 ## 7. Duration
 
-Para autoregressive codec:
+Para um gerador autoregressivo sobre códigos do codec, a quantidade de passos sequenciais de predição acompanha o comprimento da sequência do backbone:
 
 ```math
-Compute\propto T_{tokens}
+N_{AR}\approx L_{AR}
 ```
 
-KV/cache também cresce com sequence length se a arquitetura for Transformer causal convencional.
+Compute por step não precisa ser constante. Para $`L`$ camadas de largura $`d`$, FFN de largura proporcional a $`d`$, prefixo de condicionamento fixo e atenção causal plena com KV cache, o trabalho de atenção/FFN escala como:
+
+```math
+C_{AR}=O\!\left(L\left(L_{AR}d^2+L_{AR}^2d\right)\right)
+```
+
+Cada nova query ainda atende ao prefixo crescente; o cache evita recalcular keys/values anteriores, não o trabalho total quadrático de atenção. Compute linear no comprimento exige janela de atenção fixa, arquitetura apropriada ou aproximação explícita de custo constante por step. KV/cache também cresce com o comprimento em um Transformer causal convencional de atenção plena.
 
 ---
 
@@ -391,6 +403,8 @@ Nenhuma métrica substitui avaliação auditiva para todos os objetivos.
 
 # PARTE XI — COUPLING MATRIX
 
+Tendências qualitativas dentro de um regime de operação adequado; as setas não são garantias de monotonicidade. Efeitos do bitrate dependem do quantizador e da organização da sequência do gerador.
+
 | Controle ↑ | Diversity | Prompt adherence | Compute | Voice identity |
 |---|---:|---:|---:|---:|
 | AR temperature | ↑ | pode ↓ | ~ | pode ↓ |
@@ -398,7 +412,7 @@ Nenhuma métrica substitui avaliação auditiva para todos os objetivos.
 | CFG | ↓ | ↑ até regime útil | ↑ | depende |
 | duration | — | — | ↑ | drift risk ↑ |
 | reference strength | ↓ | — | varia | ↑ |
-| codec bitrate | reconstruction ↑ | — | token/decoder cost ↑ | potencial ↑ |
+| codec bitrate | reconstruction pode ↑ | — | depende do codec/LM | potencial ↑ |
 
 ---
 
@@ -573,7 +587,7 @@ Blank $`\varnothing`$ representa “nenhum novo token”.
 Exemplo paths:
 
 ```text
--- h h - e - l l - o --
+-- h h - e - l - l - o --
 ```
 
 collapse:
@@ -609,7 +623,7 @@ z_{t,u}=Joint(h_t,g_u)
 ```
 
 ```math
-P(k|t,u)=softmax(z_{t,u})
+P(k\mid t,u)=[softmax(z_{t,u})]_k
 ```
 
 Isso modela simultaneamente tempo acústico e prefixo textual.
@@ -745,7 +759,7 @@ Diarization error não é WER.
 
 ## 38. Speech contém mais que texto
 
-Sinal:
+Dimensões conceituais da fala (a soma é esquemática, não uma decomposição linear do waveform em sinais independentes):
 
 ```math
 Speech=
@@ -849,7 +863,7 @@ Context\uparrow,
 Latency\uparrow
 ```
 
-Chunk pequeno reduz latência, mas pode prejudicar phonetic/contextual accuracy e overhead.
+Chunk pequeno reduz latência, mas pode prejudicar phonetic/contextual accuracy e aumentar overhead.
 
 ---
 
@@ -914,7 +928,7 @@ O ponto arquitetural é a convergência de **speech recognition especializado co
 
 ## Speech-XL
 
-Long-form speech está migrando de “aumente contexto” para **comprima estado acústico de forma aprendida**.
+Speech-XL exemplifica **compressão aprendida do estado acústico** como abordagem para fala longa, em vez de depender apenas de um contexto não comprimido maior.
 
 ## Fine-grained speech understanding
 

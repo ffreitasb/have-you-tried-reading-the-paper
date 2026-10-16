@@ -2,7 +2,7 @@
 title: Security, Robustness & Failure Modes Datasheet — SOTA++ 2026
 aliases: [AI Security Datasheet, Robustness Datasheet, Failure Modes Datasheet]
 tags: [ai, referencia, seguranca, robustez, red-teaming, prompt-injection, agent-security, supply-chain]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Security, Robustness & Failure Modes Datasheet — SOTA++ 2026
@@ -67,25 +67,19 @@ actions / generated output
 downstream interpreters / humans / systems
 ```
 
-Cada seta é uma **trust boundary**.
+Cada seta é um fluxo de dados a revisar. Marque uma **trust boundary** onde houver mudança de autoridade, privilégio ou hipótese de confiança.
 
 ---
 
 # 3. Princípio zero: modelo é componente não confiável
 
-Mesmo sem atacante:
+Uma hipótese operacional conservadora é que erros continuam possíveis mesmo sem atacante:
 
 ```math
 P(ModelError)>0
 ```
 
-Com adversário:
-
-```math
-P(ModelError|AdversarialInput)
->
-P(ModelError|NominalInput)
-```
+Entradas adversariais podem aumentar o erro, mas o efeito depende do threat model, da distribuição dos ataques e da robustez do modelo; aumento estrito não é universal.
 
 Logo output do modelo deve ser tratado como **untrusted data** até validado para a operação específica.
 
@@ -469,7 +463,7 @@ Pode modificar estado externo.
 
 # 23. Excessive agency
 
-Risco cresce com três dimensões:
+Uma heurística qualitativa de risco destaca três dimensões:
 
 ```math
 Risk
@@ -479,7 +473,7 @@ Functionality
 \times Autonomy
 ```
 
-Reduzir qualquer fator reduz blast radius.
+Esse produto não é uma lei probabilística calibrada. Restringir essas dimensões pode ajudar a reduzir blast radius, conforme as capacidades e controles efetivos.
 
 OWASP formaliza essa classe há várias versões e expandiu abordagem agentic em 2025–2026.
 
@@ -549,7 +543,7 @@ A autorização não deve depender de “o modelo pareceu confiante”.
 
 HITL deve ser baseado em risco, não usado para todo evento.
 
-Uma função útil:
+Uma heurística ilustrativa de decisão, que exige escalas definidas e threshold calibrado:
 
 ```math
 RequireApproval
@@ -559,6 +553,8 @@ Impact\times Irreversibility\times Uncertainty
 >\tau
 )
 ```
+
+Regras explícitas de policy para ações proibidas ou irreversíveis de alto impacto têm precedência sobre esse score. Incerteza estimada zero não pode dispensar uma aprovação exigida por outra regra.
 
 A aprovação precisa mostrar:
 
@@ -780,7 +776,7 @@ Nunca confundir natural language generation com sanitização.
 
 # 40. Structured output helps syntax, not intent
 
-Grammar/schema garante:
+Grammar/schema efetivamente aplicado pode garantir o seguinte para uma saída completa, dentro do subconjunto de schema suportado pelo runtime:
 
 ```math
 y\in\mathcal L(Schema)
@@ -1046,7 +1042,7 @@ P(V accepts\ wrong\ output)
 
 pode ser alto.
 
-Diversidade arquitetural/evidência externa reduz erro correlacionado.
+Diversidade arquitetural e evidência externa podem ajudar a reduzir erro correlacionado; verifique o efeito nos slices relevantes da tarefa, sem presumir independência.
 
 Veja [12_REWARD_VERIFIER_JUDGE_DATASHEET](12_REWARD_VERIFIER_JUDGE_DATASHEET.md).
 
@@ -1425,13 +1421,13 @@ Veja [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMARK
 
 # 73. Red-team versus benchmark
 
-Benchmark:
+Um snapshot fixo de benchmark:
 
 ```math
 fixed\ distribution
 ```
 
-Red-team:
+Uma campanha adaptativa de red-team:
 
 ```math
 adaptive\ adversary

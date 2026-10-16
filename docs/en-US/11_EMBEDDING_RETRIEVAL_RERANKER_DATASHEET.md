@@ -1,7 +1,7 @@
 ---
 title: Embedding / Retrieval / Reranker Datasheet v1.0
 tags: [ai, embeddings, retrieval, rag, reranker, vector-search, ann]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Embedding / Retrieval / Reranker Datasheet v1.0
@@ -37,7 +37,7 @@ Encoder:
 f_\theta(x)=z\in\mathbb R^d
 ```
 
-For L2 normalization:
+For L2 normalization of a nonzero vector (a zero vector requires an explicit reject/fallback policy):
 
 ```math
 \hat z=\frac{z}{\|z\|_2}
@@ -105,7 +105,7 @@ z=\frac{1}{T}\sum_th_t
 z=\sum_t\alpha_th_t
 ```
 
-Pooling is part of the model recipe; it should not be swapped arbitrarily without respecting training.
+In these sums, mask padding and let $`T`$ count included tokens. For convex attention pooling, $`\alpha_t\ge0`$ and $`\sum_t\alpha_t=1`$ over included tokens; other weighted pooling must specify its coefficients. Pooling is part of the model recipe; it should not be swapped arbitrarily without respecting training.
 
 ---
 
@@ -201,7 +201,7 @@ SearchBW\downarrow,
 Quality\downarrow\ potential
 ```
 
-Useful for changing cost without retraining.
+Useful for changing cost without retraining. If scoring relies on unit norms, renormalize the nonzero retained prefix after truncation: a prefix of a unit vector is not generally unit length.
 
 ---
 
@@ -269,7 +269,7 @@ or combine ranks with Reciprocal Rank Fusion:
 RRF(d)=\sum_m\frac{1}{k+rank_m(d)}
 ```
 
-RRF avoids directly calibrating score scales.
+Ranks start at 1 and $`k>0`$ is a smoothing constant. A document absent from a truncated list contributes zero for that list. RRF avoids directly calibrating score scales.
 
 ---
 
@@ -283,7 +283,7 @@ D=(d_1,\ldots,d_n)
 
 keep token/subvector embeddings.
 
-ColBERT-like MaxSim:
+ColBERT-like MaxSim, using the normalization and token masks from the training recipe (the original ColBERT uses L2-normalized token embeddings):
 
 ```math
 score(Q,D)=
@@ -333,6 +333,8 @@ Bi-encoder:
 O(1)\ embedding/query + ANN
 ```
 
+Here O(1) counts one encoder call per query, independent of corpus size; its compute still depends on query length and the encoder architecture.
+
 Cross-encoder for $`K`$ candidates:
 
 ```math
@@ -375,7 +377,7 @@ Exact search over $`N`$ vectors of dimension $`d`$:
 O(Nd)
 ```
 
-ANN trades exactness for latency/memory.
+ANN trades exactness for latency/memory. ANN recall measures recovery of exact-search neighbors under a fixed metric; relevance recall in §22 measures recovery of labeled relevant documents. These are different targets.
 
 ---
 
@@ -499,6 +501,8 @@ This increases semantic specificity, but may inject information that is not pres
 
 # 22. Retrieval metrics
 
+Use ranks starting at 1 and $`K\ge1`$. Let $`Relevant`$ be the set of judged relevant documents; specify the evaluated cutoff and treatment of unjudged documents. Missing returned slots count as nonrelevant for Precision@K.
+
 ## Recall@K
 
 ```math
@@ -519,6 +523,8 @@ Precision@K=
 RR=\frac{1}{rank_{first\ relevant}}
 ```
 
+when a relevant result is found; RR = 0 when none is found within the evaluated ranking/cutoff.
+
 ## MRR
 
 ```math
@@ -533,7 +539,7 @@ DCG@K=
 \frac{2^{rel_i}-1}{\log_2(i+1)}
 ```
 
-nDCG normalizes by the ideal ranking.
+nDCG@K = DCG@K / IDCG@K when IDCG@K is positive. Recall@K is undefined when $`|Relevant|=0`$, and this nDCG ratio is undefined when IDCG@K = 0. An evaluation protocol must declare whether these queries are excluded or assigned a stated convention (such as zero), apply it consistently, and report their counts and the aggregation denominator.
 
 ---
 
@@ -561,19 +567,19 @@ Threshold^*=argmax\ Metric(Threshold)
 
 # 24. RAG failure decomposition
 
-Final error may be:
+For a nonempty relevant-document set $`R=Relevant`$, the first two cases below describe complete misses. Partial evidence loss may also matter when a task needs multiple documents. Final error may be:
 
 ### Retrieval miss
 
 ```math
-Relevant\notin TopK
+R\cap TopK=\varnothing
 ```
 
 ### Reranker miss
 
 ```math
-Relevant\in TopK,
-Relevant\notin Topk_{reranked}
+R\cap TopK\ne\varnothing,
+R\cap Topk_{reranked}=\varnothing
 ```
 
 ### Context-packing miss

@@ -13,7 +13,7 @@ The short version:
 
 > **This is a human-directed, AI-assisted technical knowledge project.**
 
-Felipe Freitas Braga is the human author, editor, maintainer, and accountable publisher of the repository. OpenAI ChatGPT was used extensively as a research, synthesis, drafting, restructuring, review, localization, and quality-assurance assistant during the 2026 reconstruction and expansion of the material.
+Felipe Freitas Braga is the human author, editor, maintainer, and accountable publisher of the repository. OpenAI ChatGPT was used extensively as a research, synthesis, drafting, restructuring, review, localization, and quality-assurance assistant during the 2026 reconstruction and expansion of the material. Subsequent repository engineering and scientific review used OpenAI Codex, including GPT-6 Astra review and correction passes, as described below.
 
 ---
 
@@ -61,14 +61,35 @@ Any attempt to compress that into a fake percentage would imply more precision t
 
 ---
 
-## AI system used
+### Repository engineering and mathematical rendering — October 2026
 
-The principal AI system used during the October 2026 reconstruction was:
+OpenAI Codex assisted with repository organization, portable navigation, contribution and governance documents, citation and archival integration, automated validation, and investigation and correction of mathematical rendering failures on GitHub and in temporary MkDocs builds.
 
-- **OpenAI ChatGPT**
-- **Model configuration at the time of production:** GPT-5.6 Sol
+The rendering corrections changed delimiters and explicitly reviewed equivalent TeX spellings. Their preservation checks kept presentation changes separate from changes in scientific meaning. The archived v1.0.0 release was not rewritten.
 
-Model names, configurations, and product behavior can change over time. This disclosure identifies the system used during this production cycle; it is not a runtime dependency of the repository.
+### Scientific review and bilingual corrections — October 9–16, 2026
+
+At the maintainer's request, GPT-6 Astra agents working in Codex reviewed all 44 documents across the English and Brazilian Portuguese editions. The review covered technical claims, equations and their domains, tensor dimensions, assumptions, sources, and conceptual consistency within and between the editions. It combined primary-source checks with targeted calculations and reproducible counterexamples.
+
+The maintainer then authorized corrections. The completed correction cycle addressed 47 consolidated findings in the corpus and one in the contribution guide, and clarified 46 conditional or editorial records. These are findings from that review, not an exhaustive count of every possible error. Material questions of intent were referred to the maintainer: the contrastive example retains its formula and is identified as decoupled contrastive learning (DCL); the damaged template comparison is replaced by prose about serialization compatibility without requiring byte-identical training and inference inputs.
+
+Codex assisted with implementing the paired corrections, reviewing their diffs, recording exact before/after edits, and running integrity and rendering checks. The October 16 verification covered 22 regression tests and 3,025 mathematical expressions through the native parser, temporary MkDocs builds, and the real GitHub rendering component in disposable browser fixtures, with representative desktop/mobile inspection. A browser fixture verifies candidate rendering; it does not establish that those changes have been published or that a production documentation site is deployed.
+
+Scientific assessment and mechanical verification remain separate. Matching hashes, valid MathML, and successful tests do not prove a technical claim true. This was AI-assisted review under human direction, not independent human peer review or a reproduction of every cited benchmark and training result. The maintainer retains editorial and publication responsibility; these checks do not imply that the maintainer personally rederived every equation.
+
+The language-specific [changelog](docs/en-US/CHANGELOG.md) records the conceptual corrections. The [content-revision register](scripts/content-revisions.json) records reviewed before/after fingerprints, review identifiers, and sources while retaining the historical formatting baseline. See [mathematical rendering maintenance](scripts/MATH_RENDERING.md) for the scope of those checks.
+
+---
+
+## AI systems used
+
+The recorded tools and model configurations have distinct roles in the project's history:
+
+- **OpenAI ChatGPT, GPT-5.6 Sol:** the initial October 2026 reconstruction, expansion, and localization.
+- **OpenAI Codex:** subsequent repository engineering, rendering corrections, implementation, and verification.
+- **GPT-6 Astra in Codex:** scientific review and correction passes across both language editions in October 2026.
+
+Model names, configurations, and product behavior can change over time. These names identify the recorded production and review phases; they are not runtime dependencies of the repository and do not imply that every task used the same model.
 
 ---
 
@@ -132,6 +153,8 @@ See [`LICENSE`](LICENSE) for the full license text.
 If this repository materially contributes to academic, scientific, educational, or technical work, please cite it using the metadata in [`CITATION.cff`](CITATION.cff).
 
 Zenodo archival and DOI-based citation are implemented. The immutable v1.0.0 release is published in the [Zenodo archive](https://zenodo.org/records/23092486) with DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486), which identifies that exact version. The [project DOI](https://doi.org/10.5281/zenodo.23092485) represents all versions.
+
+The living reference contains formatting and scientific corrections made after v1.0.0. They do not retroactively change that archive or its citation metadata. When referring to material from `main`, also record the commit SHA or a permalink identifying the revision used; the v1.0.0 DOI alone does not identify later corrections.
 
 ---
 

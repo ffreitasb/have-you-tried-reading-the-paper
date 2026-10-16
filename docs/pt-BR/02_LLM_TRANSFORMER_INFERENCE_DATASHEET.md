@@ -1,12 +1,12 @@
 ---
 title: LLM & Parallel Language Inference Datasheet v3.0
 tags: [ai, llm, transformer, sampling, kv-cache, inference, diffusion-language, parallel-decoding, reasoning]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # LLM & Parallel Language Inference Datasheet v3.0
 
-> Um LLM não é um gerador de frases. É uma máquina que transforma uma sequência de estados vetoriais em uma distribuição sobre o próximo token — repetidamente.
+> Um LLM causal autorregressivo não é um gerador de frases. É uma máquina que transforma uma sequência de estados vetoriais em uma distribuição sobre o próximo token — repetidamente.
 
 ## 1. Grafo computacional canônico
 
@@ -122,6 +122,8 @@ A(Q,K,V)=softmax\left(\frac{QK^\top}{\sqrt{d_h}}+M\right)V
 
 onde $`M`$ contém a máscara causal e possíveis biases.
 
+A equação de attention é por query head: a head $`h`$ usa $`Q_h`$ e os $`K_{g(h)},V_{g(h)}`$ compartilhados, onde $`g(h)`$ mapeia para sua KV head. Para grupos GQA contíguos de mesmo tamanho, com índices a partir de zero, $`g(h)=\lfloor h/(n_q/n_{kv})\rfloor`$; esse agrupamento pressupõe $`n_q`$ divisível por $`n_{kv}`$.
+
 ### Shapes típicos
 
 ```math
@@ -197,6 +199,8 @@ Em Transformers modernos, FFN representa grande parte dos parâmetros e do tráf
 ---
 
 ## 9. Mixture of Experts
+
+Abaixo está uma variante esquemática de MoE roteado. Ativação do router, normalização dos pesos selecionados e experts compartilhados dependem da arquitetura; esta não é a especificação exata de todo MoE.
 
 Router:
 
@@ -535,7 +539,7 @@ Não confundir os quatro.
 
 ## 27. Reasoning tokens / thinking budget
 
-Em modelos que externalizam ou internalizam etapas adicionais, mais budget significa mais inferência sequencial:
+Em modelos que externalizam ou internalizam etapas adicionais, gerar mais tokens de reasoning acrescenta inferência sequencial. Com prompt fixo e custo médio por token gerado aproximadamente estável:
 
 ```math
 Cost\propto T_{generated}
@@ -556,7 +560,7 @@ Mais reasoning budget não garante monotonicamente melhor resposta.
 | Controle ↑ | Entropia | Support | Repetição | KV | Latência | Comentário |
 |---|---:|---:|---:|---:|---:|---|
 | Temperature | ↑ | = | geralmente ↓ | = | ~ | pode aumentar incoerência |
-| Top-K | — | ↓ | pode ↑ | = | ~ | corte absoluto |
+| Top-K | — | ↑ | pode ↑ | = | ~ | corte absoluto |
 | Top-P mais restritivo | ↓ | ↓ | pode ↑ | = | ~ | adaptativo cumulativo |
 | Min-P mais alto | ↓ | ↓ | pode ↑ | = | ~ | relativo ao top token |
 | Rep penalty | variável | variável | ↓ lexical | = | ~ | pode ferir sintaxe |
@@ -938,15 +942,9 @@ Cada implementação precisa ser mapeada para sua equação.
 
 ## 48. Entropy schedule
 
-Em refinamento ideal:
+Um schedule de refinamento pode reduzir o número de posições não resolvidas. A entropia marginal de $`X^{(k)}`$ não é, em geral, monotônica: um estado determinístico inteiramente MASK tem entropia zero, enquanto a distribuição dos textos gerados pode ter entropia positiva.
 
-```math
-H(X^{(k+1)})\lt H(X^{(k)})
-```
-
-em média, conforme incerteza é removida.
-
-Mas reduzir entropia cedo demais pode causar premature commitment; manter demais produz instabilidade.
+Qualquer diagnóstico de entropia precisa definir a variável aleatória e o condicionamento. Concentrar cedo demais as distribuições de escolha de tokens pode causar premature commitment; manter incerteza excessiva no final do decoding pode dificultar a convergência.
 
 Isso é análogo a annealing, mas implementação específica importa.
 
@@ -1039,11 +1037,13 @@ Se modelo gera $`T_r`$ tokens intermediários e $`T_a`$ de resposta:
 T_{total}=T_r+T_a
 ```
 
-Runtime:
+Para prompt de comprimento $`P`$ e KV cache completo com layout e precisão fixos:
 
 ```math
-KV,latency,energy\propto T_{total}
+M_{KV}\approx c(P+T_{total})
 ```
+
+Aqui $`c`$ é o armazenamento por token em cache; caches com descarte ou sliding window usam o número de tokens retidos. Latência e energia de geração são aproximadamente lineares no comprimento gerado apenas quando tempo e energia médios por token permanecem estáveis. Prefixos de atenção crescentes e mudanças no regime de execução podem invalidar essa aproximação.
 
 Test-time compute compra search/reflection, não capacidade paramétrica nova.
 

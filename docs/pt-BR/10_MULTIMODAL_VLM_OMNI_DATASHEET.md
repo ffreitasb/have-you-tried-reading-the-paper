@@ -1,7 +1,7 @@
 ---
 title: Multimodal / VLM / Omni Model Datasheet v1.0
 tags: [ai, multimodal, vlm, omni, vision-language, audio-language, inference]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Multimodal / VLM / Omni Model Datasheet v1.0
@@ -109,6 +109,8 @@ K=Z_vW_K,\quad V=Z_vW_V
 A=softmax\left(\frac{QK^T}{\sqrt d}\right)V
 ```
 
+Aqui $`d=d_k`$ é a largura de queries/keys, e softmax é aplicado sobre as keys de cada query. $`Q\in\mathbb R^{N_t\times d_k}`$, $`K\in\mathbb R^{N_v\times d_k}`$ e $`V\in\mathbb R^{N_v\times d_{value}}`$ produzem $`A\in\mathbb R^{N_t\times d_{value}}`$.
+
 Vantagem: não é necessário serializar toda modalidade como “tokens textuais” equivalentes.
 
 Trade-off: mais módulos, estado e custo de atenção cruzada.
@@ -117,7 +119,7 @@ Trade-off: mais módulos, estado e custo de atenção cruzada.
 
 ## 2.3 Joint / early fusion
 
-Todas as modalidades entram numa sequência/estado conjunto:
+Todas as modalidades entram numa sequência/estado conjunto. Nesta topologia, cada $`Z_m\in\mathbb R^{N_m\times d_h}`$ representa features já projetadas para a largura oculta comum; a concatenação ocorre no eixo de tokens:
 
 ```math
 H_0=[Z_t;Z_v;Z_a;Z_{vid}]
@@ -351,7 +353,7 @@ Além da posição, o backbone frequentemente precisa saber **de qual modalidade
 h_i=e_i+p_i+m_i
 ```
 
-ou via modulation/segment embeddings.
+Aqui $`e_i,p_i,m_i\in\mathbb R^{d_h}`$: $`p_i`$ é um embedding posicional derivado das coordenadas, não a coordenada física bruta. Modulation/segment embeddings são mecanismos alternativos.
 
 ---
 
@@ -486,7 +488,7 @@ Se o backbone causal constrói KV para tudo:
 M_{KV}\propto T_{effective}
 ```
 
-Essa equação é uma das mais úteis na prática.
+Conte os tokens após a compressão de modalidade e mantenha fixos batch size, número de camadas, dimensões das KV-heads e precisão. A proporcionalidade descreve armazenamento KV de atenção completa; estados de atenção linear e backbones híbridos exigem contas por tipo de camada. Essa equação é uma das mais úteis na prática.
 
 ### Tradução
 
@@ -508,7 +510,7 @@ Se fundimos tudo e fazemos self-attention global:
 C_{joint}\sim O((N_t+N_v)^2d)
 ```
 
-A arquitetura define a curva física.
+Esses são custos de mistura da atenção com batch size e número de camadas fixos, resumindo larguras compatíveis por head em d. Projeções, FFNs, encoders de modalidade e layouts de cache devem ser contabilizados separadamente. A arquitetura define a curva física.
 
 ---
 

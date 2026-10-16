@@ -1,7 +1,7 @@
 ---
 title: Reward Model / Verifier / Judge Datasheet v1.0
 tags: [ai, reward-model, verifier, judge, prm, orm, rlvr, evaluation]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Reward Model / Verifier / Judge Datasheet v1.0
@@ -120,11 +120,13 @@ Possíveis técnicas:
 
 # 4. Outcome Reward Model — ORM
 
-Avalia a resposta final:
+Atribui score de outcome, supervisionado pelo resultado final. Um caso comum avalia somente a resposta final:
 
 ```math
 R_{outcome}=R(x,y_{final})
 ```
+
+Um ORM também pode receber a solução ou trajetória completa. Outcome supervision descreve a origem do sinal-alvo, não uma restrição obrigatória sobre a entrada do modelo.
 
 Vantagem:
 
@@ -216,6 +218,8 @@ Verifier
 Em 2026 aparecem PRMs generativos environment-aware justamente para detectar erros silenciosos que não aparecem como exceção.
 
 ### Trade-off
+
+Trade-off qualitativo a avaliar empiricamente; as setas não afirmam aumento universal de latência, custo ou variância:
 
 ```math
 VerifierCapability\uparrow
@@ -329,9 +333,7 @@ Preferência por primeira/segunda opção.
 
 ## Verbosity bias
 
-```math
-P(win|longer) > P(win|quality\ equivalent)
-```
+Há verbosity bias quando o judge favorece sistematicamente a resposta mais longa mesmo mantendo qualidade equivalente. Meça com pares controlados, posições aleatorizadas e política explícita de empate; maior win rate de respostas longas sem controlar qualidade não demonstra esse viés.
 
 ## Style bias
 
@@ -408,12 +410,15 @@ Y=\{y_1,\ldots,y_N\}
 Verifier escolhe:
 
 ```math
-y^*=\arg\max_iR(x,y_i)
+i^*=\arg\max_{i\in\{1,\ldots,N\}}R(x,y_i),
+\qquad y^*=y_{i^*}
 ```
 
-Se probabilidade de produzir pelo menos uma solução boa cresce com $`N`$, verifier converte compute em qualidade.
+Use regra fixa de desempate quando vários candidatos compartilham o maior score. Aumentar $`N`$ pode elevar a probabilidade de haver um bom candidato, mas o verifier precisa identificá-lo para converter essa cobertura em melhor qualidade selecionada.
 
-Mas:
+Para conjuntos de candidatos aninhados e função de score fixa, o maior proxy score não diminui; a qualidade real oracle-best também não diminui nesses mesmos conjuntos aninhados. A qualidade real da resposta escolhida pelo verifier pode cair por erros de ranking ou reward overoptimization. Conjuntos reamostrados separadamente não precisam apresentar aumento de nenhum dos máximos em toda execução.
+
+Para um conjunto de candidatos dado:
 
 ```math
 Quality_{selected}
@@ -421,7 +426,7 @@ Quality_{selected}
 Quality_{oracle-best}
 ```
 
-conforme erro do verifier.
+A diferença depende do erro do verifier; esse limite superior não garante melhora com mais candidatos.
 
 ---
 
@@ -453,9 +458,9 @@ Para respostas discretas:
 \hat y=mode(y_1,\ldots,y_N)
 ```
 
-Funciona quando erros são suficientemente independentes.
+Canonicalize respostas equivalentes antes de calcular a moda. Independência sozinha é insuficiente: para votos binários iid, a accuracy da maioria tende a 1 com o aumento do número de votos somente quando cada voto acerta com probabilidade $`p>1/2`$; se $`p<1/2`$, ela tende a 0. Para votos iid sobre um conjunto fixo e finito de categorias de resposta, a correta precisa ser a categoria de maior probabilidade, sem empate, para a moda amostral convergir a ela.
 
-Se outputs compartilham viés sistemático:
+Com accuracy individual comparável, dependência entre erros pode reduzir o ganho da votação. A relação abaixo é uma heurística, não uma lei monotônica universal:
 
 ```math
 Corr(error_i,error_j)\uparrow
@@ -543,9 +548,7 @@ Goodhart:
 
 Mesmo reward model razoável pode falhar fora da distribuição quando policy é empurrada para extremos:
 
-```math
-\pi_{new}\gg\pi_{training\ distribution}
-```
+O deslocamento relevante ocorre em direção a respostas pouco cobertas pela distribuição de treino do reward model. São relações qualitativas de risco, não uma ordenação ponto a ponto das probabilidades das policies.
 
 Quanto mais forte a otimização contra um RM imperfeito, maior o risco de explorar zonas não calibradas.
 

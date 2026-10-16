@@ -1,7 +1,7 @@
 ---
 title: Code Generation & Agentic Coding Datasheet v2.0
 tags: [ai, code, fim, agents, software-engineering]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Code Generation & Agentic Coding Datasheet v2.0
@@ -83,9 +83,11 @@ Não existe “temperature 0 sempre”. O objetivo define o regime.
 
 ### Completion determinístico
 
-- temperature baixa;
+- decoding greedy/argmax com desempate determinístico;
 - support restrito;
 - stop/FIM corretos.
+
+Temperature positiva baixa, por si só, não torna a amostragem determinística. Reprodutibilidade entre configurações de runtime/hardware continua sendo uma questão separada.
 
 ### Arquitetura/refactoring exploration
 
@@ -392,10 +394,10 @@ Reproduzir uma trajetória agentic requer snapshot do ambiente, não somente see
 Custo total aproximado:
 
 ```math
-Cost=C_{prefill}(repo\ context)+\sum_t C_{decode}(t)+\sum_j C_{tools,j}
+Cost=\sum_j C_{prefill,j}+\sum_t C_{decode}(t)+\sum_k C_{tools,k}
 ```
 
-Agentes longos podem gastar mais contexto reprocessando histórico do que gerando código.
+A soma de prefill cobre todas as chamadas ao modelo no episódio, incluindo contexto novo e reprocessado conforme o reuso de cache. Use a mesma unidade de custo em todos os termos. Agentes longos podem gastar mais contexto reprocessando histórico do que gerando código.
 
 ### Otimizações
 

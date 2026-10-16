@@ -1,7 +1,7 @@
 ---
 title: Time-Series & Tabular Foundation Models Datasheet v1.0
 tags: [ai, time-series, tabular, forecasting, tabpfn, foundation-models]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Time-Series & Tabular Foundation Models Datasheet v1.0
@@ -84,13 +84,13 @@ Good for fine temporal granularity; expensive for long sequences.
 Patch of length $`P`$:
 
 ```math
-p_i=[x_{iP},\ldots,x_{iP+P-1}]
+p_i=[x_{(i-1)P+1},\ldots,x_{iP}],\quad i=1,\ldots,\lfloor T/P\rfloor
 ```
 
-Number of tokens:
+For integer $`1\le P\le T`$, non-overlapping patches, and no padding, discard any incomplete trailing patch in this example. Padding or retaining it requires an explicit mask/policy. The number of full-patch tokens is:
 
 ```math
-N\approx\frac{T}{P}
+N=\left\lfloor\frac{T}{P}\right\rfloor
 ```
 
 Trade-off:
@@ -98,11 +98,11 @@ Trade-off:
 ```math
 P\uparrow
 \Rightarrow
-SequenceLength\downarrow,
-LocalResolution\downarrow
+TokenSequenceLength\downarrow,
+TokenGridResolution\downarrow
 ```
 
-Patching is the temporal equivalent of reducing resolution.
+At fixed input length, larger non-overlapping patches coarsen the token/attention grid. Packing samples into patches can preserve every sample; information loss depends on the embedding or compression. Patching alone is not equivalent to downsampling the signal.
 
 ---
 
@@ -136,7 +136,7 @@ A series may undergo an affine transform:
 x'_t=\frac{x_t-\mu}{\sigma}
 ```
 
-or local/instance-wise normalization.
+or local/instance-wise normalization. Fit statistics using training data or the available historical window only, following the model recipe; never use the forecast target window. Normalize per feature when required. For $`\sigma=0`$, define a constant-feature rule or a positive scale floor, and apply the corresponding inverse transform consistently.
 
 This helps transfer across series with different scales, but it can erase absolute meaning when magnitude itself is semantically important.
 
@@ -170,6 +170,8 @@ Keep separate:
 - known-future covariates;
 - static features.
 
+Use temporal or rolling-origin evaluation. At each forecast origin, preprocessing, imputation, feature selection, thresholds, and calibration may use only information available by that origin. A future timestamp does not make a measured covariate known in advance: use its forecast or a genuinely preannounced value, and record availability times.
+
 ---
 
 # 8. Deterministic forecasting
@@ -198,13 +200,13 @@ L_\tau(y,\hat q)
 \max(\tau(y-\hat q),(\tau-1)(y-\hat q))
 ```
 
-Produces intervals such as:
+Produces quantiles such as:
 
 ```math
-[q_{0.1},q_{0.5},q_{0.9}]
+(q_{0.1},q_{0.5},q_{0.9})
 ```
 
-Coverage must be calibrated for the target domain.
+The two outer quantiles define $`[q_{0.1},q_{0.9}]`$, a prediction interval with nominal 80% coverage; $`q_{0.5}`$ is the median. Coverage must be calibrated for the target domain. Check quantile ordering/crossing and empirical coverage by horizon and regime; declare any noncrossing adjustment and fit it without access to test outcomes.
 
 ---
 
@@ -325,7 +327,7 @@ Missingness itself may be informative:
 P(missing|state)\neq const
 ```
 
-So filling with zero or the mean without an explicit mask can introduce false semantics.
+For multivariate series, masks must identify missingness per feature, for example $`m_{td}`$. Filling with zero or the mean without an explicit mask can introduce false semantics.
 
 ---
 
@@ -419,7 +421,7 @@ Do not elevate “decomposition” into a universal requirement.
 - calibration failure;
 - domain-pretraining mismatch.
 
-2026 causal stress-testing studies of TSFMs report abrupt failures on patterns outside the pretraining regime; this reinforces that “foundation” does not mean universal.
+A 2026 study of Chronos-2 and TimesFM-2.5 reports abrupt failures on selected synthetic regime-switch patterns and, for TimesFM-2.5, energy-release patterns. The authors suggest pretraining-data composition as a possible explanation without isolating it causally. These findings are specific to the tested models and generators; “foundation” does not imply universal capability.
 
 ---
 
@@ -434,10 +436,10 @@ D=\{(x_i,y_i)\}_{i=1}^{N}
 ```
 
 ```math
-x_i=(x_{i1},\ldots,x_{iD})
+x_i=(x_{i1},\ldots,x_{i,D_{features}})
 ```
 
-Features may be:
+Here $`D_{features}`$ is the feature count, distinct from dataset $`D`$. Features may be:
 
 - continuous;
 - categorical;
@@ -470,13 +472,13 @@ This resolves part of the heterogeneity problem.
 
 # 24. Permutation considerations
 
-Rows in supervised learning are usually exchangeable:
+For a dataset represented as a sequence of rows, an exchangeability assumption means:
 
 ```math
 P(D)=P(\pi(D))
 ```
 
-for permutation $`\pi`$, unless explicit temporal or grouped structure exists.
+for every allowed row permutation $`\pi`$. This is symmetry of the joint distribution, not independence: rows that are i.i.d. conditional on a shared latent variable can be correlated and still exchangeable. Temporal or group structure may restrict which permutations preserve the distribution; the evaluation split must respect that structure.
 
 Columns are not semantically exchangeable unless their identities are preserved.
 
@@ -557,7 +559,7 @@ The “prompt” is the training set itself.
 Unlike an LLM:
 
 ```math
-Context\sim N\times D
+Context\sim N\times D_{features}
 ```
 
 Growth in samples and features increases memory/attention pressure.
@@ -635,7 +637,7 @@ Comparisons across multiple datasets need robust ranks/aggregates, not just a ra
 - calibration drift;
 - extrapolation outside support;
 - IDs treated as ordinal numbers;
-- correlated rows violating assumed exchangeability.
+- temporal or group dependence that breaks the assumed permutation symmetry.
 
 ---
 

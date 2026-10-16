@@ -334,6 +334,8 @@ The repository includes a machine-readable [`CITATION.cff`](CITATION.cff), which
 
 [Archived release on Zenodo →](https://zenodo.org/records/23092486) · [Production provenance](PROVENANCE.md) · [CC BY-SA 4.0](LICENSE)
 
+The living reference includes corrections made after v1.0.0. When citing material from `main`, also record the commit SHA or permalink used: the archived release DOI identifies its original snapshot. The [changelog](docs/en-US/CHANGELOG.md) records subsequent conceptual changes.
+
 **[Citation metadata →](CITATION.cff)**
 
 ---
@@ -344,7 +346,9 @@ This project is **human-directed and AI-assisted**.
 
 The original late-2025 datasheets were predominantly authored by Felipe Freitas Braga and later reviewed and refined with AI assistance. The 2026 SOTA++ reconstruction and expansion used OpenAI ChatGPT extensively for research synthesis, technical drafting, restructuring, review, English localization, and quality assurance, while the project architecture, standards, scope, technical judgment, final editorial decisions, and publication responsibility remained human-controlled.
 
-The AI contribution is intentionally disclosed rather than quietly hidden behind the commit history. It is material to how the current knowledge base was produced, but the AI system is not listed as an academic author because it cannot assume authorship responsibilities or accountability.
+Subsequent work used OpenAI Codex for repository engineering, mathematical rendering, and verified corrections, including a GPT-6 Astra scientific review of both language editions. Corrections were checked against primary sources and targeted examples, with integrity and rendering verified separately; this does not constitute independent human peer review or a guarantee that no errors remain.
+
+The AI contribution is intentionally disclosed rather than quietly hidden behind the commit history. It is material to how the current knowledge base was produced, but AI systems are not listed as academic authors because they cannot assume authorship responsibilities or accountability.
 
 **[Read the full provenance statement →](PROVENANCE.md)**
 

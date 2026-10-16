@@ -1,0 +1,1595 @@
+{
+  "schema": 1,
+  "policy": "Explicit scientific revisions layered over the unchanged historical formatting baseline. Hash equality detects drift; it does not prove scientific correctness.",
+  "review_catalog": {
+    "EVAL-01": {
+      "subject": "Best-of-N atribui um índice à variável que representa a resposta",
+      "sources": [
+        "https://arxiv.org/html/2210.10760v1"
+      ]
+    },
+    "EVAL-02": {
+      "subject": "Aumentar a chance de existir uma boa solução não assegura melhorar a solução selecionada",
+      "sources": [
+        "https://arxiv.org/html/2210.10760v1"
+      ]
+    },
+    "EVAL-03": {
+      "subject": "SE e bootstrap não especificam a unidade independente do experimento",
+      "sources": [
+        "https://arxiv.org/html/2007.07797v2"
+      ]
+    },
+    "EVAL-04": {
+      "subject": "Fluxo de dados e fronteira de confiança são conceitos distintos",
+      "sources": [
+        "https://learn.microsoft.com/en-us/archive/msdn-magazine/2006/november/uncover-security-design-flaws-using-the-stride-approach",
+        "https://www.w3.org/TR/2026/DNOTE-threat-modeling-guide-20260623/"
+      ]
+    },
+    "EVAL-05": {
+      "subject": "Adversário não implica aumento estrito universal da probabilidade de erro",
+      "sources": [
+        "https://arxiv.org/html/1906.04584v2"
+      ]
+    },
+    "EVAL-A01": {
+      "subject": "A convenção de z_{α/2} não está definida",
+      "sources": []
+    },
+    "EVAL-A02": {
+      "subject": "Quality/budget exige uma escala de qualidade com zero significativo",
+      "sources": []
+    },
+    "EVAL-A03": {
+      "subject": "Produtos de risco e aprovação precisam permanecer heurísticas declaradas",
+      "sources": [
+        "https://genai.owasp.org/resource/agent-control-standard-acs/",
+        "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence"
+      ]
+    },
+    "EVAL-A04": {
+      "subject": "PT fortalece “can guarantee” para “garante” em structured output",
+      "sources": [
+        "https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md"
+      ]
+    },
+    "EVAL-A05": {
+      "subject": "Convenções de casos degenerados das métricas ficam implícitas",
+      "sources": []
+    },
+    "EVAL-A06": {
+      "subject": "TPS requer alinhar a janela T_decode ao número de tokens",
+      "sources": []
+    },
+    "EVAL-A07": {
+      "subject": "“Benchmark=fixed distribution” precisa do escopo de um snapshot",
+      "sources": [
+        "https://arxiv.org/abs/2406.19314"
+      ]
+    },
+    "EVAL-A08": {
+      "subject": "Diversidade arquitetural pode reduzir correlação, mas não a garante",
+      "sources": [
+        "https://arxiv.org/abs/2406.07791"
+      ]
+    },
+    "FND-01": {
+      "subject": "Adaptive-P foi reduzido indevidamente a um cutoff adaptativo",
+      "sources": [
+        "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/tools/completion/README.md"
+      ]
+    },
+    "FND-02": {
+      "subject": "Steps e NFE aparecem como sinônimos",
+      "sources": [
+        "https://github.com/NVlabs/edm/blob/main/generate.py"
+      ]
+    },
+    "FND-03": {
+      "subject": "Codebooks não são, em geral, quantizadores paralelos",
+      "sources": [
+        "https://arxiv.org/pdf/2210.13438"
+      ]
+    },
+    "FND-04": {
+      "subject": "FFT size foi confundido com duração/tamanho da janela de análise",
+      "sources": [
+        "https://docs.pytorch.org/docs/2.8/generated/torch.stft.html"
+      ]
+    },
+    "FND-05": {
+      "subject": "Fórmula de erro padrão da média apresentada como definição geral",
+      "sources": [
+        "https://www.itl.nist.gov/div898/handbook/eda/section3/eda352.htm",
+        "https://www.itl.nist.gov/div898/handbook/glossary.htm"
+      ]
+    },
+    "FND-06": {
+      "subject": "Convenção de links contradiz seu exemplo e o corpus atual",
+      "sources": [
+        "https://spec.commonmark.org/0.31.2/#links"
+      ]
+    },
+    "FND-07": {
+      "subject": "Unidades de vazão estão agrupadas como tempo",
+      "sources": [
+        "https://www.nist.gov/pml/owm/metric-si/si-units"
+      ]
+    },
+    "FND-08": {
+      "subject": "Tag COND utilizada sem definição na taxonomia canônica",
+      "sources": [
+        "https://github.com/ffreitasb/have-you-tried-reading-the-paper/blob/94d4699b9ead3a5e6ed1dd1f4611a2862a96fe21/docs/en-US/19_PARAMETER_GLOSSARY_AND_REGISTRY.md#1-canonical-provenance-taxonomy"
+      ]
+    },
+    "FND-C01": {
+      "subject": "A perda contrastiva é compatível com DCL; decidir se a intenção era InfoNCE",
+      "sources": [
+        "https://arxiv.org/pdf/2110.06848"
+      ]
+    },
+    "FND-C02": {
+      "subject": "Condicionamento C implícito à esquerda da fatoração AR",
+      "sources": [
+        "https://arxiv.org/pdf/1409.0473"
+      ]
+    },
+    "FND-C03": {
+      "subject": "Integração ODE/SDE usa operador sem ruído explícito",
+      "sources": [
+        "https://arxiv.org/html/2011.13456v2"
+      ]
+    },
+    "FND-C04": {
+      "subject": "Clipping epsilon descrito como update bound semelhante a trust region",
+      "sources": [
+        "https://arxiv.org/pdf/1707.06347"
+      ]
+    },
+    "FND-C05": {
+      "subject": "Normalização L2 pressupõe vetor não nulo",
+      "sources": [
+        "https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.normalize.html"
+      ]
+    },
+    "FND-C06": {
+      "subject": "Memória KV aproximada exige unidade de b e regime arquitetural",
+      "sources": [
+        "https://arxiv.org/abs/2305.13245"
+      ]
+    },
+    "GEN-01": {
+      "subject": "Exemplo CTC produz helo, não hello",
+      "sources": [
+        "https://www.cs.toronto.edu/~graves/icml_2006.pdf"
+      ]
+    },
+    "GEN-02": {
+      "subject": "Compute AR linear sem hipótese de custo constante por passo",
+      "sources": [
+        "https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md",
+        "https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf"
+      ]
+    },
+    "GEN-03": {
+      "subject": "Total de códigos não é necessariamente comprimento sequencial do LM",
+      "sources": [
+        "https://arxiv.org/html/2601.15621v1",
+        "https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md"
+      ]
+    },
+    "GEN-04": {
+      "subject": "Custo vídeo duplica guidance sob a definição canônica de NFE",
+      "sources": [
+        "https://github.com/NVlabs/edm",
+        "https://huggingface.co/docs/diffusers/main/api/pipelines/ltx2"
+      ]
+    },
+    "GEN-05": {
+      "subject": "Seleção de componente iguala mesh ao índice do argmax",
+      "sources": [
+        "https://doc.cgal.org/latest/Polygon_mesh_processing/group__PMP__keep__connected__components__grp.html",
+        "https://doc.cgal.org/latest/Polygon_mesh_processing/group__PMP__measure__grp.html"
+      ]
+    },
+    "GEN-06": {
+      "subject": "Duplicação de tokens usa o mesmo N em ambos os lados",
+      "sources": [
+        "https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf"
+      ]
+    },
+    "GEN-07": {
+      "subject": "Condicionamento C omitido no lado esquerdo da fatorização AR",
+      "sources": [
+        "https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md",
+        "https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf"
+      ]
+    },
+    "GEN-08": {
+      "subject": "Estado latente de vídeo usa T em vez de T_l",
+      "sources": [
+        "https://arxiv.org/html/2408.06072v3"
+      ]
+    },
+    "GEN-09": {
+      "subject": "Probabilidade RNN-T escalar igualada ao vetor softmax",
+      "sources": [
+        "https://arxiv.org/pdf/1211.3711"
+      ]
+    },
+    "GEN-A01": {
+      "subject": "Somas de movimento e atributos da fala são esquemas",
+      "sources": [
+        "https://arxiv.org/abs/2003.08934",
+        "https://arxiv.org/abs/2605.12036"
+      ]
+    },
+    "GEN-A02": {
+      "subject": "Denoise: qual trajetória é descartada?",
+      "sources": [
+        "https://docs.comfy.org/built-in-nodes/sampling/ksampler"
+      ]
+    },
+    "GEN-A03": {
+      "subject": "Coeficiente de isolamento abstrato não é necessariamente o slider",
+      "sources": [
+        "https://huggingface.co/docs/diffusers/main/api/pipelines/ltx2"
+      ]
+    },
+    "GEN-A04": {
+      "subject": "UV e simetria são representações parciais",
+      "sources": [
+        "https://arxiv.org/html/2506.15442v1",
+        "https://doc.cgal.org/latest/Polygon_mesh_processing/group__PMP__keep__connected__components__grp.html",
+        "https://docs.blender.org/manual/en/4.0/modeling/meshes/uv/unwrapping/seams.html",
+        "https://docs.blender.org/manual/en/5.0/modeling/modifiers/generate/mirror.html"
+      ]
+    },
+    "GEN-A05": {
+      "subject": "Setas de matrizes dependem de regime empírico",
+      "sources": [
+        "https://huggingface.co/docs/diffusers/main/api/modular_diffusers/guiders",
+        "https://huggingface.co/docs/diffusers/main/api/pipelines/ltx2"
+      ]
+    },
+    "GEN-A06": {
+      "subject": "Teto de fidelidade do decoder sem métrica",
+      "sources": [
+        "https://arxiv.org/abs/2112.10752"
+      ]
+    },
+    "GEN-BILINGUAL": {
+      "subject": "Made the Portuguese small-chunk overhead direction explicit to match the existing English statement.",
+      "sources": []
+    },
+    "GEN-U01": {
+      "subject": "Narrowed unmeasured prevalence/monotonicity/field-trend claims without claiming benchmark reproduction.",
+      "sources": []
+    },
+    "GOV-01": {
+      "subject": "Guia de contribuição omite dependências e um gate exigidos pelo CI",
+      "sources": []
+    },
+    "LLM-01": {
+      "subject": "A matriz inverte o efeito de aumentar Top-K no suporte",
+      "sources": [
+        "https://github.com/ggml-org/llama.cpp/blob/master/tools/completion/README.md#top-k-sampling"
+      ]
+    },
+    "LLM-02": {
+      "subject": "Entropia marginal da sequência não precisa diminuir no denoising ideal",
+      "sources": [
+        "https://arxiv.org/html/2406.07524v2"
+      ]
+    },
+    "LLM-03": {
+      "subject": "Proporcionalidade linear de KV, latência e energia omite condições materiais",
+      "sources": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://huggingface.co/docs/transformers/main/en/cache_explanation"
+      ]
+    },
+    "LLM-04": {
+      "subject": "Temperatura baixa e suporte restrito não garantem completion determinístico",
+      "sources": [
+        "https://huggingface.co/docs/transformers/main/en/generation_strategies#greedy-search",
+        "https://huggingface.co/docs/transformers/main/en/generation_strategies#sampling"
+      ]
+    },
+    "LLM-05": {
+      "subject": "Custo de patching depende do stride; patching não implica perda necessária dos valores locais",
+      "sources": [
+        "https://arxiv.org/abs/2211.14730",
+        "https://arxiv.org/html/2211.14730v2"
+      ]
+    },
+    "LLM-A01": {
+      "subject": "Attention com GQA deixa implícito o mapeamento entre heads",
+      "sources": [
+        "https://arxiv.org/html/2305.13245v3"
+      ]
+    },
+    "LLM-A02": {
+      "subject": "Softmax seguido de TopK sem renormalização é uma variante, não a definição de todo MoE",
+      "sources": [
+        "https://arxiv.org/html/2412.19437v2"
+      ]
+    },
+    "LLM-A03": {
+      "subject": "Custo total agentic não explicita múltiplos prefills",
+      "sources": [
+        "https://huggingface.co/docs/transformers/main/en/cache_explanation"
+      ]
+    },
+    "LLM-A04": {
+      "subject": "PQ listado como overhead deixa indefinido se os vetores FP32 são preservados",
+      "sources": [
+        "https://github.com/facebookresearch/faiss/wiki/Faiss-indexes"
+      ]
+    },
+    "LLM-A05": {
+      "subject": "O fator m de merge precisa representar razão de contagens, não lado espacial",
+      "sources": [
+        "https://arxiv.org/html/2409.12191v2"
+      ]
+    },
+    "LLM-A06": {
+      "subject": "Batching do reranker não tem sinal universal para a latência da consulta",
+      "sources": [
+        "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/batcher.html#delayed-batching"
+      ]
+    },
+    "LLM-A07": {
+      "subject": "A frase de abertura define todo LLM pelo próximo token, apesar da parte XIII",
+      "sources": [
+        "https://arxiv.org/abs/2506.17298"
+      ]
+    },
+    "REVIEW-DATE": {
+      "subject": "Record the completion date of the reviewed living documents.",
+      "sources": []
+    },
+    "REVIEW-LOG": {
+      "subject": "Record the bilingual scientific corrections in the living changelog.",
+      "sources": []
+    },
+    "SYS-01": {
+      "subject": "Máscara de schema ignora o prefixo já emitido",
+      "sources": [
+        "https://arxiv.org/html/2407.08103v1"
+      ]
+    },
+    "SYS-02": {
+      "subject": "Métricas de ranking não definem queries vazias e falhas totais",
+      "sources": [
+        "https://torchmetrics.readthedocs.io/en/v1.0.3/retrieval/mrr.html"
+      ]
+    },
+    "SYS-03": {
+      "subject": "Relevant muda de conjunto para elemento nas fórmulas de falha",
+      "sources": [
+        "https://torchmetrics.readthedocs.io/en/v1.0.3/retrieval/mrr.html"
+      ]
+    },
+    "SYS-04": {
+      "subject": "Tamanho previsto de chunk é confundido com intervalo de execução sem feedback",
+      "sources": [
+        "https://arxiv.org/html/2304.13705v1"
+      ]
+    },
+    "SYS-05": {
+      "subject": "AR contínuo não exige tokenização ou distribuições de mistura",
+      "sources": [
+        "https://github.com/openai/spinningup/blob/master/docs/spinningup/rl_intro.rst",
+        "https://spinningup.openai.com/en/latest/spinningup/rl_intro.html"
+      ]
+    },
+    "SYS-06": {
+      "subject": "Horizonte visual H é condicionado a H+1 ações",
+      "sources": [
+        "https://proceedings.mlr.press/v97/hafner19a.html"
+      ]
+    },
+    "SYS-07": {
+      "subject": "Patching reduz granularidade dos tokens; não implica reduzir a resolução do sinal",
+      "sources": [
+        "https://arxiv.org/html/2211.14730v2"
+      ]
+    },
+    "SYS-08": {
+      "subject": "Indexação dos patches mistura série iniciada em 1 com blocos iniciados em 0",
+      "sources": [
+        "https://arxiv.org/html/2211.14730v2"
+      ]
+    },
+    "SYS-09": {
+      "subject": "Três quantis são chamados de intervalo",
+      "sources": [
+        "https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_quantile.html",
+        "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html"
+      ]
+    },
+    "SYS-10": {
+      "subject": "Atribuição ao regime de pretraining é mais forte que a evidência citada",
+      "sources": [
+        "https://arxiv.org/html/2608.24303v1"
+      ]
+    },
+    "SYS-11": {
+      "subject": "Laplaciano normalizado e random walk precisam de hipóteses sobre o grafo",
+      "sources": [
+        "https://fanchung.ucsd.edu/research/cb/ch1.pdf",
+        "https://networkx.org/documentation/stable/reference/generated/networkx.linalg.laplacianmatrix.directed_laplacian_matrix.html",
+        "https://networkx.org/documentation/stable/reference/generated/networkx.linalg.laplacianmatrix.normalized_laplacian_matrix.html"
+      ]
+    },
+    "SYS-12": {
+      "subject": "Link prediction condiciona no mesmo grafo que já contém a resposta",
+      "sources": [
+        "https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.transforms.RandomLinkSplit.html"
+      ]
+    },
+    "SYS-13": {
+      "subject": "Probabilidade de uma serialização é igualada ao marginal do grafo",
+      "sources": [
+        "https://proceedings.mlr.press/v139/chen21j.html"
+      ]
+    },
+    "SYS-D01": {
+      "subject": "Pontuação de risco como escolha de projeto",
+      "sources": []
+    },
+    "SYS-D02": {
+      "subject": "Loop de GUI e latência de voz são esquemas simplificados",
+      "sources": [
+        "https://proceedings.mlr.press/v97/hafner19a.html"
+      ]
+    },
+    "SYS-D03": {
+      "subject": "Explicitar dimensões comuns na fusão e significado de d",
+      "sources": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://arxiv.org/abs/2204.14198"
+      ]
+    },
+    "SYS-D04": {
+      "subject": "Domínio dos custos multimodais",
+      "sources": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://arxiv.org/abs/2604.15804"
+      ]
+    },
+    "SYS-D05": {
+      "subject": "Normalização e pooling após truncamento",
+      "sources": [
+        "https://arxiv.org/abs/2601.04720",
+        "https://github.com/facebookresearch/faiss/wiki/MetricType-and-distances"
+      ]
+    },
+    "SYS-D06": {
+      "subject": "Protocolos e hipóteses de retrieval",
+      "sources": [
+        "https://arxiv.org/html/2004.12832v1",
+        "https://github.com/facebookresearch/faiss/wiki/Faiss-indexes",
+        "https://github.com/facebookresearch/faiss/wiki/MetricType-and-distances",
+        "https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf"
+      ]
+    },
+    "SYS-D07": {
+      "subject": "Média inviável, erro acumulado e objetivo MPC como simplificações",
+      "sources": [
+        "https://arxiv.org/abs/1903.11199",
+        "https://proceedings.mlr.press/v97/hafner19a.html"
+      ]
+    },
+    "SYS-D08": {
+      "subject": "Conjunto de ações seguras depende do estado e da dinâmica",
+      "sources": [
+        "https://arxiv.org/abs/1903.11199"
+      ]
+    },
+    "SYS-D09": {
+      "subject": "Protocolo temporal para normalização, covariáveis e calibração",
+      "sources": [
+        "https://arxiv.org/html/2211.14730v2",
+        "https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_quantile.html",
+        "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html"
+      ]
+    },
+    "SYS-D10": {
+      "subject": "Exchangeability é diferente de independência",
+      "sources": []
+    },
+    "SYS-D11": {
+      "subject": "Crescimento da vizinhança em função do grau médio",
+      "sources": [
+        "https://proceedings.mlr.press/v70/gilmer17a.html"
+      ]
+    },
+    "SYS-D12": {
+      "subject": "Produto dos fanouts e O(|E|d) são contas parciais",
+      "sources": [
+        "https://arxiv.org/html/2602.04768v2",
+        "https://proceedings.mlr.press/v70/gilmer17a.html"
+      ]
+    },
+    "TRN-01": {
+      "subject": "A relação entre templates contém o literal eq, sem operador matemático",
+      "sources": [
+        "https://huggingface.co/docs/transformers/chat_templating"
+      ]
+    },
+    "TRN-02": {
+      "subject": "A equação chamada universal descreve SGD quando a direção é definida como gradiente bruto",
+      "sources": [
+        "https://arxiv.org/html/1711.05101"
+      ]
+    },
+    "TRN-03": {
+      "subject": "Off-policy e offline são eixos distintos; estabilidade e custo não decorrem do primeiro",
+      "sources": [
+        "https://arxiv.org/abs/2005.01643",
+        "https://arxiv.org/html/1509.02971"
+      ]
+    },
+    "TRN-04": {
+      "subject": "Congelar a base QLoRA não torna sua derivada matemática zero nem garante gradientes não nulos nos adapters",
+      "sources": [
+        "https://arxiv.org/html/2305.14314",
+        "https://huggingface.co/docs/peft/main/package_reference/lora"
+      ]
+    },
+    "TRN-05": {
+      "subject": "A escala de viabilidade de hardware coloca QLoRA depois de LoRA sem definir o eixo e inverte o efeito usual em VRAM",
+      "sources": [
+        "https://arxiv.org/html/2305.14314"
+      ]
+    },
+    "TRN-06": {
+      "subject": "Desvio-padrão absolutamente pequeno não implica vantagem GRPO pequena",
+      "sources": [
+        "https://arxiv.org/html/2402.03300",
+        "https://arxiv.org/html/2507.18071"
+      ]
+    },
+    "TRN-07": {
+      "subject": "Best-of-N atribui um índice à variável que representa a resposta",
+      "sources": [
+        "https://arxiv.org/html/2210.10760"
+      ]
+    },
+    "TRN-08": {
+      "subject": "Aumentar a chance de existir uma boa solução não assegura melhorar a solução selecionada",
+      "sources": [
+        "https://arxiv.org/html/2210.10760"
+      ]
+    },
+    "TRN-09": {
+      "subject": "Independência dos erros, sozinha, não faz majority voting funcionar",
+      "sources": [
+        "https://arxiv.org/html/2203.11171"
+      ]
+    },
+    "TRN-10": {
+      "subject": "A desigualdade de verbosity bias compara populações diferentes e não isola o viés",
+      "sources": [
+        "https://arxiv.org/html/2306.05685"
+      ]
+    },
+    "TRN-A01": {
+      "subject": "Operador de template",
+      "sources": [
+        "https://huggingface.co/docs/transformers/chat_templating"
+      ]
+    },
+    "TRN-A02": {
+      "subject": "Eixo de normalização DoRA",
+      "sources": [
+        "https://arxiv.org/html/2402.09353",
+        "https://github.com/huggingface/peft/blob/main/src/peft/tuners/lora/dora.py"
+      ]
+    },
+    "TRN-A03": {
+      "subject": "Domínios matemáticos implícitos",
+      "sources": [
+        "https://arxiv.org/html/2305.18290",
+        "https://github.com/arcee-ai/mergekit/blob/main/docs/merge_methods.md"
+      ]
+    },
+    "TRN-A04": {
+      "subject": "Diagramas e relações qualitativas não são leis quantitativas",
+      "sources": [
+        "https://arxiv.org/html/2210.10760"
+      ]
+    },
+    "TRN-A05": {
+      "subject": "Outcome supervision não restringe necessariamente a entrada à resposta final",
+      "sources": [
+        "https://arxiv.org/html/2402.03300"
+      ]
+    },
+    "TRN-A06": {
+      "subject": "Condições de uso de PPO e distilação",
+      "sources": [
+        "https://arxiv.org/abs/1606.07947",
+        "https://arxiv.org/html/1503.02531",
+        "https://arxiv.org/pdf/1707.06347"
+      ]
+    }
+  },
+  "revisions": [
+    {
+      "id": "bilingual-scientific-corrections-2026-10-16",
+      "source_commit": "94d4699b9ead3a5e6ed1dd1f4611a2862a96fe21",
+      "reviewed_on": "2026-10-16",
+      "files": {
+        "docs/en-US/00_README_INDEX.md": {
+          "before": {
+            "outside_sha256": "05389bfeb11e791790957ff0ce2b3794c16803d61e963078935d3b5460eb7a7b",
+            "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+            "inline": 0,
+            "display": 15
+          },
+          "after": {
+            "outside_sha256": "fe1f31aecef3b42aae37ada5579e37e54813583896fc091bd714d627b127ef8d",
+            "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+            "inline": 0,
+            "display": 15
+          },
+          "review_ids": [
+            "FND-08",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md": {
+          "before": {
+            "outside_sha256": "47b86e7518f211de17b5a6c99ad9d76797bf91c5c5e987dd5dab83f2d616ea0f",
+            "tex_sha256": "3fff4e446bc6176fd6e3274b1d660424161900f796ff6c46081a790373cd603b",
+            "inline": 30,
+            "display": 55
+          },
+          "after": {
+            "outside_sha256": "77b94df80e0eedfaa94bcf022fd1049c188b6cee083f5edfc7a533fdb56506ce",
+            "tex_sha256": "9074aee2d871f1e6b80083b42ac0e890342b80f8c89bad3aab29495297fa5c8d",
+            "inline": 34,
+            "display": 55
+          },
+          "review_ids": [
+            "FND-C01",
+            "FND-C02",
+            "FND-C03",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "daafb250aff46c5f3676e6438a8df8f9f9f2d04104877913d9967ebc0c7b5217",
+            "tex_sha256": "95e816024447c1eaa7685abda64545821be75babdcd0f843091f96108c63caa7",
+            "inline": 24,
+            "display": 76
+          },
+          "after": {
+            "outside_sha256": "f08b0294f1b3d61242bfbde0c2d34f8c09279c9afb8c153b6aff6ac9458832d8",
+            "tex_sha256": "fc7ad473ac84234f696abaad46ba45c0bde9b0dd5aa20e0b051f4a38d68096ce",
+            "inline": 34,
+            "display": 75
+          },
+          "review_ids": [
+            "LLM-01",
+            "LLM-02",
+            "LLM-03",
+            "LLM-A01",
+            "LLM-A02",
+            "LLM-A07",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "37d8d75bb66e0d66228d28cf0c77041362c37670ecb8333435f6d400ba793545",
+            "tex_sha256": "2d5e955ddeec86391643d3df3d7c2fdca65f3bba492e2e3f9e5fbcce88396157",
+            "inline": 2,
+            "display": 26
+          },
+          "after": {
+            "outside_sha256": "4b96e24355148666715e58c5b3dfe857eceebf6c23d974997f00231cea556550",
+            "tex_sha256": "b71cea4e9a4d1b08bf0379069cb51020d3cd01a93e8d7a8baad64fd5ecabd293",
+            "inline": 2,
+            "display": 26
+          },
+          "review_ids": [
+            "LLM-04",
+            "LLM-A03",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "a37563b26204339e429fdc405b67c5b2649ee536abf544e8e1956a6c48ab07aa",
+            "tex_sha256": "714438098d8a54736b0980f629bd1fbc1a1b37a9d06b5f1286a551296981b68c",
+            "inline": 13,
+            "display": 36
+          },
+          "after": {
+            "outside_sha256": "8b1d68ced58da2d8f659702383a2f44c9f3a29d3e174726459de805984f508aa",
+            "tex_sha256": "1dde48d204f8a394ffdfb32636639ac3fb717e1952c8f690be4a308b42e95fea",
+            "inline": 13,
+            "display": 36
+          },
+          "review_ids": [
+            "GEN-04",
+            "GEN-A02",
+            "GEN-A05",
+            "GEN-A06",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "354e7af3b329fc937d1b7b3f0779312cd6d70189b225412e9f9ef53081267518",
+            "tex_sha256": "541ef72afb1ffe21063854de85668cd1bb99c7e6bceb8b81b19d5f0aa3c97ac3",
+            "inline": 3,
+            "display": 28
+          },
+          "after": {
+            "outside_sha256": "14722c7227c1b2d0c3f56fdcf415cb3b784ea76d3b439b0a79b0296cc442b4e0",
+            "tex_sha256": "70194caf8d73e5ebde9602c09f1ea09eca7615e184c5d64a845e62c030aac106",
+            "inline": 9,
+            "display": 28
+          },
+          "review_ids": [
+            "GEN-04",
+            "GEN-06",
+            "GEN-08",
+            "GEN-A01",
+            "GEN-A03",
+            "GEN-A05",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "ffb28a0693b0a32bd0b22eed8849002e92fafc22a8ef940a78489b4d89b17bb1",
+            "tex_sha256": "6a051924c4723561f5434c082f42fcacd604902d1c9f8fcd978a7ed3763628fe",
+            "inline": 20,
+            "display": 61
+          },
+          "after": {
+            "outside_sha256": "23f2cb8f4bac4dd39d03a3909400868b2ba76dbfbe4029d5a31d72ea9eb4acc4",
+            "tex_sha256": "667f0abb04614b12d9cbc5fc4400c932a95a01e47f2a7b09a7c071b753b09901",
+            "inline": 26,
+            "display": 63
+          },
+          "review_ids": [
+            "GEN-01",
+            "GEN-02",
+            "GEN-03",
+            "GEN-07",
+            "GEN-09",
+            "GEN-A01",
+            "GEN-A05",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/07_3D_GENERATION_REPRESENTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "6df66c7f2413f05c84e4993e02037c44e2c39df3cfde272b6472958772909480",
+            "tex_sha256": "48b1da61708ce544f99ac44f50a584638afe9264ab28a395978f27275c18d3c8",
+            "inline": 3,
+            "display": 25
+          },
+          "after": {
+            "outside_sha256": "98f7bd55202924c758cf7c2cb6195d7fa145ad7878d212676e638aa49ba2612b",
+            "tex_sha256": "446f58cfc993608aa559d0839eccffb0cd49f2b1621a8c77782cad0be497d896",
+            "inline": 5,
+            "display": 25
+          },
+          "review_ids": [
+            "GEN-05",
+            "GEN-A04",
+            "GEN-A05",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "ca2f8c041297c7a2706eb80e4bb2fea67d954c5916d35df85b3ad4d824839699",
+            "tex_sha256": "c54bf69391314ffb3680898757ceec5d6807584dc879fe6244511244b3aa513a",
+            "inline": 1,
+            "display": 34
+          },
+          "after": {
+            "outside_sha256": "e0b16685a83e50f66bfda3cebf6a0fe8be055066c4e36db360d37f068fe04822",
+            "tex_sha256": "1c60d77dab1409f27be2f3c4e7b2c8cb9408b9920fbebe7f0b07bdeb7177d45e",
+            "inline": 7,
+            "display": 35
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-01",
+            "SYS-D01",
+            "SYS-D02"
+          ]
+        },
+        "docs/en-US/09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "61694c5b2bda37f6068876746ae4e5419d22a44d5530f9913ccbfcbc8faad53d",
+            "tex_sha256": "e8591f3463c7f3ac64c1ec49b8ef9f08b5c8e34d7e98ec546479f6e94e9f0e58",
+            "inline": 34,
+            "display": 72
+          },
+          "after": {
+            "outside_sha256": "64342981ea409edb1f1565caab1a9f340b281cbebd888dbaf4d21dc44b99eac8",
+            "tex_sha256": "302ab000912c0a36fcdc0a9115296cedf0f3720ac0f082185c0a06f56b482d9f",
+            "inline": 39,
+            "display": 73
+          },
+          "review_ids": [
+            "LLM-05",
+            "LLM-A02",
+            "LLM-A04",
+            "LLM-A05",
+            "LLM-A06",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/10_MULTIMODAL_VLM_OMNI_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "efaa259dc1f8a6ff260fc04be15cc7a7a2946fe32278ca55917f94f8e5dee7a2",
+            "tex_sha256": "265bd69f49a7d757e73259f5f8a4fe29711d84184a885dab952ace199fc18846",
+            "inline": 8,
+            "display": 53
+          },
+          "after": {
+            "outside_sha256": "9eca78d325f0ed4659168dc43ab7bb25db8e379d697c131c0bb7715e580e4106",
+            "tex_sha256": "d6840e3238abe2745402d8d9bb879f9c4cc27eca672b271c04d44c66de9971b7",
+            "inline": 16,
+            "display": 53
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-D03",
+            "SYS-D04"
+          ]
+        },
+        "docs/en-US/11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "f561509e17d8cbdd17cd37566f45803cede2df29d210aa59ee74f13ee826c4f3",
+            "tex_sha256": "4346d665cb777ed893454392eac62212019ba0d49342b48a08f4d8ffbd872bf4",
+            "inline": 10,
+            "display": 59
+          },
+          "after": {
+            "outside_sha256": "fb6a44b80f92f6b90f935bb56492eb406b233162feaa254d1d57e496e539cde6",
+            "tex_sha256": "d2fc3d3778728415b428b05c5d56d8ad1cae7e720946ffd4362233e87f1fc9e9",
+            "inline": 18,
+            "display": 59
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-02",
+            "SYS-03",
+            "SYS-D05",
+            "SYS-D06"
+          ]
+        },
+        "docs/en-US/12_REWARD_VERIFIER_JUDGE_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "77d82fc9a7f8b2b2321dba04d15c04ea814551a7e2a9472daaea8e39fb83a41f",
+            "tex_sha256": "04f3fa1d29a8331aa1444f481f6b22fe6d7bac3cd44f3064bf3f50024dfc2441",
+            "inline": 7,
+            "display": 53
+          },
+          "after": {
+            "outside_sha256": "3e391e376ab9fede448953536a12961e550f7cd426d953578a2ccdef3766b728",
+            "tex_sha256": "3254e2d767bf71125a6a6eb3eaef357e84897d0aa07c3870b51a7a0fd5a34470",
+            "inline": 9,
+            "display": 51
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "TRN-07",
+            "TRN-08",
+            "TRN-09",
+            "TRN-10",
+            "TRN-A04",
+            "TRN-A05"
+          ]
+        },
+        "docs/en-US/13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "11541bfd6688c538aed7d9782089e855c5929118ea7941505f1828f18cf316e1",
+            "tex_sha256": "dd08304ddd96aecde775b31a0a42d964c2b6cf85eaeb2726c31c86ae0ae46e1a",
+            "inline": 7,
+            "display": 65
+          },
+          "after": {
+            "outside_sha256": "f2bd2e40a57a6133d3caf7e3ad1cb0ae2d0a162c7e7a7a189a182bbfb5581748",
+            "tex_sha256": "15d0f83b9eca7826d4201c9f4c7ea7a8ef4fbe0632437ecba4077fb800e4adc2",
+            "inline": 12,
+            "display": 64
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-04",
+            "SYS-05",
+            "SYS-06",
+            "SYS-D07",
+            "SYS-D08"
+          ]
+        },
+        "docs/en-US/14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md": {
+          "before": {
+            "outside_sha256": "93d7ca3e97f109c04db2c61ffd385100e4f9149c1c75b9177190918f1c266532",
+            "tex_sha256": "281f4aaff9ae955568b062b4079ca1c09e2489996e332547e84d31812db71ee0",
+            "inline": 6,
+            "display": 59
+          },
+          "after": {
+            "outside_sha256": "edee791c9940627c022eb8d368c1e151dd0b637ad11cd0f07607cf01b1a54a9e",
+            "tex_sha256": "6312b21caacff31910211d3ca0fcb85c778f2d2a35d479cb4944f79488eac6d8",
+            "inline": 13,
+            "display": 59
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-07",
+            "SYS-08",
+            "SYS-09",
+            "SYS-10",
+            "SYS-D09",
+            "SYS-D10"
+          ]
+        },
+        "docs/en-US/15_GRAPH_FOUNDATION_MODELS_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "90805e89e18fb97c3d3780c3d151405892a7dcc05e1985a092d95438f049bcf2",
+            "tex_sha256": "54a6b8975973cd521bd076649f8d0bca4ac6895f882fbcb641f36cebcf498ce9",
+            "inline": 14,
+            "display": 49
+          },
+          "after": {
+            "outside_sha256": "b6b303b52f6005d5f662ecc87bea3f07420edae7defc363a8bb5e70e38a9db6c",
+            "tex_sha256": "8bdf87b8fbf14388083d5854c218060054bcda23efec321c8067b5ede0759c8a",
+            "inline": 34,
+            "display": 53
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-11",
+            "SYS-12",
+            "SYS-13",
+            "SYS-D11",
+            "SYS-D12"
+          ]
+        },
+        "docs/en-US/16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "9e580ad0aa0246cdd3f45b6eb4b4d8836925b4babb0d65ee0ce03876691dd4b3",
+            "tex_sha256": "720333f92895209d43e2747199ce4acfd5036ced2bdcec56841e9f77ac6b4b8a",
+            "inline": 36,
+            "display": 109
+          },
+          "after": {
+            "outside_sha256": "20eaa9afc2948cb0f60ac8712d71f24a3e47e1a35ad02840792d29197c5c2c0e",
+            "tex_sha256": "3384190cfafbf207c07cb24688a33b29992c2966a62a445e6e8ceb86216de1a2",
+            "inline": 58,
+            "display": 107
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "TRN-01",
+            "TRN-02",
+            "TRN-03",
+            "TRN-04",
+            "TRN-05",
+            "TRN-06",
+            "TRN-A01",
+            "TRN-A02",
+            "TRN-A03",
+            "TRN-A04",
+            "TRN-A06"
+          ]
+        },
+        "docs/en-US/17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "c15d8705f0d486294d856acace662a233b389adc78a024e93ed581e9e93b065a",
+            "tex_sha256": "18868afe3c67d22dd5301eba43c068882aad760352600fcbf9aeab1f5477db48",
+            "inline": 23,
+            "display": 100
+          },
+          "after": {
+            "outside_sha256": "2a1e04a71f59dc711d20a9d08e6e93ddee9a4393210b1b8e83eefd2674d47b6a",
+            "tex_sha256": "2461e2a80ddb689ee1d01e2b7cd1becffd3286e16682f1a470eb82dcaaf1b25d",
+            "inline": 36,
+            "display": 100
+          },
+          "review_ids": [
+            "EVAL-01",
+            "EVAL-02",
+            "EVAL-03",
+            "EVAL-A01",
+            "EVAL-A02",
+            "EVAL-A05",
+            "EVAL-A06",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "c270a2828d92681839da356c6ec38bcc810dc8da2c29d7c7016e089ca9beabbd",
+            "tex_sha256": "99964ab986d1aba08e541ec0da094d535f7677278b990c52193518c68d470cc1",
+            "inline": 1,
+            "display": 81
+          },
+          "after": {
+            "outside_sha256": "9467d29108621e8df8e2f97f76b2571c4c2a5d88fae9f94ab3158eb137cdf04a",
+            "tex_sha256": "e8dcc07e01314237ebb505f2092a4359185d5f4bef421e91f6987171738242e6",
+            "inline": 1,
+            "display": 80
+          },
+          "review_ids": [
+            "EVAL-04",
+            "EVAL-05",
+            "EVAL-A03",
+            "EVAL-A04",
+            "EVAL-A07",
+            "EVAL-A08",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/19_PARAMETER_GLOSSARY_AND_REGISTRY.md": {
+          "before": {
+            "outside_sha256": "6f0ec41221602569dbddb7669dcbbde043ce544e7934e17c2d72010f685fd642",
+            "tex_sha256": "2e7e5a18db27f46670617e7c7ea588a1a4db1e1205d95057d324b1962e8fc101",
+            "inline": 58,
+            "display": 9
+          },
+          "after": {
+            "outside_sha256": "80cb22ce3d811ebd0c41db3754ede156f0605b9e87e23304038b5cf97a748909",
+            "tex_sha256": "2e7e5a18db27f46670617e7c7ea588a1a4db1e1205d95057d324b1962e8fc101",
+            "inline": 58,
+            "display": 9
+          },
+          "review_ids": [
+            "FND-01",
+            "FND-02",
+            "FND-03",
+            "FND-04",
+            "FND-05",
+            "FND-07",
+            "FND-08",
+            "FND-C04",
+            "FND-C05",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/en-US/CHANGELOG.md": {
+          "before": {
+            "outside_sha256": "823bb2e8cb09885641c44b9100407464de65e8e860497171e1e329acef23af51",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "after": {
+            "outside_sha256": "443d2bd77512d5038773a2a7b2d4b1a3143d2ee4db80596d046d995f8205b373",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "REVIEW-LOG"
+          ]
+        },
+        "docs/en-US/CONVENTIONS.md": {
+          "before": {
+            "outside_sha256": "552eb865a8cfc9417ecc1ee6d7edf5af18ade3f4b0b40e1dca13c6298d580ac6",
+            "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+            "inline": 9,
+            "display": 14
+          },
+          "after": {
+            "outside_sha256": "4b08acc33e3485a88a36dcb64d9c1e0cd837c4074cbca951e742b3b3319e691d",
+            "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+            "inline": 9,
+            "display": 14
+          },
+          "review_ids": [
+            "FND-06",
+            "FND-08",
+            "FND-C06",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/00_README_INDEX.md": {
+          "before": {
+            "outside_sha256": "f26c9a01d888159cdadfedb309c373efb2e3f15c336a9c5cd8871bcbf3cfc4c4",
+            "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+            "inline": 0,
+            "display": 15
+          },
+          "after": {
+            "outside_sha256": "2b3e887354fc9b478e47752afd2446df9b08625c68302eefd6dfc18d9abd7c4f",
+            "tex_sha256": "1462b635ddecffa99f9aa89aa3cce4c24c69b90461036917b134b75abebcb206",
+            "inline": 0,
+            "display": 15
+          },
+          "review_ids": [
+            "FND-08",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/01_GUT_GENERATIVE_AI_UNIFIED_ENGINEERING.md": {
+          "before": {
+            "outside_sha256": "000b017f40b6318c9b4099e6d110583b2b675ca48f6a82322054176eeb73a6f4",
+            "tex_sha256": "df5e0dbe30fdbf38ae1b91aefbd9a9e828a78b5c63410e2597747bbf284d2599",
+            "inline": 30,
+            "display": 55
+          },
+          "after": {
+            "outside_sha256": "5d25c431573a9e1831d5c05099927ee841de578f70f37066e9978ff166b494fe",
+            "tex_sha256": "3339d31579e171e122bb8ec629e503370514e6218c0be648b0d187e7ccf0854c",
+            "inline": 34,
+            "display": 55
+          },
+          "review_ids": [
+            "FND-C01",
+            "FND-C02",
+            "FND-C03",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/02_LLM_TRANSFORMER_INFERENCE_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "0a1f6a1fce037b58c5c1bf01f5ffb69501a610e959f9e8e248fe587bbad9cd91",
+            "tex_sha256": "95e816024447c1eaa7685abda64545821be75babdcd0f843091f96108c63caa7",
+            "inline": 24,
+            "display": 76
+          },
+          "after": {
+            "outside_sha256": "0cd8acdea3f42295bbfc41013aae234f3a7381876743bad8580e1c310ee1b8cb",
+            "tex_sha256": "fc7ad473ac84234f696abaad46ba45c0bde9b0dd5aa20e0b051f4a38d68096ce",
+            "inline": 34,
+            "display": 75
+          },
+          "review_ids": [
+            "LLM-01",
+            "LLM-02",
+            "LLM-03",
+            "LLM-A01",
+            "LLM-A02",
+            "LLM-A07",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/03_CODE_GENERATION_AND_AGENTIC_CODING_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "d82220963ae4292c98e51c08e73e22fd534b9c5ce89771148a5168cbf6fc63e3",
+            "tex_sha256": "2d5e955ddeec86391643d3df3d7c2fdca65f3bba492e2e3f9e5fbcce88396157",
+            "inline": 2,
+            "display": 26
+          },
+          "after": {
+            "outside_sha256": "27b6bd98fcef86f077fdd2a202aba6ba97fa711c90b0550e60745f85b8c9eff1",
+            "tex_sha256": "b71cea4e9a4d1b08bf0379069cb51020d3cd01a93e8d7a8baad64fd5ecabd293",
+            "inline": 2,
+            "display": 26
+          },
+          "review_ids": [
+            "LLM-04",
+            "LLM-A03",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "9b350ff0de5ee8f87e2758518116eb123079d6bfd01336e6e8864778c29a2730",
+            "tex_sha256": "e3f3ec40976cc10b35e2a481b287976b1946175985e9c75f37a54c85a6c8c581",
+            "inline": 13,
+            "display": 36
+          },
+          "after": {
+            "outside_sha256": "650ba6d1a07dbfd4b0ae06b66979a4ccd467e8aeda74f46647692ddbc08815e0",
+            "tex_sha256": "90e2ec8e16a250671a568bf9986152c4bc81c403d28ba555c6f7d8c5e6343afd",
+            "inline": 13,
+            "display": 36
+          },
+          "review_ids": [
+            "GEN-04",
+            "GEN-A02",
+            "GEN-A05",
+            "GEN-A06",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/05_VIDEO_GENERATION_SPATIOTEMPORAL_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "c9cbcb241b2f5dd57a0789bc8f3059e907b06d2129c7859b616c99e7ae030d46",
+            "tex_sha256": "541ef72afb1ffe21063854de85668cd1bb99c7e6bceb8b81b19d5f0aa3c97ac3",
+            "inline": 3,
+            "display": 28
+          },
+          "after": {
+            "outside_sha256": "ae8a689f5d13696d24e3ace744084eda9b6ba2729bd03f7c2ce06cf906cce734",
+            "tex_sha256": "70194caf8d73e5ebde9602c09f1ea09eca7615e184c5d64a845e62c030aac106",
+            "inline": 9,
+            "display": 28
+          },
+          "review_ids": [
+            "GEN-04",
+            "GEN-06",
+            "GEN-08",
+            "GEN-A01",
+            "GEN-A03",
+            "GEN-A05",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "238e60406cc8afc50ab326f8e89384455871007ae2fee82193761e7a7ccbd986",
+            "tex_sha256": "6c864a5bacd2c26c4578e7bb2613388f887cb8f4ffd4b108b1cd95c9a219cddd",
+            "inline": 20,
+            "display": 61
+          },
+          "after": {
+            "outside_sha256": "ca39c28f6684fd988c4dab768be5e9c8a04c27f37c55ed80da037d7fcccdf99b",
+            "tex_sha256": "0c193e0ab11b31edabda9beed6ee238b7374f8df802a95a18f970213d10199ac",
+            "inline": 26,
+            "display": 63
+          },
+          "review_ids": [
+            "GEN-01",
+            "GEN-02",
+            "GEN-03",
+            "GEN-07",
+            "GEN-09",
+            "GEN-A01",
+            "GEN-A05",
+            "GEN-BILINGUAL",
+            "GEN-U01",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/07_3D_GENERATION_REPRESENTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "ead8e131797684d3317ad2a9f75ad70876e455b5977c384419ac977d3cd3b375",
+            "tex_sha256": "48b1da61708ce544f99ac44f50a584638afe9264ab28a395978f27275c18d3c8",
+            "inline": 3,
+            "display": 25
+          },
+          "after": {
+            "outside_sha256": "12013ef4e1587f54126a4e556c35080ac991896ad0fceef12cc39b57e4e76ff2",
+            "tex_sha256": "446f58cfc993608aa559d0839eccffb0cd49f2b1621a8c77782cad0be497d896",
+            "inline": 5,
+            "display": 25
+          },
+          "review_ids": [
+            "GEN-05",
+            "GEN-A04",
+            "GEN-A05",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/08_AGENT_ACTION_CONTROL_SYSTEM_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "231e2a125786ca0d61d07a97cfbbc0ce1250b06b138830f39fe8103dd03a1a58",
+            "tex_sha256": "c54bf69391314ffb3680898757ceec5d6807584dc879fe6244511244b3aa513a",
+            "inline": 1,
+            "display": 34
+          },
+          "after": {
+            "outside_sha256": "9e9f4d417a7b8a85c1d8eba46c04da053fce356a2e2ecb3c1feba94fde42b956",
+            "tex_sha256": "1c60d77dab1409f27be2f3c4e7b2c8cb9408b9920fbebe7f0b07bdeb7177d45e",
+            "inline": 7,
+            "display": 35
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-01",
+            "SYS-D01",
+            "SYS-D02"
+          ]
+        },
+        "docs/pt-BR/09_LOCAL_AI_INFERENCE_RUNTIME_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "c469e5658564aeab132282858e3eb36b1e129a80346536374e7ac900d72d705c",
+            "tex_sha256": "e238a7efe52c7694c55d3fe72b99d077bebfbe04711a1d66949a9a37194fc4ca",
+            "inline": 34,
+            "display": 72
+          },
+          "after": {
+            "outside_sha256": "0048758b78beb2b3492bc39128242cbabdba1882b1cfa967cd807d3fa762f179",
+            "tex_sha256": "b669c9d6b319df3ad6076de0c5b4377eae754bb1ca73ef355de6f74913983bca",
+            "inline": 39,
+            "display": 73
+          },
+          "review_ids": [
+            "LLM-05",
+            "LLM-A02",
+            "LLM-A04",
+            "LLM-A05",
+            "LLM-A06",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/10_MULTIMODAL_VLM_OMNI_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "9b0744344c3821a833be890502cad7b64cd3efedadc1b3649e67cd64ccba8b75",
+            "tex_sha256": "36ebf59e9639cfb200ec59d05db1897c10b5683dea9138a9f90c2e1577fb5143",
+            "inline": 8,
+            "display": 53
+          },
+          "after": {
+            "outside_sha256": "6a0791ad1e99b1082f81bea52ec71289befe76cf960a6cc4104f035f0a98d9f3",
+            "tex_sha256": "6080bd0c3f6feb64f95df3bb97537b14b625fb4b2d4ea125ebcb1a7325d0c12d",
+            "inline": 16,
+            "display": 53
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-D03",
+            "SYS-D04"
+          ]
+        },
+        "docs/pt-BR/11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "9b688e463013dd3c9888636226268d566784f4fbc2b27db8aab66d88b1a17500",
+            "tex_sha256": "4346d665cb777ed893454392eac62212019ba0d49342b48a08f4d8ffbd872bf4",
+            "inline": 10,
+            "display": 59
+          },
+          "after": {
+            "outside_sha256": "f99469e145c2ddfd493e3b22212296ffb9735a0d9a75468592ea8be83d7b7172",
+            "tex_sha256": "d2fc3d3778728415b428b05c5d56d8ad1cae7e720946ffd4362233e87f1fc9e9",
+            "inline": 18,
+            "display": 59
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-02",
+            "SYS-03",
+            "SYS-D05",
+            "SYS-D06"
+          ]
+        },
+        "docs/pt-BR/12_REWARD_VERIFIER_JUDGE_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "accba3d80d933b5f327904e05c6df9c8a1772d6ac85708a545366faa35310e01",
+            "tex_sha256": "5b84cbfe793dcd9fd3c5f5dbfc5b7f691ebbdfe54321172bc2f289cec1f19ae6",
+            "inline": 7,
+            "display": 53
+          },
+          "after": {
+            "outside_sha256": "f6655c71f7c72f23ac82602a061b2a3eff29eb7963118a61223e3a8b4f58b3d0",
+            "tex_sha256": "1bc6d85f411f550a0c0d88e735f70badd5064fac5bc73ea97e2af5e6d1b9601f",
+            "inline": 9,
+            "display": 51
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "TRN-07",
+            "TRN-08",
+            "TRN-09",
+            "TRN-10",
+            "TRN-A04",
+            "TRN-A05"
+          ]
+        },
+        "docs/pt-BR/13_WORLD_MODEL_VLA_EMBODIED_AI_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "a4c9687decac6a8d03f0937799072b4a8275be1c61dd1ccd30e34f72e1eb208f",
+            "tex_sha256": "d6861963f71f68e97dbb6d95a5080bb765669af528d9f5fde8a626e6139422ba",
+            "inline": 7,
+            "display": 65
+          },
+          "after": {
+            "outside_sha256": "699d4813797ef6c2968c7bad306683136d55cd8fef361626c9db98e2ea78db86",
+            "tex_sha256": "ed56c955152be6f4cef1f1909557691a9fc5c947ed96ef9bb573cb0dd049560d",
+            "inline": 12,
+            "display": 64
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-04",
+            "SYS-05",
+            "SYS-06",
+            "SYS-D07",
+            "SYS-D08"
+          ]
+        },
+        "docs/pt-BR/14_TIME_SERIES_TABULAR_FOUNDATION_MODELS.md": {
+          "before": {
+            "outside_sha256": "9311cd17faf3d69c5c0cfde5c0ac2b862f4664870032be365d51e010d8db3351",
+            "tex_sha256": "281f4aaff9ae955568b062b4079ca1c09e2489996e332547e84d31812db71ee0",
+            "inline": 6,
+            "display": 59
+          },
+          "after": {
+            "outside_sha256": "917151dbdff5dcecb843c54867f53e685e87ce2669936defae2ac1f3cddff6e9",
+            "tex_sha256": "6312b21caacff31910211d3ca0fcb85c778f2d2a35d479cb4944f79488eac6d8",
+            "inline": 13,
+            "display": 59
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-07",
+            "SYS-08",
+            "SYS-09",
+            "SYS-10",
+            "SYS-D09",
+            "SYS-D10"
+          ]
+        },
+        "docs/pt-BR/15_GRAPH_FOUNDATION_MODELS_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "6c5565fd66cd285be31821312ce6ed46ad7cae1f41fff92f9046ae06e059fbfd",
+            "tex_sha256": "54a6b8975973cd521bd076649f8d0bca4ac6895f882fbcb641f36cebcf498ce9",
+            "inline": 14,
+            "display": 49
+          },
+          "after": {
+            "outside_sha256": "66af3d22f22d3e3355a7f21430973c9fb99dad2c425b4e36c43877e91ace2fe4",
+            "tex_sha256": "8bdf87b8fbf14388083d5854c218060054bcda23efec321c8067b5ede0759c8a",
+            "inline": 34,
+            "display": 53
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "SYS-11",
+            "SYS-12",
+            "SYS-13",
+            "SYS-D11",
+            "SYS-D12"
+          ]
+        },
+        "docs/pt-BR/16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "040f4350724bcaf616a451766b7a129d33f84fd09339a93fce621c04f1dee894",
+            "tex_sha256": "720333f92895209d43e2747199ce4acfd5036ced2bdcec56841e9f77ac6b4b8a",
+            "inline": 36,
+            "display": 109
+          },
+          "after": {
+            "outside_sha256": "d1fc669a5480712b0eaa2558ec57f7be2ca8d39cb60581a2bba248985a2d920d",
+            "tex_sha256": "58b93d97ee81ce9566272799d505bb41be6b5994b9b88972c3120e328e06ebc1",
+            "inline": 58,
+            "display": 107
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "TRN-01",
+            "TRN-02",
+            "TRN-03",
+            "TRN-04",
+            "TRN-05",
+            "TRN-06",
+            "TRN-A01",
+            "TRN-A02",
+            "TRN-A03",
+            "TRN-A04",
+            "TRN-A06"
+          ]
+        },
+        "docs/pt-BR/17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "f794230b11a59f76f686ac92af7b88ba18c38b681546b2367d81e3fb249db1a7",
+            "tex_sha256": "aa5f8caf28df5f15879957b8d85e111bce7dba09bf4b667376e1c5dc9c96763a",
+            "inline": 22,
+            "display": 100
+          },
+          "after": {
+            "outside_sha256": "80bcec9e17f468bb7808ae61fc6dabc664893b7bec765b7f72526bccbfce46c8",
+            "tex_sha256": "aa8a8d1a5711749e47478837ceef35af405c4399b9ab283a2a5036bf96930ca6",
+            "inline": 35,
+            "display": 100
+          },
+          "review_ids": [
+            "EVAL-01",
+            "EVAL-02",
+            "EVAL-03",
+            "EVAL-A01",
+            "EVAL-A02",
+            "EVAL-A05",
+            "EVAL-A06",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/18_SECURITY_ROBUSTNESS_FAILURE_MODES_DATASHEET.md": {
+          "before": {
+            "outside_sha256": "e65a6e41ef008cca50c7c725d5a1548c1b3d677b988fadf05c93501cd67f8a77",
+            "tex_sha256": "99964ab986d1aba08e541ec0da094d535f7677278b990c52193518c68d470cc1",
+            "inline": 1,
+            "display": 81
+          },
+          "after": {
+            "outside_sha256": "9c792ca809e8ca47a18d9833df515aa5531e977df58ae2ceb6aad4bc3e111a37",
+            "tex_sha256": "e8dcc07e01314237ebb505f2092a4359185d5f4bef421e91f6987171738242e6",
+            "inline": 1,
+            "display": 80
+          },
+          "review_ids": [
+            "EVAL-04",
+            "EVAL-05",
+            "EVAL-A03",
+            "EVAL-A04",
+            "EVAL-A07",
+            "EVAL-A08",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/19_PARAMETER_GLOSSARY_AND_REGISTRY.md": {
+          "before": {
+            "outside_sha256": "daa34fe507fabeed0aa4806912e955f410bbba12cec691a6deeb512c2fa997bb",
+            "tex_sha256": "43a017fe20b496027cde6d1be5e9a2e674ac74460389ccbf9ff08da7bdceb4f6",
+            "inline": 58,
+            "display": 9
+          },
+          "after": {
+            "outside_sha256": "41921d8765db40911ae972e9df4ea2cbbf25dfbf274b1aad84bf7b6d83bae91d",
+            "tex_sha256": "43a017fe20b496027cde6d1be5e9a2e674ac74460389ccbf9ff08da7bdceb4f6",
+            "inline": 58,
+            "display": 9
+          },
+          "review_ids": [
+            "FND-01",
+            "FND-02",
+            "FND-03",
+            "FND-04",
+            "FND-05",
+            "FND-07",
+            "FND-08",
+            "FND-C04",
+            "FND-C05",
+            "REVIEW-DATE"
+          ]
+        },
+        "docs/pt-BR/CHANGELOG.md": {
+          "before": {
+            "outside_sha256": "3e6795f81fd05d2b909ed5e864cdeb1b2332935d7b1d6bd0383024057ad7ffcc",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "after": {
+            "outside_sha256": "42f437712c8206c7c2f1c3ae5e5a72b8d8cad95c5163c3f13f0627f6815b6e40",
+            "tex_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "inline": 0,
+            "display": 0
+          },
+          "review_ids": [
+            "REVIEW-DATE",
+            "REVIEW-LOG"
+          ]
+        },
+        "docs/pt-BR/CONVENTIONS.md": {
+          "before": {
+            "outside_sha256": "9bb7799b75cd6c2f0f3b96d09e4e0ea78e343f2bc0f679d4110ccb5ed693b9c7",
+            "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+            "inline": 9,
+            "display": 14
+          },
+          "after": {
+            "outside_sha256": "887512e0e8cc4cc91e564ef8fe7cb9096c9300f9d469d2ad3f08a444ecc96924",
+            "tex_sha256": "e77f1fdc686cd968224266260c0f5afef720f6c728b9aa6ff61e1d25bec144bd",
+            "inline": 9,
+            "display": 14
+          },
+          "review_ids": [
+            "FND-06",
+            "FND-08",
+            "FND-C06",
+            "REVIEW-DATE"
+          ]
+        }
+      }
+    }
+  ]
+}

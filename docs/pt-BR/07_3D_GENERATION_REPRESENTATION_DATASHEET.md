@@ -1,7 +1,7 @@
 ---
 title: 3D Generation Representation Datasheet v2.0
 tags: [ai, 3d, mesh, nerf, gaussian-splatting, slat, cad]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # 3D Generation Representation Datasheet v2.0
@@ -241,8 +241,10 @@ Componentes desconectados:
 Filtrar por connected-component size costuma ser etapa útil:
 
 ```math
-\mathcal M^*=\arg\max_i Volume/Area(\mathcal M_i)
+i^*\in\arg\max_i s(\mathcal M_i),\qquad \mathcal M^*=\mathcal M_{i^*}
 ```
+
+Escolher uma única métrica escalar de tamanho $`s`$ para a comparação: área superficial, ou volume encerrado para componentes fechados, orientados consistentemente e sem self-intersections. São métricas alternativas com unidades diferentes, não uma razão volume/área. Se vários componentes empatarem, escolher um índice maximizador conforme uma regra de desempate declarada.
 
 Mas não remover cegamente componentes pequenos se o objeto tiver peças deliberadamente separadas.
 
@@ -252,11 +254,13 @@ Mas não remover cegamente componentes pequenos se o objeto tiver peças deliber
 
 ## 10. UV texture
 
-Imagem 2D mapeada sobre a superfície:
+Imagem 2D mapeada sobre um chart local $`c`$ da superfície:
 
 ```math
-(u,v)=\phi(\mathbf x_{surface})
+(u,v)=\phi_c(\mathbf x_{surface})
 ```
+
+Em UV seams, o mesmo ponto da superfície pode ter coordenadas diferentes em charts adjacentes. Implementações de mesh podem, portanto, armazenar UVs por face corner, em vez de um único par por vértice geométrico.
 
 Resolução de textura afeta memória e aparência, mas não geometria.
 
@@ -395,17 +399,19 @@ Pode ser:
 
 Não é variável universal.
 
-Pós-processo geométrico explícito:
+Pós-processo geométrico explícito, mostrado aqui apenas no nível do conjunto de vértices:
 
 ```math
 V'=V\cup Mirror(V,plane)
 ```
 
-é diferente de “pedir simetria” ao generative model.
+Isso é diferente de “pedir simetria” ao generative model. Uma mesh espelhada completa também precisa da conectividade das faces espelhadas, winding/normals corrigidos sob reflexão e soldagem no plano de espelhamento onde se pretende uma superfície contínua. A união dos vértices, sozinha, não estabelece essas propriedades.
 
 ---
 
 # PARTE XI — COUPLING MATRIX
+
+Tendências qualitativas dentro de um regime de operação adequado; as setas não são garantias de monotonicidade. Mais resolução cria capacidade para detalhe, mas não garante geometria correta, topologia válida ou texturas melhores.
 
 | Controle ↑ | Geometry detail | Manifold risk | Compute | Texture quality |
 |---|---:|---:|---:|---:|

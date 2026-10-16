@@ -1,7 +1,7 @@
 ---
 title: Time-Series & Tabular Foundation Models Datasheet v1.0
 tags: [ai, time-series, tabular, forecasting, tabpfn, foundation-models]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Time-Series & Tabular Foundation Models Datasheet v1.0
@@ -84,13 +84,13 @@ Bom para granularidade fina; ruim para sequências longas.
 Patch de comprimento $`P`$:
 
 ```math
-p_i=[x_{iP},\ldots,x_{iP+P-1}]
+p_i=[x_{(i-1)P+1},\ldots,x_{iP}],\quad i=1,\ldots,\lfloor T/P\rfloor
 ```
 
-Número de tokens:
+Para $`1\le P\le T`$ inteiro, patches não sobrepostos e sem padding, este exemplo descarta o patch final incompleto. Aplicar padding ou retê-lo exige máscara/política explícita. O número de tokens de patches completos é:
 
 ```math
-N\approx\frac{T}{P}
+N=\left\lfloor\frac{T}{P}\right\rfloor
 ```
 
 Trade-off:
@@ -98,11 +98,11 @@ Trade-off:
 ```math
 P\uparrow
 \Rightarrow
-SequenceLength\downarrow,
-LocalResolution\downarrow
+TokenSequenceLength\downarrow,
+TokenGridResolution\downarrow
 ```
 
-Patching é o equivalente temporal de reduzir resolução.
+Com comprimento de entrada fixo, patches não sobrepostos maiores tornam a grade de tokens/atenção mais grosseira. Agrupar amostras em patches pode preservar todas as amostras; a perda de informação depende do embedding ou da compressão. Patching, sozinho, não equivale a downsampling do sinal.
 
 ---
 
@@ -136,7 +136,7 @@ Uma série pode sofrer affine transform:
 x'_t=\frac{x_t-\mu}{\sigma}
 ```
 
-ou normalization local/instance-wise.
+ou normalization local/instance-wise. Ajuste estatísticas somente com treino ou janela histórica disponível, conforme o recipe; nunca use a janela alvo do forecast. Normalize por feature quando necessário. Para $`\sigma=0`$, defina regra para feature constante ou piso positivo de escala e aplique a transformação inversa correspondente de forma consistente.
 
 Isso ajuda transfer entre séries de escala diferente, mas pode apagar significado absoluto quando magnitude é semanticamente importante.
 
@@ -170,6 +170,8 @@ Separar:
 - known-future covariates;
 - static features.
 
+Use avaliação temporal ou rolling-origin. Em cada origem de previsão, pré-processamento, imputação, seleção de features, thresholds e calibração podem usar apenas informação disponível até aquele instante. Um timestamp futuro não torna uma covariável medida conhecida antecipadamente: use sua previsão ou um valor realmente anunciado de antemão e registre os instantes de disponibilidade.
+
 ---
 
 # 8. Deterministic forecasting
@@ -198,13 +200,13 @@ L_\tau(y,\hat q)
 \max(\tau(y-\hat q),(\tau-1)(y-\hat q))
 ```
 
-Gera intervalos:
+Gera quantis como:
 
 ```math
-[q_{0.1},q_{0.5},q_{0.9}]
+(q_{0.1},q_{0.5},q_{0.9})
 ```
 
-Coverage precisa ser calibrado no domínio.
+Os dois quantis extremos definem $`[q_{0.1},q_{0.9}]`$, intervalo de predição com cobertura nominal de 80%; $`q_{0.5}`$ é a mediana. A cobertura precisa ser calibrada no domínio alvo. Verifique ordenação/cruzamento de quantis e cobertura empírica por horizonte e regime; declare eventual ajuste para evitar cruzamentos e ajuste-o sem acesso aos resultados do teste.
 
 ---
 
@@ -325,7 +327,7 @@ Missingness pode ser informativa:
 P(missing|state)\neq const
 ```
 
-Logo preencher zero/mean sem mask explícita pode introduzir semântica falsa.
+Em séries multivariadas, máscaras devem identificar missingness por feature, por exemplo $`m_{td}`$. Preencher zero/mean sem mask explícita pode introduzir semântica falsa.
 
 ---
 
@@ -419,7 +421,7 @@ Não elevar “decomposition” a requisito universal.
 - calibration failure;
 - domain pretraining mismatch.
 
-Estudos 2026 de causal stress-testing em TSFMs encontram falhas súbitas em padrões fora do regime pretraining; isso reforça que “foundation” não significa universal.
+Um estudo de 2026 com Chronos-2 e TimesFM-2.5 relata falhas abruptas em padrões sintéticos selecionados de mudança de regime e, para TimesFM-2.5, de energy-release. Os autores sugerem a composição dos dados de pretraining como explicação possível, sem isolá-la causalmente. Os resultados se limitam aos modelos e geradores testados; “foundation” não implica capacidade universal.
 
 ---
 
@@ -434,10 +436,10 @@ D=\{(x_i,y_i)\}_{i=1}^{N}
 ```
 
 ```math
-x_i=(x_{i1},\ldots,x_{iD})
+x_i=(x_{i1},\ldots,x_{i,D_{features}})
 ```
 
-Features podem ser:
+Aqui $`D_{features}`$ é o número de features, distinto do dataset $`D`$. Features podem ser:
 
 - contínuas;
 - categóricas;
@@ -470,13 +472,13 @@ Isso resolve parte da heterogeneidade.
 
 # 24. Permutation considerations
 
-Rows em supervised learning são usualmente exchangeable:
+Para um dataset representado como sequência de linhas, uma hipótese de exchangeability significa:
 
 ```math
 P(D)=P(\pi(D))
 ```
 
-para permutação $`\pi`$, salvo estrutura temporal/grupal explícita.
+para toda permutação de linhas permitida $`\pi`$. Trata-se de simetria da distribuição conjunta, não de independência: linhas i.i.d. condicionadas a uma variável latente compartilhada podem ser correlacionadas e ainda exchangeable. Estrutura temporal ou grupal pode restringir quais permutações preservam a distribuição; o split de avaliação deve respeitar essa estrutura.
 
 Columns não são exchangeable semanticamente a menos que identidade seja preservada.
 
@@ -557,7 +559,7 @@ O “prompt” é o próprio training set.
 Diferente de LLM:
 
 ```math
-Context\sim N\times D
+Context\sim N\times D_{features}
 ```
 
 crescimento de samples e features pressiona memória/attention.
@@ -635,7 +637,7 @@ Comparar modelos em múltiplos datasets exige ranks/aggregate robustos, não ape
 - calibration drift;
 - extrapolation fora do suporte;
 - IDs tratados como números ordinais;
-- correlated rows violando exchangeability assumida.
+- dependência temporal ou grupal que quebra a simetria de permutação assumida.
 
 ---
 

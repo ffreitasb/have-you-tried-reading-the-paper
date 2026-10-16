@@ -1,7 +1,7 @@
 ---
 title: Image Generation — Diffusion, Flow & DiT Datasheet v2.0
 tags: [ai, image, diffusion, rectified-flow, dit, comfyui]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Image Generation — Diffusion, Flow & DiT Datasheet v2.0
@@ -44,7 +44,7 @@ Com fator de compressão espacial $`f`$:
 H_l\approx H/f,\qquad W_l\approx W/f
 ```
 
-A geração moderna quase sempre economiza compute trabalhando em $`Z`$, não diretamente em pixels.
+Modelos generativos latentes trabalham em $`Z`$ para reduzir o trabalho do denoiser em relação ao processamento da grade completa de pixels.
 
 ### Consequência
 
@@ -76,7 +76,7 @@ Decoder:
 \hat X=D(Z)
 ```
 
-O decoder impõe um teto de fidelidade independente do denoiser.
+Um decoder fixo restringe quais saídas podem ser representadas, de modo que suas limitações podem persistir mesmo com um denoiser melhor. Qualidade de reconstrução é um diagnóstico útil, não um limite numérico universal para toda métrica de qualidade de geração.
 
 ### Failure modes
 
@@ -331,13 +331,13 @@ No ComfyUI podem aparecer próximos, mas são objetos conceitualmente diferentes
 
 ## 15. Steps e NFE
 
-`Steps` é número de passos da malha. Custo real depende de avaliações da rede:
+`Steps` conta atualizações de integração do solver. Distinguir de avaliações do modelo por amostra gerada:
 
 ```math
-NFE=\text{number of }f_\theta\text{ forward passes}
+NFE_{model}=\text{number of model evaluations per generated sample}
 ```
 
-Um método com duas avaliações/step pode custar aproximadamente 2× o denoiser de um método com uma.
+Contar cada branch de guidance separadamente, mesmo quando os branches compartilham uma chamada forward em batch. Batching pode mudar tempo de execução e memória sem eliminar o trabalho aritmético desses branches. Com o mesmo guidance e custo por avaliação, duas avaliações do campo por step exigem aproximadamente o dobro do trabalho do denoiser de uma; alguns solvers reutilizam avaliações ou omitem uma correção final.
 
 ### Qualidade
 
@@ -367,7 +367,7 @@ z_{t_s}=\alpha_{t_s}z_0+\sigma_{t_s}\epsilon
 
 Então o processo reverso começa dali.
 
-Denoising strength é portanto melhor entendido como **quanto da trajetória original é descartada**, não simplesmente “criatividade”.
+Denoising strength controla o **nível inicial de ruído e a porção percorrida da trajetória reversa**. Em pipelines img2img típicos, maior strength adiciona mais ruído à referência e percorre mais da trajetória de denoising; o mapeamento exato depende do scheduler e do pipeline.
 
 ### Aproximação intuitiva
 
@@ -482,10 +482,12 @@ Guiders adicionais podem adicionar forwards extras.
 
 # PARTE XI — COUPLING MATRIX
 
+Tendências qualitativas dentro de um regime de operação adequado; as setas não são garantias de monotonicidade. Resultados dependem do modelo, sampler, dados e implementação.
+
 | Controle ↑ | Prompt adherence | Diversity | Compute | Estrutura da referência |
 |---|---:|---:|---:|---:|
 | CFG | ↑ até saturar | ↓ | ↑ se extra pass | — |
-| Steps/NFE | pode ↑ até plateau | ~ | ↑ | — |
+| Steps (solver/guidance fixos) | pode ↑ até plateau | ~ | ↑ | — |
 | Denoise strength | condicionamento pode dominar | ↑ | depende | ↓ |
 | Resolution | detalhe potencial ↑ | — | ↑ forte | — |
 | Guidance rescale | estabiliza high-CFG | pode ↑ | pequeno | — |

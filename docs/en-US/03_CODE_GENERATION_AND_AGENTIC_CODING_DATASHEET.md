@@ -1,7 +1,7 @@
 ---
 title: Code Generation & Agentic Coding Datasheet v2.0
 tags: [ai, code, fim, agents, software-engineering]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Code Generation & Agentic Coding Datasheet v2.0
@@ -83,9 +83,11 @@ There is no universal “temperature 0 always.” The objective defines the regi
 
 ### Deterministic completion
 
-- low temperature;
+- greedy/argmax decoding with deterministic tie-breaking;
 - restricted support;
 - correct stop/FIM handling.
+
+Low positive temperature alone does not make sampling deterministic. Reproducibility across runtime/hardware configurations remains a separate issue.
 
 ### Architecture/refactoring exploration
 
@@ -392,10 +394,10 @@ Reproducing an agentic trajectory requires an environment snapshot, not just a s
 Approximate total cost:
 
 ```math
-Cost=C_{prefill}(repo\ context)+\sum_t C_{decode}(t)+\sum_j C_{tools,j}
+Cost=\sum_j C_{prefill,j}+\sum_t C_{decode}(t)+\sum_k C_{tools,k}
 ```
 
-Long-running agents may spend more context reprocessing history than generating code.
+The prefill sum covers all model calls in the episode, including new and reprocessed context according to cache reuse. Use the same cost unit for every term. Long-running agents may spend more context reprocessing history than generating code.
 
 ### Optimizations
 

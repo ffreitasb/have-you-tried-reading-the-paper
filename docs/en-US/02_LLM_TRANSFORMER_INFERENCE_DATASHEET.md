@@ -1,12 +1,12 @@
 ---
 title: LLM & Parallel Language Inference Datasheet v3.0
 tags: [ai, llm, transformer, sampling, kv-cache, inference, diffusion-language, parallel-decoding, reasoning]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # LLM & Parallel Language Inference Datasheet v3.0
 
-> An LLM is not a sentence generator. It is a machine that repeatedly transforms a sequence of vector states into a distribution over the next token.
+> A causal autoregressive LLM is not a sentence generator. It is a machine that repeatedly transforms a sequence of vector states into a distribution over the next token.
 
 ## 1. Canonical computational graph
 
@@ -122,6 +122,8 @@ A(Q,K,V)=softmax\left(\frac{QK^\top}{\sqrt{d_h}}+M\right)V
 
 where $`M`$ contains the causal mask and any additional biases.
 
+The attention equation applies per query head: head $`h`$ uses $`Q_h`$ and the shared $`K_{g(h)},V_{g(h)}`$, where $`g(h)`$ maps it to its KV head. For contiguous equal-sized GQA groups with zero-based indices, $`g(h)=\lfloor h/(n_q/n_{kv})\rfloor`$; this grouping assumes $`n_q`$ is divisible by $`n_{kv}`$.
+
 ### Typical shapes
 
 ```math
@@ -197,6 +199,8 @@ In modern Transformers, FFNs account for a large fraction of both parameters and
 ---
 
 ## 9. Mixture of Experts
+
+One schematic routed-MoE variant is shown below. Router activation, normalization of selected weights, and shared experts depend on the architecture; this is not an exact specification of every MoE.
 
 Router:
 
@@ -535,7 +539,7 @@ Do not conflate the four.
 
 ## 27. Reasoning tokens / thinking budget
 
-In models that externalize or internalize additional reasoning steps, a larger budget means more sequential inference:
+In models that externalize or internalize additional reasoning steps, generating more reasoning tokens adds sequential inference. At a fixed prompt and approximately stable average cost per generated token:
 
 ```math
 Cost\propto T_{generated}
@@ -556,7 +560,7 @@ A larger reasoning budget does not guarantee monotonically better answers.
 | Control ↑ | Entropy | Support | Repetition | KV | Latency | Comment |
 |---|---:|---:|---:|---:|---:|---|
 | Temperature | ↑ | = | usually ↓ | = | ~ | may increase incoherence |
-| Top-K | — | ↓ | may ↑ | = | ~ | absolute cutoff |
+| Top-K | — | ↑ | may ↑ | = | ~ | absolute cutoff |
 | More restrictive Top-P | ↓ | ↓ | may ↑ | = | ~ | cumulative adaptive cutoff |
 | Higher Min-P | ↓ | ↓ | may ↑ | = | ~ | relative to top token |
 | Rep penalty | variable | variable | ↓ lexical | = | ~ | may damage syntax |
@@ -938,15 +942,9 @@ Each implementation must be mapped to its actual equation.
 
 ## 48. Entropy schedule
 
-Under ideal refinement:
+A refinement schedule may reduce the number of unresolved positions. The marginal entropy of $`X^{(k)}`$ is not generally monotone: a deterministic all-MASK state has zero entropy, while the generated text distribution can have positive entropy.
 
-```math
-H(X^{(k+1)})\lt H(X^{(k)})
-```
-
-on average, as uncertainty is removed.
-
-But collapsing entropy too early can cause premature commitment; keeping it high for too long creates instability.
+Any entropy diagnostic must specify its random variable and conditioning. Sharpening token-choice distributions too early can cause premature commitment; maintaining excessive uncertainty late in decoding can hinder convergence.
 
 This is analogous to annealing, but the concrete implementation matters.
 
@@ -1039,11 +1037,13 @@ If the model generates $`T_r`$ intermediate tokens and $`T_a`$ answer tokens:
 T_{total}=T_r+T_a
 ```
 
-Runtime:
+For prompt length $`P`$ and a full KV cache with fixed layout and precision:
 
 ```math
-KV,latency,energy\propto T_{total}
+M_{KV}\approx c(P+T_{total})
 ```
+
+Here $`c`$ is the storage per cached token; caches with eviction or a sliding window use the number of retained tokens instead. Generation latency and energy are approximately linear in generated length only when average time and energy per generated token remain stable. Growing attention prefixes and changing execution regimes can invalidate that approximation.
 
 Test-time compute buys search/reflection, not new parametric capacity.
 

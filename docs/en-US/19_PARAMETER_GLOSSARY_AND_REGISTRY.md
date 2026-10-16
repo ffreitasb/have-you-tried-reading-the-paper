@@ -2,7 +2,7 @@
 title: Parameter Glossary & Canonical Registry — SOTA++ 2026
 aliases: [Parameter Registry, AI Glossary, Datasheet Data Dictionary]
 tags: [ai, reference, glossary, parameters, ontology, data-dictionary]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Parameter Glossary & Canonical Registry — SOTA++ 2026
@@ -43,6 +43,7 @@ See [CONVENTIONS](CONVENTIONS.md) for editorial and notation rules.
 | `DISTILL` | distillation | how is knowledge transferred? |
 | `MERGE` | model merging | how are checkpoints/deltas combined? |
 | `GEN` | generative process | AR, diffusion, flow, masked refinement, etc. |
+| `COND` | conditioning | what input or representation conditions the prediction? |
 | `INF` | inference | what operator/control runs at use time? |
 | `STATE` | persistent state | what grows or persists? |
 | `BACKEND` | runtime | how is computation implemented? |
@@ -110,7 +111,7 @@ Never write only “temperature” in a cross-domain document.
 
 | Term | Meaning |
 |---|---|
-| Diffusion/flow steps | evaluations / integration trajectory |
+| Diffusion/flow steps | integration updates along the solver trajectory; distinct from model-evaluation count |
 | Training steps | optimizer updates |
 | Agent steps | observe/act iterations |
 | Reasoning/search steps | inference/search budget |
@@ -200,7 +201,7 @@ Primary file: [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERE
 | typical-p | `INF` | filters by typicality/self-information | $`0<p\le1`$ |
 | top-n-sigma | `INF` | threshold based on the logit distribution | backend-specific |
 | XTC | `INF` | exclusion/candidate-pruning sampler | backend-specific |
-| adaptive-p | `INF` | adaptive cutoff with state/EMA | backend-specific |
+| adaptive-p | `INF` | reweights probabilities around an adaptive target, using an EMA of the original probabilities of selected tokens | backend-specific; [llama.cpp implementation](https://github.com/ggml-org/llama.cpp/pull/17927), record version |
 | repetition penalty | `INF` | modifies logits of repeated tokens | ratio/factor |
 | frequency penalty | `INF` | penalty proportional to frequency | scale |
 | presence penalty | `INF` | penalty for binary presence | scale |
@@ -272,7 +273,8 @@ File: [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSI
 | timestep $`t`$ | `GEN` | trajectory coordinate |
 | sigma $`\sigma_t`$ | `GEN` | noise level |
 | alpha $`\alpha_t`$ | `GEN` | signal coefficient |
-| steps / NFE | `INF` | number of evaluations/integration steps |
+| integration steps | `INF` | number of solver updates along the integration grid |
+| NFE_model | `INF` | model evaluations per generated sample, including separate guidance branches |
 | scheduler | `INF` | locations $`t_i/\sigma_i`$ on the integration grid |
 | solver/sampler | `INF` | numerical stepping rule between points |
 | CFG scale | `INF` | conditional/unconditional extrapolation |
@@ -292,9 +294,11 @@ File: [04_IMAGE_GENERATION_DIFFUSION_FLOW_DATASHEET](04_IMAGE_GENERATION_DIFFUSI
 |---|---|
 | Scheduler | **where** along the trajectory do we evaluate? |
 | Solver | **how** do we advance between evaluations? |
-| NFE | how many times is the model/vector field called? |
+| NFE_model | how many model evaluations are performed per generated sample, counting each guidance branch? |
 | Ancestral step | does it inject a stochastic component during the trajectory? |
 | Deterministic ODE step | does it integrate the field without extra noise injection? |
+
+Here, `NFE` means `NFE_model`: each conditioning/guidance branch counts separately even when branches are concatenated into one batched forward call. Integration steps, guided-field evaluations, and model evaluations can differ. For example, the [EDM Heun sampler](https://github.com/NVlabs/edm/blob/main/generate.py) uses 35 model evaluations for 18 integration steps, without additional guidance branches. This count tracks model work; batching, tensor shapes, and precision affect FLOPs and wall time, which must be reported separately.
 
 Never use `sampler/scheduler` as generic synonyms.
 
@@ -329,10 +333,11 @@ File: [06_AUDIO_MUSIC_TTS_GENERATION_DATASHEET](06_AUDIO_MUSIC_TTS_GENERATION_DA
 |---|---|---|
 | sample rate | `MODEL/PIPE` | samples per second |
 | hop length | `MODEL` | STFT/mel-frame stride |
-| FFT size | `MODEL/PIPE` | spectral window size |
+| FFT size | `MODEL/PIPE` | number of FFT points (`n_fft`); may exceed window length through zero padding |
+| window length | `MODEL/PIPE` | analysis-window length in samples (`win_length`), distinct from [FFT size](https://docs.pytorch.org/docs/2.8/generated/torch.stft.html) |
 | mel bins | `MODEL` | mel-spectrogram dimensionality |
 | codec frame rate | `MODEL` | latent/codec frames per second |
-| codebooks | `ARCH/MODEL` | parallel quantizers in a neural codec |
+| codebooks | `ARCH/MODEL` | code-vector dictionaries; in [RVQ](https://arxiv.org/abs/2210.13438), successive stages quantize the residual left by earlier stages |
 | bitrate | `MODEL/PIPE` | represented bits per second |
 | duration | `INF/PIPE` | generation horizon |
 | speaker embedding | `STATE/COND` | conditioning representation of speaker identity |
@@ -416,7 +421,7 @@ File: [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKE
 |---|---|---|
 | embedding dimension $`d`$ | `MODEL` | vector dimensionality |
 | pooling | `MODEL/PIPE` | sequence → vector |
-| L2 normalization | `PIPE/MODEL` | $`z/\Vert z\Vert`$ |
+| L2 normalization | `PIPE/MODEL` | $`z/\Vert z\Vert`$ for nonzero z; numerical implementations must specify an [epsilon or zero-vector policy](https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.normalize.html) |
 | cosine similarity | `INF` | normalized angular similarity |
 | dot product | `INF` | inner product |
 | contrastive temperature $`\tau`$ | `TRAIN/OBJ` | sharpness of the contrastive loss |
@@ -591,7 +596,7 @@ File: [16_TRAINING_ALIGNMENT_ADAPTATION_DATASHEET](16_TRAINING_ALIGNMENT_ADAPTAT
 | GRPO group size | samples per prompt for relative advantages |
 | reward std | signal diversity within the group |
 | rollout length | generated response/action horizon |
-| clipping epsilon | trust-region-like update bound |
+| clipping epsilon | probability-ratio clipping band in the [PPO surrogate objective](https://arxiv.org/abs/1707.06347); does not guarantee a hard bound on parameter changes or KL |
 | GSPO sequence ratio | likelihood ratio normalized by sequence length |
 | RLVR | reinforcement learning with verifiable reward |
 
@@ -680,7 +685,8 @@ File: [17_EVALUATION_BENCHMARK_EXPERIMENTATION_DATASHEET](17_EVALUATION_BENCHMAR
 |---|---|
 | sample mean $`\bar x`$ | estimate of the mean |
 | sample variance $`s^2`$ | dispersion estimate |
-| standard error | $`s/\sqrt N`$ |
+| standard error | standard deviation of a statistic's sampling distribution |
+| estimated standard error of the mean | $`s/\sqrt N`$ for N iid observations with finite variance; s is the sample standard deviation ([NIST](https://www.itl.nist.gov/div898/handbook/eda/section3/eda352.htm)); dependent observations require a design-appropriate variance estimator |
 | confidence interval | interval estimate |
 | bootstrap | resampling with replacement |
 | paired comparison | same unit evaluated by A and B |
@@ -801,8 +807,13 @@ FLOP/s and tokens/s measure different things.
 
 ## Time
 
+Duration:
+
 - ms;
-- s;
+- s.
+
+Rates (counts per unit time):
+
 - frames/s;
 - samples/s;
 - tokens/s.

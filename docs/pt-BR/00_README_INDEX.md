@@ -2,7 +2,7 @@
 title: Foundation Model Engineering Datasheets — SOTA++ 2026
 aliases: [AI Datasheets SOTA++ 2026, Foundation Models Engineering Reference]
 tags: [ai, referencia, engenharia, inferencia, treinamento, avaliacao, seguranca, foundation-models, local-ai]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Foundation Model Engineering Datasheets — SOTA++ 2026
@@ -128,6 +128,7 @@ Cada parâmetro deve ser lido com sua camada de origem.
 | `DISTILL` | distillation | teacher temperature, on-policy KD |
 | `MERGE` | model merging | TIES density, merge weights |
 | `GEN` | processo generativo | AR, masked refinement, diffusion |
+| `COND` | condicionamento | speaker embedding, imagem de referência, sinal de controle |
 | `INF` | inferência | temperature, min-p, solver |
 | `STATE` | estado persistente | KV cache, rollout state |
 | `BACKEND` | runtime | KV dtype, GPU offload |

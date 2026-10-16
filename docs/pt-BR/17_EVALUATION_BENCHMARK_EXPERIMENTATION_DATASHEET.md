@@ -2,7 +2,7 @@
 title: Evaluation, Benchmarking & Experimentation Datasheet — SOTA++ 2026
 aliases: [Evaluation Datasheet, Benchmarking Datasheet, AI Experimentation Reference]
 tags: [ai, referencia, avaliacao, benchmarks, experimentacao, estatistica, reproducibilidade]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Evaluation, Benchmarking & Experimentation Datasheet — SOTA++ 2026
@@ -243,7 +243,7 @@ F1=
 2\frac{Precision\cdot Recall}{Precision+Recall}
 ```
 
-Macro e micro averaging respondem perguntas diferentes.
+Macro e micro averaging respondem perguntas diferentes. Essas razões exigem denominadores não nulos; declare como casos indefinidos são pontuados ou excluídos antes de calcular médias.
 
 ---
 
@@ -313,6 +313,8 @@ MRR
 \frac1{rank_i}
 ```
 
+Aqui $`rank_i`$ é a posição do primeiro resultado relevante para a consulta $`i`$; sua contribuição de reciprocal rank é zero quando nenhum resultado relevante é recuperado.
+
 ## DCG
 
 ```math
@@ -329,6 +331,8 @@ NDCG@K
 =
 \frac{DCG@K}{IDCG@K}
 ```
+
+Declare a política para consultas sem documentos relevantes ou com DCG ideal zero, e para menos de $`K`$ resultados retornados; essas escolhas afetam médias e comparabilidade.
 
 Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -370,6 +374,8 @@ P(correct|confidence=p)\approx p
 ```
 
 ## Brier score
+
+Para outcomes binários $`y_i\in\{0,1\}`$ e probabilidades previstas $`p_i`$ do outcome 1:
 
 ```math
 BS=
@@ -572,14 +578,14 @@ com incerteza.
 
 # 20. Standard error
 
-Para média:
+Para $`N`$ observações independentes com média comum e variância comum finita, o erro-padrão estimado da média é:
 
 ```math
 SE=
 \frac{s}{\sqrt N}
 ```
 
-Crescer $`N`$ reduz incerteza aproximadamente como:
+Sob essas hipóteses, aumentar o número de observações independentes reduz a incerteza aproximadamente como:
 
 ```math
 1/\sqrt N
@@ -601,11 +607,15 @@ CI
 z_{\alpha/2}SE
 ```
 
+Aqui $`z_{\alpha/2}=\Phi^{-1}(1-\alpha/2)`$ é o valor crítico positivo de cauda superior da normal padrão, para $`0<\alpha<1`$; $`\Phi`$ é sua CDF.
+
 Para muitos benchmarks, bootstrap é mais flexível.
 
 ---
 
 # 22. Bootstrap
+
+Primeiro defina a estatística, a população-alvo e a unidade de amostragem. Para exemplos independentes:
 
 1. amostrar exemplos com reposição;
 2. recalcular métrica;
@@ -616,7 +626,7 @@ Para muitos benchmarks, bootstrap é mais flexível.
 \{\hat\theta_1^*,\ldots,\hat\theta_B^*\}
 ```
 
-Útil para métricas sem fórmula simples de variância.
+Útil para métricas sem fórmula simples de variância. Para observações agrupadas ou dependentes, escolha reamostragem por cluster/bloco ou modelo estatístico compatível com o desenho amostral e o estimando; não trate toda linha item/seed como independente. Preserve pares A/B ao reamostrar comparações pareadas. Bootstrap hierárquico só é apropriado quando sua hierarquia corresponde a esse desenho.
 
 ---
 
@@ -740,7 +750,7 @@ Isso mostra se resultado é dominado por:
 - alguns itens;
 - randomness.
 
-Macro-average pode esconder tudo isso.
+Macro-average pode esconder tudo isso. Use o desenho amostral e a população-alvo para escolher a unidade independente das estimativas de incerteza nas seções 20–22; repetir seeds no mesmo item não cria novos itens independentes.
 
 ---
 
@@ -1037,17 +1047,19 @@ Gere:
 y_1,\ldots,y_N
 ```
 
-Selecione:
+Selecione usando uma regra fixa de desempate:
 
 ```math
-y^*=\arg\max_i V(y_i)
+i^*=\arg\max_{i\in\{1,\ldots,N\}} V(y_i),\qquad y^*=y_{i^*}
 ```
 
-Score cresce com:
+Score depende de:
 
 - generator diversity;
 - N;
 - verifier quality.
+
+Com verificador fixo e conjuntos candidatos ampliados por inclusão, o máximo do score proxy não diminui. A qualidade real da tarefa pode cair por erro do verificador ou sobreotimização; maior diversidade também não garante ganho.
 
 Atribuir todo ganho ao generator é erro causal.
 
@@ -1075,6 +1087,8 @@ Tempo médio por token depois do primeiro.
 TPS=
 \frac{N_{generated}}{T_{decode}}
 ```
+
+Conte apenas tokens produzidos na janela declarada $`T_{decode}`$. Se medir da chegada do primeiro token $`t_1`$ à chegada do último $`t_N`$, a taxa é $`(N-1)/(t_N-t_1)`$ para $`N>1`$, excluindo o primeiro token da contagem. Informe a janela separadamente do tempo total do request.
 
 ## Throughput
 
@@ -1184,7 +1198,7 @@ Quality/Second
 Quality/TokenBudget
 ```
 
-especialmente para comparar quantizações e model sizes.
+especialmente para comparar quantizações e model sizes. Essas razões exigem uma métrica de qualidade declarada, com zero significativo, e denominador de orçamento positivo. Para scores com origem arbitrária, use análise de Pareto ou ganhos explicitamente definidos sobre um baseline; deslocar a origem do score pode inverter rankings por razão.
 
 ---
 

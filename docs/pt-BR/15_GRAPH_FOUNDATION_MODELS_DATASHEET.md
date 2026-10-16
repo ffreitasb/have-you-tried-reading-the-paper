@@ -1,7 +1,7 @@
 ---
 title: Graph Foundation Models Datasheet v1.0
 tags: [ai, graph, gnn, graph-transformer, foundation-models, message-passing]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Graph Foundation Models Datasheet v1.0
@@ -129,7 +129,7 @@ Mas vizinhança pode crescer exponencialmente:
 |N_L(v)|\sim d^L
 ```
 
-para grau médio $`d`$, antes de sobreposição.
+com $`d`$ como fator de ramificação efetivo em regime aproximadamente homogêneo e semelhante a árvore. Grau médio, sozinho, não limita a vizinhança de um nó: um hub pode ser muito maior. Limites exigem grau máximo ou fanouts explícitos de sampling, contabilizando nós repetidos.
 
 Isso cria problemas de memória/sampling.
 
@@ -219,7 +219,7 @@ How\ is\ topology\ represented\ to\ attention?
 
 # 10. Laplacian positional encoding
 
-Adjacency $`A`$, degree $`D`$.
+Nesta construção, assuma grafo não dirigido com adjacência simétrica não negativa $`A`$, graus $`d_i=\sum_jA_{ij}`$ e $`D=diag(d_i)`$. A fórmula com inverso dos graus abaixo assume inicialmente $`d_i>0`$ para todo nó; grafos assinados ou dirigidos exigem construção específica adequada.
 
 Graph Laplacian:
 
@@ -232,6 +232,14 @@ ou normalizado:
 ```math
 L_{sym}=I-D^{-1/2}AD^{-1/2}
 ```
+
+Para incluir vértices isolados, defina $`S`$ diagonal por $`S_{ii}=d_i^{-1/2}`$ quando $`d_i>0`$ e $`S_{ii}=0`$ nos demais casos, e use:
+
+```math
+L_{sym}=S(D-A)S
+```
+
+Essa convenção produz linhas/colunas nulas nos vértices isolados, inclusive diagonal zero; coincide com a fórmula anterior nos nós de grau positivo.
 
 Eigenvectors:
 
@@ -249,13 +257,13 @@ Eigenvectors possuem ambiguidades de sinal e degeneracies; arquitetura precisa t
 
 # 11. Random-walk structural encoding
 
-Transition matrix:
+Com pesos de linha não negativos $`A_{ij}`$, faça $`D`$ conter as somas das linhas (graus de saída em grafo dirigido). Se todos os graus de saída forem positivos, a matriz de transição é:
 
 ```math
 P=D^{-1}A
 ```
 
-Probabilidades de retorno/visita após $`k`$ passos:
+Se houver graus de saída zero, normalize cada linha de grau positivo como $`P_{ij}=A_{ij}/d_i`$ e atribua a cada nó de grau zero uma linha absorvente: $`P_{ii}=1`$ e $`P_{ij}=0`$ para $`j\ne i`$. Outras políticas para dangling nodes devem ser declaradas. Cada linha passa a somar um; pesos negativos não podem ser usados diretamente como probabilidades de transição. As entradas abaixo dão probabilidades de transição após $`k`$ passos (a diagonal contém probabilidades de retorno):
 
 ```math
 P^k
@@ -327,8 +335,16 @@ Exemplos:
 # 15. Edge / link prediction
 
 ```math
-P((u,v)\in E|G)
+G_{obs}=(V,E_{obs},X),\quad Y_{uv}=\mathbf 1[(u,v)\in E_{target}]
 ```
+
+Aqui $`X`$ contém apenas atributos disponíveis ao preditor; $`E_{obs}`$ é seu contexto observado e $`E_{target}`$ define rótulos de predição. Modele:
+
+```math
+p_\theta(Y_{uv}=1\mid G_{obs},u,v)
+```
+
+Declare splits de arestas de treino/validação/teste e calcule embeddings a partir do contexto permitido. Oculte as arestas alvo avaliadas, inclusive cópias reversas de relações não dirigidas, do message passing e de features derivadas. Predição temporal usa somente informação disponível até o cutoff para prever arestas posteriores. Condicionar no grafo completo que já contém a aresta consultada tornaria conhecida sua pertinência.
 
 Score simples:
 
@@ -390,10 +406,10 @@ O estado não é uma sequência natural; qualquer serialização impõe ordem ar
 
 # 18. Autoregressive graph generation
 
-Uma serialização possível:
+Para uma serialização discreta válida e terminante $`S=(action_1,\ldots,action_T)`$, incluindo a ação stop:
 
 ```math
-p(G)=\prod_t p(action_t|action_{\lt t})
+p(S)=\prod_{t=1}^{T}p(action_t|action_{\lt t})
 ```
 
 com ações:
@@ -403,7 +419,13 @@ com ações:
 - set attribute;
 - stop.
 
-Problema: diferentes ordens podem representar o mesmo grafo.
+Diferentes ordens de ações podem representar o mesmo grafo. Para um modelo com suporte em sequências válidas e terminantes, o marginal do grafo é:
+
+```math
+p(G)=\sum_{S:decode(S)=G}p(S)
+```
+
+O decoder deve fixar o que conta como o mesmo grafo (incluindo eventual equivalência por renomeação dos nós). Identificar esse marginal com a probabilidade de uma única sequência exige bijeção canônica e suporte do modelo restrito a sequências canônicas; escolher uma ordem de treino, sozinho, não estabelece essa identidade.
 
 ---
 
@@ -508,13 +530,19 @@ Fanout:
 K_1,K_2,\ldots,K_L
 ```
 
-Sampled receptive field aproximadamente:
+Para uma raiz, o último salto de uma árvore completa de sampling contém:
 
 ```math
-N_{sample}\sim\prod_lK_l
+N_{leaf}=\prod_{l=1}^{L}K_l
 ```
 
-antes de overlap.
+O total de todos os saltos, incluindo a raiz, é:
+
+```math
+N_{tree}=1+\sum_{l=1}^{L}\prod_{j=1}^{l}K_j
+```
+
+São ocorrências na árvore de sampling com todos os fanouts preenchidos. A contagem de nós distintos pode ser menor por sobreposição, amostras repetidas ou grau insuficiente; múltiplas raízes também podem compartilhar nós. Apenas o último produto é aproximação de ordem dominante somente em regimes adequados de fanout/profundidade.
 
 Trade-off:
 
@@ -555,7 +583,7 @@ Edge states:
 M_E\approx |E|d_eb
 ```
 
-Attention global sobre todos os nodes:
+Aqui $`b`$ é o número de bytes por escalar armazenado. Essas estimativas contam um conjunto de representações de nós/arestas; ativações por camada, gradientes, estado do otimizador, índices de adjacência e mensagens materializadas são custos separados. Attention global sobre todos os nodes possui contagem de pares:
 
 ```math
 O(|V|^2)
@@ -563,13 +591,13 @@ O(|V|^2)
 
 é rapidamente inviável.
 
-Graph structure permite sparse attention/message passing próximo de:
+Para largura d e números de camadas/heads fixos, mistura de atenção esparsa ou agregação sobre arestas custa:
 
 ```math
 O(|E|d)
 ```
 
-em muitos regimes.
+Essa conta exclui projeções, tipicamente $`O(|V|d^2)`$, e funções de mensagem aprendidas; um MLP denso de largura d por aresta pode acrescentar $`O(|E|d^2)`$. Materializar todas as mensagens pode consumir memória $`O(|E|d)`$, enquanto implementações fundidas podem evitar esse tensor. Estimativas de compute e de estado armazenado são grandezas distintas.
 
 ---
 

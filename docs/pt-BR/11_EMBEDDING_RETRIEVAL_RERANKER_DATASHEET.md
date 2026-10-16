@@ -1,7 +1,7 @@
 ---
 title: Embedding / Retrieval / Reranker Datasheet v1.0
 tags: [ai, embeddings, retrieval, rag, reranker, vector-search, ann]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Embedding / Retrieval / Reranker Datasheet v1.0
@@ -37,7 +37,7 @@ Encoder:
 f_\theta(x)=z\in\mathbb R^d
 ```
 
-Para normalização L2:
+Para normalização L2 de vetor não nulo (vetor zero exige política explícita de rejeição/fallback):
 
 ```math
 \hat z=\frac{z}{\|z\|_2}
@@ -105,7 +105,7 @@ z=\frac{1}{T}\sum_th_t
 z=\sum_t\alpha_th_t
 ```
 
-Pooling é parte do modelo; não deve ser trocado arbitrariamente sem respeitar o training recipe.
+Nessas somas, mascare padding e faça $`T`$ contar os tokens incluídos. Para attention pooling convexo, $`\alpha_t\ge0`$ e $`\sum_t\alpha_t=1`$ nos tokens incluídos; outros weighted poolings devem especificar seus coeficientes. Pooling é parte do modelo; não deve ser trocado arbitrariamente sem respeitar o training recipe.
 
 ---
 
@@ -201,7 +201,7 @@ SearchBW\downarrow,
 Quality\downarrow\ potential
 ```
 
-Útil para escolher custo sem retreinar.
+Útil para escolher custo sem retreinar. Se o score depende de normas unitárias, renormalize o prefixo não nulo após o truncamento: um prefixo de vetor unitário geralmente não tem norma unitária.
 
 ---
 
@@ -269,7 +269,7 @@ ou combine ranks via Reciprocal Rank Fusion:
 RRF(d)=\sum_m\frac{1}{k+rank_m(d)}
 ```
 
-RRF evita calibrar escalas de scores diretamente.
+Ranks começam em 1 e $`k>0`$ é uma constante de suavização. Documento ausente de uma lista truncada contribui zero nessa lista. RRF evita calibrar escalas de scores diretamente.
 
 ---
 
@@ -283,7 +283,7 @@ D=(d_1,\ldots,d_n)
 
 mantemos embeddings por token/subvector.
 
-ColBERT-like MaxSim:
+ColBERT-like MaxSim, com normalização e máscaras de tokens do training recipe (o ColBERT original usa embeddings de tokens normalizados em L2):
 
 ```math
 score(Q,D)=
@@ -333,6 +333,8 @@ Bi-encoder:
 O(1)\ embedding/query + ANN
 ```
 
+Aqui O(1) conta uma chamada de encoder por query, independente do tamanho do corpus; seu compute ainda depende do comprimento da query e da arquitetura do encoder.
+
 Cross-encoder para $`K`$ candidatos:
 
 ```math
@@ -375,7 +377,7 @@ Busca exata sobre $`N`$ vetores de dimensão $`d`$:
 O(Nd)
 ```
 
-ANN troca exatidão por latência/memória.
+ANN troca exatidão por latência/memória. Recall de ANN mede a recuperação dos vizinhos da busca exata sob uma métrica fixa; recall de relevância na §22 mede a recuperação de documentos rotulados como relevantes. São alvos distintos.
 
 ---
 
@@ -499,6 +501,8 @@ Isso aumenta semantic specificity, mas pode introduzir informação não present
 
 # 22. Retrieval metrics
 
+Use ranks começando em 1 e $`K\ge1`$. Seja $`Relevant`$ o conjunto de documentos julgados relevantes; especifique o cutoff avaliado e o tratamento dos documentos não julgados. Posições não retornadas contam como não relevantes em Precision@K.
+
 ## Recall@K
 
 ```math
@@ -519,6 +523,8 @@ Precision@K=
 RR=\frac{1}{rank_{first\ relevant}}
 ```
 
+quando um resultado relevante é encontrado; RR = 0 quando nenhum é encontrado no ranking/cutoff avaliado.
+
 ## MRR
 
 ```math
@@ -533,7 +539,7 @@ DCG@K=
 \frac{2^{rel_i}-1}{\log_2(i+1)}
 ```
 
-nDCG normaliza pelo ranking ideal.
+nDCG@K = DCG@K / IDCG@K quando IDCG@K é positivo. Recall@K é indefinido quando $`|Relevant|=0`$, e essa razão nDCG é indefinida quando IDCG@K = 0. O protocolo deve declarar se essas queries são excluídas ou recebem uma convenção explícita (como zero), aplicá-la consistentemente e informar suas contagens e o denominador da agregação.
 
 ---
 
@@ -561,19 +567,19 @@ Threshold^*=argmax\ Metric(Threshold)
 
 # 24. RAG failure decomposition
 
-Erro final pode ser:
+Para um conjunto não vazio de documentos relevantes $`R=Relevant`$, os dois primeiros casos abaixo descrevem falhas totais. Perda parcial de evidência também pode importar quando a tarefa exige vários documentos. Erro final pode ser:
 
 ### Retrieval miss
 
 ```math
-Relevant\notin TopK
+R\cap TopK=\varnothing
 ```
 
 ### Reranker miss
 
 ```math
-Relevant\in TopK,
-Relevant\notin Topk_{reranked}
+R\cap TopK\ne\varnothing,
+R\cap Topk_{reranked}=\varnothing
 ```
 
 ### Context packing miss

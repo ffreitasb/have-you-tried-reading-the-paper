@@ -20,7 +20,7 @@ def main():
         print(f"ERROR: {error}")
     if errors:
         return 1
-    print(f"PASS: {count} math expressions; preserved prose/TeX; native Arithmatex rendering")
+    print(f"PASS: {count} math expressions; prose/TeX match reviewed baseline; native Arithmatex rendering")
     return 0
 
 

@@ -31,13 +31,16 @@ A new product/model name is not automatically a new mathematical category.
    ```sh
    python -m venv .venv
    # Activate .venv using your shell's standard activation command.
-   python -m pip install -r scripts/requirements-validation.txt
+   python -m pip install -r scripts/requirements-validation.txt -r scripts/requirements-rendering.txt
    python scripts/validate_repository.py
    python -m unittest discover -s scripts -p "test_*.py"
+   python scripts/verify_math_rendering.py
    cffconvert --validate -i CITATION.cff
    ```
 
 The validator is read-only. It checks structure, local links and deterministic fragments, text hygiene, citation metadata, and the Zenodo mirror when present. External references have a separate weekly/manual workflow with a downloadable report; network failures do not establish that a technical claim is wrong.
+
+Intentional scientific edits also need a reviewed content-revision entry; do not regenerate historical hashes just to pass a check. Follow [mathematical rendering maintenance](scripts/MATH_RENDERING.md) to record the bilingual correction and validate its presentation separately from its meaning.
 
 Do not commit editor state, agent memory, credentials, or local build output. Report active security problems privately through the [security policy](SECURITY.md). Community participation follows the [code of conduct](CODE_OF_CONDUCT.md).
 

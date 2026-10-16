@@ -1,7 +1,7 @@
 ---
 title: Local AI Inference & Runtime Datasheet v2.0 — VRAM, State, Retrieval, Multimodal and Parallel Inference
 tags: [ai, local-ai, gguf, quantization, vram, inference, multimodal, retrieval, runtime]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Local AI Inference & Runtime Datasheet v2.0
@@ -257,7 +257,7 @@ MLA vai além, comprimindo K/V em latentes aprendidos.
 
 ## 11. MoE: compute ativo ≠ storage total
 
-Para top-k routed MoE:
+Para uma variante esquemática de MoE roteado top-k (ativação do gate, normalização dos pesos selecionados e experts compartilhados dependem da arquitetura):
 
 ```math
 y=\sum_{i\in TopK(g(x))}g_i(x)E_i(x)
@@ -543,7 +543,7 @@ Patchification idealizada:
 N_v\approx\frac{H}{P_h}\frac{W}{P_w}
 ```
 
-Após merge fator $`m`$:
+Após merge com fator de contagem de tokens $`m`$ (tokens de entrada por token de saída; um merge espacial $`k\times k`$ tem $`m=k^2`$):
 
 ```math
 N'_v\approx\frac{N_v}{m}
@@ -617,7 +617,7 @@ Exemplo:
 M_{vec}\approx4.096GB
 ```
 
-antes de graph/IVF/PQ/metadata overhead.
+para os vetores brutos, antes das estruturas do índice e metadados. Códigos PQ podem substituir os vetores FP32 no índice, em vez de apenas acrescentar overhead: dimensione códigos, codebooks, IDs e estruturas separadamente, somando os vetores originais somente se forem retidos. Os 4.096 GB acima usam GB decimal.
 
 ---
 
@@ -646,13 +646,13 @@ Com $`K`$ candidatos:
 C_{rerank}\approx K\cdot C_{cross-encoder}
 ```
 
-Batching melhora utilization:
+Batching pode melhorar utilization:
 
 ```math
 Throughput_{batch}\uparrow
 ```
 
-mas aumenta latency/VRAM peak.
+Batches maiores podem aumentar o pico de VRAM. Batching entre consultas pode acrescentar espera em fila, enquanto agrupar candidatos de uma mesma consulta pode reduzir sua latência total de reranking. Informe o regime de batching e a medida de latência usados.
 
 Pipeline sizing deve medir:
 
@@ -806,13 +806,19 @@ Point tokens:
 N=T
 ```
 
-Patch size $`P`$:
+Para patches sem sobreposição, de comprimento $`P`$ e stride $`S=P`$:
 
 ```math
 N\approx T/P
 ```
 
-Patching reduz atenção e memória, mas perde resolução local.
+Em geral, sem padding, para $`T\ge P`$ e stride inteiro positivo $`S`$:
+
+```math
+N=\left\lfloor\frac{T-P}{S}\right\rfloor+1
+```
+
+Padding altera a contagem. Quando patching reduz o número de tokens, reduz o custo de atenção e a resolução temporal no eixo de tokens; a perda de informação dentro de um patch depende da projeção/compressão, não do agrupamento por si só.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Video Generation — Spatiotemporal Latent Datasheet v2.0
 tags: [ai, video, diffusion, flow, temporal, dit]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Video Generation — Spatiotemporal Latent Datasheet v2.0
@@ -76,10 +76,10 @@ Por isso vídeo exige:
 Todos os frames/latentes fazem parte do mesmo estado:
 
 ```math
-Z_t=[z_t^1,z_t^2,\ldots,z_t^T]
+Z_t=[z_t^1,z_t^2,\ldots,z_t^{T_l}]
 ```
 
-O modelo pode denoise/transportar a sequência conjuntamente.
+Aqui $`t`$ é o tempo de difusão/flow, enquanto o sobrescrito indexa as $`T_l`$ posições temporais latentes após a compressão. O modelo pode denoise/transportar a sequência conjuntamente.
 
 ### Consequência
 
@@ -232,6 +232,8 @@ Em modelos conjuntos vídeo+áudio, uma prediction pode ser obtida com cross-mod
 f_{guided}=f+ s_m(f-f_{isolated})
 ```
 
+Aqui $`s_m`$ é um coeficiente abstrato de contraste: zero desativa esse termo. Ele não precisa coincidir com um slider da API; por exemplo, o `modality_scale` documentado do LTX-2 desativa isolation guidance em 1.0. Conferir a convenção do pipeline ao mapear controles para esta equação.
+
 Isso mostra que guidance é uma família geral de **contrastes entre predictions**, não apenas prompt positivo vs negativo.
 
 ---
@@ -296,7 +298,7 @@ com overlap:
 |W_i\cap W_{i+1}|>0
 ```
 
-Maior overlap aumenta continuidade e compute.
+Maior overlap pode ajudar a continuidade e costuma adicionar computação repetida para uma duração de saída fixa. O benefício depende de como as janelas são condicionadas e combinadas; a continuidade não melhora necessariamente de forma monotônica.
 
 ---
 
@@ -319,13 +321,13 @@ A solução correta depende da topology, não de uma regra como “cortar o últ
 
 ## 17. Camera vs object motion
 
-Idealmente decompor:
+Decomposição conceitual das fontes de movimento (a soma abaixo é esquemática, não uma identidade aditiva geral para movimento no plano da imagem):
 
 ```math
 Motion_{observed}=Motion_{camera}+Motion_{objects}+deformation
 ```
 
-Promptar tudo como uma frase deixa o modelo inferir a decomposição. Control representations podem reduzir ambiguidade.
+A projeção depende conjuntamente de geometria, profundidade, pose da câmera e movimento dos objetos. Promptar tudo como uma frase deixa o modelo inferir esses fatores; control representations podem reduzir ambiguidade.
 
 ---
 
@@ -340,7 +342,7 @@ N=T_pH_pW_p
 Dobrar duração mantendo tudo:
 
 ```math
-N\approx2N
+N_{new}\approx2N_{old}
 ```
 
 Atenção global ingênua:
@@ -358,8 +360,10 @@ Esse é o motivo estrutural para compressão e atenção fatorada.
 CFG + STG + modality guidance podem exigir múltiplos forwards por step.
 
 ```math
-Cost\approx NFE\times passes_{guidance}\times C_{forward}
+Cost_{model}\approx\sum_{j=1}^{NFE_{model}}C_j\approx NFE_{model}\,C_{forward}
 ```
+
+Aqui custo significa computação do modelo por amostra gerada. $`NFE_{model}`$ conta cada avaliação do modelo, incluindo branches separados de guidance, uma única vez; $`C_j`$ é seu trabalho e $`C_{forward}`$ supõe trabalho comparável por branch. Não multiplicar novamente pela quantidade de branches de guidance. Por exemplo, 20 steps Euler com dois branches de CFG exigem 40 avaliações do modelo. Colocar esses branches em batch pode mudar tempo de execução e memória sem eliminar seu trabalho aritmético.
 
 Um slider de guidance pode portanto alterar **qualidade e custo**.
 
@@ -367,9 +371,11 @@ Um slider de guidance pode portanto alterar **qualidade e custo**.
 
 # PARTE IX — COUPLING MATRIX
 
+Tendências qualitativas dentro de um regime de operação adequado; as setas não são garantias de monotonicidade. Riscos ligados à duração referem-se à perda de coerência ou identidade em sequências mais longas.
+
 | Controle ↑ | Motion freedom | Temporal coherence | Compute | Identity |
 |---|---:|---:|---:|---:|
-| duration | — | risco ↑ | ↑ forte | risco ↓ |
+| duration | — | risco de drift pode ↑ | ↑ forte | risco de drift pode ↑ |
 | resolution | — | risco indireto | ↑ forte | potencial ↑ |
 | I2V reference weight | ↓ | ↑ | varia | ↑ |
 | CFG | aderência ↑ | não monotônico | ↑ | pode ↑/↓ |

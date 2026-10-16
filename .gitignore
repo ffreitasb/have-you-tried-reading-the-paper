@@ -1,6 +1,8 @@
 PRD_REPOSITORY_BOOTSTRAP_ZENODO_V1.md
+PRD_2_GITHUB_PAGES_MKDOCS_RTFM.md
 
 # Local agent state and workspace tools
+/AGENTS.md
 .claude-flow/
 .repowise/
 .kilo/

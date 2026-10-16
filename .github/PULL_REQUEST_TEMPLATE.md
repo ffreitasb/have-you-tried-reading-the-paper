@@ -15,8 +15,11 @@ Link primary/authoritative sources with relevant sections, equations, or reprodu
 ## Validation
 
 - [ ] Repository validator passes.
+- [ ] Regression tests and `python scripts/verify_math_rendering.py` pass.
+- [ ] Intentional corpus edits have a reviewed content-revision entry; historical preservation hashes were retained.
 - [ ] Local links and relevant fragments were checked.
 - [ ] CFF validation passes if citation metadata changed.
+- Changed mathematical markup or expressions: describe parser/browser checks and their limits separately from the evidence supporting the technical claims.
 - External reference checks and any network limitations:
 
 ## AI assistance

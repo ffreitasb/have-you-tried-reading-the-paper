@@ -1,7 +1,7 @@
 ---
 title: World Model / VLA / Embodied AI Datasheet v1.0
 tags: [ai, world-model, vla, robotics, embodied-ai, control, policy, planning]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # World Model / VLA / Embodied AI Datasheet v1.0
@@ -130,7 +130,7 @@ z_t\rightarrow \hat v_t
 Predicts future image/video:
 
 ```math
-p(I_{t+1:t+H}|I_{\le t},a_{t:t+H})
+p(I_{t+1:t+H}|I_{\le t},a_{t:t+H-1})
 ```
 
 Pros:
@@ -177,13 +177,13 @@ s_{t+1}\sim p_\theta(s|s_t,a_t)
 
 Real worlds have multiple plausible futures.
 
-When uncertainty matters, a single mean prediction can be dangerous:
+When uncertainty matters, a single mean prediction can be dangerous. One possible failure with a nonconvex set of feasible states is:
 
 ```math
 E[s_{t+1}]\notin feasible\ states
 ```
 
-for multimodal distributions.
+Multimodality alone does not imply this failure; feasibility depends on the support and the state constraints.
 
 ---
 
@@ -199,19 +199,19 @@ Recursive error:
 e_{t+k}\approx F(e_{t+k-1},model\ error)
 ```
 
-As horizon grows:
+A possible trend when rollout errors compound:
 
 ```math
 H\uparrow\Rightarrow accumulated\ model\ error\uparrow
 ```
 
-not necessarily linearly.
+Growth need not be linear or monotonic; stable dynamics can attenuate errors. This is a failure tendency, not a universal bound.
 
 ---
 
 # 8. Planning / MPC analogy
 
-We want:
+A schematic finite-horizon objective under deterministic predicted dynamics:
 
 ```math
 a^*_{t:t+H-1}
@@ -220,7 +220,7 @@ a^*_{t:t+H-1}
 \sum_{k=0}^{H-1}\gamma^kR(\hat s_{t+k},a_{t+k})
 ```
 
-Typically, only the first action is executed before replanning:
+The rollout is initialized from the current state estimate and follows the learned dynamics. This objective alone does not guarantee stability or safety; those claims require suitable constraints, uncertainty treatment, and control assumptions. Typically, only the first action is executed before replanning:
 
 ```math
 MPC: plan\rightarrow act\rightarrow observe\rightarrow replan
@@ -309,27 +309,21 @@ This enables an autoregressive categorical decoder.
 A_t=(a_t,a_{t+1},\ldots,a_{t+K-1})
 ```
 
-This reduces backbone call frequency and may smooth control.
+Predicting a chunk may smooth control. Backbone call frequency decreases only if more actions are executed between policy updates.
 
 ---
 
 # 12. Action-chunking trade-off
 
-Larger chunks:
+Separate the predicted horizon $`K`$ from the number of actions executed before a new policy update, $`1\le K_{exec}\le K`$. With fixed control rate and synchronous open-loop execution between updates:
 
 ```math
-K\uparrow
-\Rightarrow
-InferenceFrequency\downarrow
+f_{replan}\approx\frac{f_{control}}{K_{exec}}
 ```
 
-but:
+Increasing $`K_{exec}`$ lowers policy-update frequency and delays incorporation of new observations by that policy. It does not necessarily lower sensor sampling or low-level servo feedback rates. Larger predicted chunks alone need not reduce replanning: overlapping chunks and temporal ensembling, as in ACT, can update the policy every control step.
 
-```math
-FeedbackFrequency\downarrow
-```
-
-So there is a trade-off between throughput and closed-loop responsiveness.
+The throughput/responsiveness trade-off therefore depends on the execution schedule.
 
 In control terms:
 
@@ -340,7 +334,7 @@ In control terms:
 # 13. Autoregressive action policy
 
 ```math
-P(A)=\prod_tp(a_t|a_{\lt t},C)
+p(A\mid C)=\prod_tp(a_t\mid a_{\lt t},C)
 ```
 
 Pros:
@@ -352,7 +346,7 @@ Cons:
 
 - sequential latency;
 - error propagation;
-- continuous actions require tokenization or mixture outputs.
+- continuous actions require an appropriate continuous-output head (for example, a Gaussian, mixture, or flow), or may be discretized into tokens.
 
 ---
 
@@ -492,7 +486,7 @@ a_t^{raw}=\pi(s_t)
 Safety filter:
 
 ```math
-a_t=\Pi_{\mathcal A_{safe}}(a_t^{raw})
+a_t=\Pi_{\mathcal A_{safe}(s_t)}(a_t^{raw})
 ```
 
 May include:
@@ -503,6 +497,8 @@ May include:
 - workspace boundaries;
 - human proximity;
 - forbidden actions.
+
+Here $`\mathcal A_{safe}(s_t)`$ must encode the constraints appropriate to the current state and dynamics; under partial observability, use a belief/uncertainty-aware set $`\mathcal A_{safe}(b_t)`$. The projection is schematic: its metric, existence, and any nonunique solution need a defined policy. If the set is empty or the filter fails, invoke a separately specified emergency/fallback controller; simply stopping is not safe for every plant. Instantaneous action limits alone do not establish safety of the resulting trajectory.
 
 A safe policy should not depend on prompting alone.
 

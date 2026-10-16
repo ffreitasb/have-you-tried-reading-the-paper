@@ -2,7 +2,7 @@
 title: Training, Alignment & Adaptation Datasheet — SOTA++ 2026
 aliases: [Training Datasheet, Post-Training Datasheet, Alignment and Adaptation]
 tags: [ai, referencia, treinamento, post-training, alignment, peft, rl, distillation, merging]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Training, Alignment & Adaptation Datasheet — SOTA++ 2026
@@ -70,16 +70,16 @@ Não existe um único “training step”. Existem **múltiplos operadores de at
 Para parâmetros $`\theta`$, loss $`\mathcal L`$ e learning rate $`\eta`$:
 
 ```math
-\theta_{t+1}=\theta_t-\eta_t\,\hat g_t
+\theta_{t+1}=\theta_t-\eta_t\,u_t
 ```
 
-onde:
+onde $`u_t`$ é a direção de atualização produzida pelo optimizer a partir dos gradientes e de seu estado, incluindo momentum, scaling adaptativo ou weight decay desacoplado quando usados. Para SGD de minibatch sem momentum nem weight decay:
 
 ```math
-\hat g_t \approx \nabla_\theta \mathcal L(\theta_t;B_t)
+u_t=\hat g_t=\nabla_\theta \mathcal L(\theta_t;B_t)
 ```
 
-é uma estimativa do gradiente no minibatch $`B_t`$.
+O gradiente no minibatch $`B_t`$ estima o gradiente do objetivo de treinamento.
 
 A loss define **o que é desejável**.
 
@@ -87,7 +87,7 @@ O optimizer define **como nos movemos no espaço de parâmetros**.
 
 O dataset define **quais regiões desse espaço recebem sinal**.
 
-Portanto:
+Como diagrama qualitativo de dependências:
 
 ```math
 Behavior = f(Architecture,Data,Objective,Optimization,PostTraining)
@@ -108,7 +108,7 @@ P(x)=\sum_i w_iP_i(x)
 com:
 
 ```math
-\sum_i w_i=1
+\sum_i w_i=1,\qquad w_i\ge0\ \text{para todo }i
 ```
 
 Os pesos da mistura são um **hyperparameter comportamental**.
@@ -272,7 +272,7 @@ Veja [02_LLM_TRANSFORMER_INFERENCE_DATASHEET](02_LLM_TRANSFORMER_INFERENCE_DATAS
 {\sum_j\exp(sim(q,d_j)/\tau)}
 ```
 
-Aqui $`\tau`$ é **contrastive temperature**, não sampling temperature.
+Aqui $`\tau>0`$ é **contrastive temperature**, não sampling temperature. O denominador inclui o exemplo positivo e os demais exemplos candidatos.
 
 Veja [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -401,7 +401,7 @@ Parâmetros fundamentais:
 
 ## 6.5 Gradient clipping
 
-Global norm:
+Global norm, para $`g\neq0`$ e limiar $`c>0`$:
 
 ```math
 g'=
@@ -409,7 +409,7 @@ g'=
 \min\left(1,\frac{c}{\|g\|}\right)
 ```
 
-Evita updates extremos.
+Para $`g=0`$, defina $`g'=0`$. Isso limita a norma do gradiente; a atualização dos parâmetros também depende do optimizer.
 
 Não corrige uma loss mal especificada.
 
@@ -558,14 +558,7 @@ Isso evita ensinar o modelo a predizer o próprio prompt quando a finalidade é 
 
 Mensagens são serializadas em tokens especiais.
 
-Logo:
-
-```math
-Template_{train}
-eq Template_{infer}
-```
-
-pode causar regressão relevante.
+Usar serialização de mensagens ou convenções de tokens de controle incompatíveis com o treinamento pode causar regressão relevante na inferência. A compatibilidade envolve papéis, limites e semântica dos tokens; não exige identidade byte a byte entre um exemplo completo de treino e um prefixo de inferência.
 
 Chat template não é cosmética de frontend.
 
@@ -678,7 +671,7 @@ Uma objective abstrata:
 \beta D_{KL}(\pi_\theta\|\pi_{ref})
 ```
 
-O termo KL limita drift.
+Para cada prompt $`x`$, o KL compara as distribuições condicionais de saída. Use $`\beta>0`$ e suporte da reference policy onde a policy otimizada tem probabilidade positiva; o treino calcula a média do objetivo sobre prompts. O termo KL penaliza drift.
 
 ---
 
@@ -706,6 +699,8 @@ clip(r_t,1-\epsilon,1+\epsilon)A_t
 \right]
 ```
 
+Maximize esse surrogate, ou minimize seu negativo. Rollouts são amostrados da policy de coleta congelada $`\pi_{old}`$, com vantagens tratadas como fixas durante o update. Essa policy tem papel diferente da reference policy $`\pi_{ref}`$ usada na regularização RLHF.
+
 Historicamente importante, porém infraestrutura de actor/critic/reward/reference torna o pipeline complexo.
 
 ---
@@ -714,7 +709,7 @@ Historicamente importante, porém infraestrutura de actor/critic/reward/referenc
 
 DPO elimina o reward model explícito no loop de otimização.
 
-Uma forma canônica:
+Uma forma canônica por par, com $`\beta>0`$ e probabilidades positivas para as respostas comparadas nas duas policies:
 
 ```math
 \mathcal L_{DPO}
@@ -812,13 +807,15 @@ A vantagem relativa reduz necessidade de critic explícito.
 
 Failure surface importante:
 
-se:
+se todos os rewards são idênticos e $`\epsilon>0`$:
 
 ```math
-\sigma_G\approx0
+\sigma_G=0
+\quad\Rightarrow\quad
+\hat A_i=0
 ```
 
-há pouco sinal relativo no grupo.
+Dispersão muito menor que $`\epsilon`$ também atenua o sinal normalizado. Desvio-padrão pequeno em valor absoluto, sozinho, não implica vantagens pequenas: quando supera o estabilizador, a normalização pode preservar sinal relativo de ordem um e também amplificar ruído do reward.
 
 ---
 
@@ -901,21 +898,26 @@ Cons:
 
 ## Off-policy / offline
 
-Dados pré-coletados:
+São eixos diferentes. Aprendizado **off-policy** atualiza uma policy alvo com dados de outra policy de comportamento; ainda pode coletar experiência nova online, por exemplo com replay.
+
+Aprendizado **offline** usa dataset fixo, pré-coletado, sem nova interação:
 
 ```math
 D=\{x,y,r\}
 ```
 
-Pros:
+Vantagens potenciais de um dataset fixo:
 
-- estável;
-- barato;
-- reprodutível.
+- reutilização da experiência coletada;
+- menor custo de coleta adicional;
+- comparação controlada e reproduzível dos dados.
 
-Cons:
+Riscos:
 
-- distribution mismatch.
+- distribution mismatch;
+- extrapolation error e otimização instável.
+
+Aprendizado off-policy ou offline não é inerentemente barato ou estável; o custo total também inclui aquisição de dados e otimização.
 
 ---
 
@@ -1070,17 +1072,13 @@ forward/dequant compute
 train LoRA adapters
 ```
 
-Assim:
+A base é excluída das atualizações de parâmetros:
 
 ```math
-\nabla W_{base}=0
+\Delta W_{base}=0
 ```
 
-mas:
-
-```math
-\nabla A,\nabla B\neq0
-```
+Os adapters $`A,B`$ são otimizados. Congelar a base não significa que a derivada matemática da loss em relação aos pesos seja zero; os gradientes dos pesos da base não são acumulados para otimização. Gradientes dos adapters também podem ser zero em determinados passos: na inicialização padrão $`B=0`$, o gradiente inicial da loss em relação a $`A`$ é zero.
 
 QLoRA reduz drasticamente memória do frozen base, mas treino continua exigindo:
 
@@ -1101,13 +1099,14 @@ FileSize_{Q4}\neq TrainingVRAM
 
 DoRA separa magnitude e direção do peso.
 
-Conceitualmente:
+Na convenção de camada linear $`W,V\in\mathbb R^{d_{out}\times d_{in}}`$ e com vetor de magnitude $`m\in\mathbb R^{d_{out}}`$, a decomposição para linhas não nulas de $`V`$ é:
 
 ```math
-W=m\frac{V}{\|V\|}
+W_{j,:}=m_j\frac{V_{j,:}}{\|V_{j,:}\|_2},
+\qquad j\in\{1,\ldots,d_{out}\}
 ```
 
-A direção recebe adaptação low-rank; magnitude é aprendida separadamente.
+Cada linha de saída é normalizada ao longo da dimensão de entrada; sua magnitude é aplicada por broadcasting nessa linha. Uma convenção de pesos transposta expressa a mesma operação por coluna. A direção recebe adaptação low-rank; magnitude é aprendida separadamente. Normas de linha zero exigem convenção numérica explícita na implementação.
 
 Objetivo: aproximar mais a liberdade do full fine-tuning mantendo PEFT.
 
@@ -1235,6 +1234,8 @@ SLERP(t)
 \frac{\sin(t\omega)}{\sin\omega}v_1
 ```
 
+Aqui $`t\in[0,1]`$ e $`0<\omega<\pi`$. Endpoints coincidentes usam o limite contínuo; endpoints antípodas não determinam arco único de interpolação. A implementação precisa tratar explicitamente $`\sin\omega`$ zero ou numericamente próximo de zero.
+
 Útil quando linear interpolation não preserva bem magnitude/direção.
 
 ---
@@ -1285,7 +1286,7 @@ D_{KL}
 (q_T^{(T)}\|p_\theta^{(T)})
 ```
 
-Aqui $`T`$ é **distillation temperature**, novamente diferente de sampling temperature.
+Aqui $`T>0`$ é **distillation temperature**, novamente diferente de sampling temperature, e $`\lambda\in[0,1]`$. O teacher é fixo e as duas distribuições usam o mesmo suporte de categorias; em distilação token-level isso exige vocabulários compatíveis ou alinhamento explícito. Sequence-level distillation pode ser usada quando não há logits diretamente alinhados.
 
 ---
 
@@ -1702,21 +1703,14 @@ de:
 
 Uma GPU que roda Q4 de um 12B não necessariamente consegue treinar esse 12B.
 
-Para consumer GPU, normalmente a ordem de viabilidade é:
+Avalie a viabilidade separadamente em pico de VRAM, tempo de execução e suporte do runtime:
 
-```text
-prompt tuning / small adapters
-        ↓
-LoRA
-        ↓
-QLoRA
-        ↓
-partial/full fine-tuning
-        ↓
-pretraining
-```
+- para o mesmo base model, adapter targets, batch e sequence length, QLoRA normalmente reduz a memória dos pesos da base em relação a LoRA com base BF16/FP16;
+- metadados de quantização, dequant buffers, activations e suporte de kernels ainda afetam VRAM total e tempo; menor memória dos pesos da base não garante treino mais rápido;
+- prompt tuning e adapters pequenos reduzem o estado treinável, mas ainda exigem a base e as activations necessárias para treinar esses parâmetros;
+- full fine-tuning acrescenta gradients e optimizer states dos parâmetros atualizados da base, enquanto pretraining também depende fortemente do volume de dados e do orçamento de compute.
 
-mas cada modelo e sequence length altera a curva.
+Não há ordem universal desses métodos entre todos os hardwares, modelos e sequence lengths.
 
 Calcule antes:
 
@@ -1834,6 +1828,8 @@ A fotografia relevante em outubro de 2026 é menos “qual algoritmo venceu” e
 ---
 
 # 61. Resumo mecânico
+
+Este é um diagrama qualitativo de dependências. O símbolo de composição resume influências que interagem; não define lei quantitativa nem composição literal de funções matemáticas especificadas.
 
 ```math
 \boxed{

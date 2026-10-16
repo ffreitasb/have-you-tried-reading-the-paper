@@ -1,7 +1,7 @@
 ---
 title: Reward Model / Verifier / Judge Datasheet v1.0
 tags: [ai, reward-model, verifier, judge, prm, orm, rlvr, evaluation]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Reward Model / Verifier / Judge Datasheet v1.0
@@ -120,11 +120,13 @@ Possible techniques:
 
 # 4. Outcome Reward Model — ORM
 
-Evaluates the final answer:
+Assigns an outcome-level score, supervised by the final result. A common case evaluates only the final answer:
 
 ```math
 R_{outcome}=R(x,y_{final})
 ```
+
+An ORM can also consume the complete solution or trajectory. Outcome supervision describes the source of the target signal, not a mandatory restriction on the model's input.
 
 Advantages:
 
@@ -216,6 +218,8 @@ Verifier
 In 2026, environment-aware generative PRMs are appearing specifically to catch silent failures that do not surface as exceptions.
 
 ### Trade-off
+
+A qualitative trade-off to assess empirically; the arrows do not assert a universal increase in latency, cost, or variance:
 
 ```math
 VerifierCapability\uparrow
@@ -329,9 +333,7 @@ Preference for the first/second option.
 
 ## Verbosity bias
 
-```math
-P(win|longer) > P(win|quality\ equivalent)
-```
+A judge exhibits verbosity bias when it systematically favors the longer response even when answer quality is held equivalent. Measure this with controlled pairs, randomized positions, and an explicit tie policy; a higher win rate for longer answers without controlling quality does not establish this bias.
 
 ## Style bias
 
@@ -408,12 +410,15 @@ Y=\{y_1,\ldots,y_N\}
 The verifier selects:
 
 ```math
-y^*=\arg\max_iR(x,y_i)
+i^*=\arg\max_{i\in\{1,\ldots,N\}}R(x,y_i),
+\qquad y^*=y_{i^*}
 ```
 
-If the probability of producing at least one good solution rises with $`N`$, the verifier converts compute into quality.
+Use a fixed tie-breaking rule when several candidates share the maximum score. Increasing $`N`$ can raise the probability that a good candidate is available, but the verifier must identify it to turn that coverage into better selected quality.
 
-But:
+For nested candidate sets and a fixed scoring function, the maximum proxy score cannot decrease; the oracle-best true quality also cannot decrease over the same nested sets. The true quality of the verifier-selected response can decrease because of ranking errors or reward overoptimization. Separately resampled candidate sets need not show either maximum increasing on every run.
+
+For any given candidate set:
 
 ```math
 Quality_{selected}
@@ -421,7 +426,7 @@ Quality_{selected}
 Quality_{oracle-best}
 ```
 
-as a function of verifier error.
+The gap depends on verifier error; this upper bound is not a guarantee of improvement with more candidates.
 
 ---
 
@@ -453,9 +458,9 @@ For discrete answers:
 \hat y=mode(y_1,\ldots,y_N)
 ```
 
-Works when errors are sufficiently independent.
+Canonicalize equivalent answers before taking the mode. Independence alone is insufficient: for iid binary votes, majority accuracy tends to 1 as the number of votes grows only when each vote is correct with probability $`p>1/2`$; if $`p<1/2`$, it tends to 0. For iid votes over a fixed finite set of answer categories, the correct answer must be the unique most probable category for the sample mode to converge to it.
 
-If outputs share a systematic bias:
+At comparable individual accuracy, dependence between errors can reduce voting gains. The following is a heuristic, not a universal monotonic law:
 
 ```math
 Corr(error_i,error_j)\uparrow
@@ -543,9 +548,7 @@ Goodhart:
 
 Even a reasonable reward model can fail out of distribution when the policy is pushed toward extremes:
 
-```math
-\pi_{new}\gg\pi_{training\ distribution}
-```
+The relevant shift is toward responses poorly covered by the reward model's training distribution. These are qualitative risk relationships, not a pointwise ordering of policy probabilities.
 
 The harder you optimize against an imperfect RM, the more likely you are to exploit uncalibrated regions.
 

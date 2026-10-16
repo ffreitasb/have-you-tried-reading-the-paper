@@ -2,12 +2,28 @@
 title: Changelog — Foundation Model Engineering Datasheets
 aliases: [Datasheet Changelog]
 tags: [ai, referencia, changelog, knowledge-management]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Changelog
 
 > Registro de mudanças estruturais/conceituais da coleção. Correções tipográficas triviais podem não aparecer aqui.
+
+---
+
+# 2026-10-16 — Correções técnicas bilíngues
+
+## Corrigido e esclarecido
+
+- Corrigidos a direção do suporte em Top-K, o exemplo de alinhamento CTC, índices de seleção, componentes de probabilidade e indexação temporal/de patches.
+- Separados passos de integração de avaliações do modelo, contagem de códigos do codec de passos sequenciais de decoding e horizonte previsto de horizonte executado.
+- Qualificadas afirmações sobre complexidade, incerteza, votação, Best-of-N, GRPO, operadores de grafos e risco com suas hipóteses necessárias; distinguidas afirmações científicas de diagramas conceituais e tendências empíricas.
+- Distinguidos off-policy de treinamento offline e parâmetros congelados de derivadas matemáticas; esclarecida a semântica de otimizadores, adaptação e serialização de chat.
+- Preservada a fórmula contrastiva, identificada explicitamente como perda contrastiva desacoplada (DCL), com domínio e referência primária.
+- Corrigidas definições de geração de grafos e link prediction, restrições de prefixo de schema, convenções de retrieval e a força de uma afirmação citada sobre séries temporais.
+- Alinhadas terminologia, tags de condicionamento, convenções de links portáveis e formulações relevantes em inglês/português, preservando a voz editorial de cada edição.
+
+Estas são correções da referência viva. A release arquivada v1.0.0 e seu DOI permanecem inalterados. A revisão e as correções tiveram assistência de IA e foram conferidas com fontes primárias e exemplos reproduzíveis; não constituem garantia de ausência de outros erros.
 
 ---
 

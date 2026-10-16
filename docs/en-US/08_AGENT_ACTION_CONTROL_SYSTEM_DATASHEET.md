@@ -1,7 +1,7 @@
 ---
 title: Agent & Action Control System Datasheet v2.0
 tags: [ai, agents, tools, function-calling, mcp, control-systems]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Agent & Action Control System Datasheet v2.0
@@ -83,10 +83,16 @@ L(Schema)
 During decoding:
 
 ```math
-p(x_t)=0\quad\forall x_t\notin ValidPrefix(Schema)
+V_t=\{v\in\mathcal V_{ordinary}:decode(x_{\lt t}\circ v)\in Pref(L(Schema))\}
 ```
 
-Depending on the implementation, this can strongly guarantee syntactic/structural validity.
+Here $`x_{<t}`$ is the emitted token prefix, $`\circ`$ appends a token, and $`Pref(L)`$ contains string prefixes that can still be completed to a member of $`L`$. The mask therefore depends on the current parser/tokenizer state. Add EOS to $`V_t`$ only when the decoded prefix is already in $`L(Schema)`$.
+
+```math
+p_S(v\mid x_{\lt t})=\frac{p_\theta(v\mid x_{\lt t})\mathbf 1[v\in V_t]}{\sum_{u\in V_t}p_\theta(u\mid x_{\lt t})}
+```
+
+Mask disallowed logits with negative infinity and renormalize. If no admissible continuation has positive probability, fail without committing an output. With correct constraint enforcement, a completed output can be guaranteed syntactically/structurally valid; a truncated prefix is not a completed valid output.
 
 ### But:
 
@@ -260,19 +266,19 @@ Not every action is reversible.
 
 Not simply one global `True/False` toggle.
 
-Define:
+One possible **HEURISTIC** prioritization score:
 
 ```math
-Risk(a)=Impact(a)\times Probability(error)\times Irreversibility(a)
+Risk_{score}(a)=Impact(a)\times Probability(error)\times Irreversibility(a)
 ```
 
 Require approval when:
 
 ```math
-Risk(a)>\tau
+Risk_{score}(a)>\tau
 ```
 
-or based on capability class.
+Define the factor scales, error event, context, and threshold for the application. This product is not a calibrated probability or a validated universal risk measure. Capability restrictions and high-impact approval/blocking rules apply independently: a low score or high reversibility cannot override those gates. Authorization and transient harm still matter even when an action is reversible.
 
 ### Examples of high-risk actions
 
@@ -346,7 +352,7 @@ Action:
 a_t=(mouse/keyboard/navigation)
 ```
 
-New state:
+Schematic screen-update flow (the application also has hidden state):
 
 ```math
 screen_{t+1}=App(screen_t,a_t)
@@ -373,7 +379,7 @@ Computer use has lower observability than a structured API. Prefer APIs/tools wh
 audio\rightarrow VAD\rightarrow ASR\rightarrow agent/policy\rightarrow tool\rightarrow environment
 ```
 
-Total latency:
+Total latency for sequential, non-overlapping stages; streaming/pipelining requires accounting for overlap:
 
 ```math
 T=T_{VAD}+T_{ASR}+T_{LLM}+T_{tool}+T_{feedback}

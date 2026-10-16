@@ -1,7 +1,7 @@
 ---
 title: Image Generation — Diffusion, Flow & DiT Datasheet v2.0
 tags: [ai, image, diffusion, rectified-flow, dit, comfyui]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Image Generation — Diffusion, Flow & DiT Datasheet v2.0
@@ -44,7 +44,7 @@ With spatial compression factor $`f`$:
 H_l\approx H/f,\qquad W_l\approx W/f
 ```
 
-Modern generation almost always saves compute by working in $`Z`$, not directly in pixels.
+Latent generative models work in $`Z`$ to reduce the denoiser workload relative to processing the full pixel grid.
 
 ### Consequence
 
@@ -76,7 +76,7 @@ Decoder:
 \hat X=D(Z)
 ```
 
-The decoder imposes a fidelity ceiling independent of the denoiser.
+A fixed decoder constrains which outputs can be represented, so decoder limitations can remain even with a better denoiser. Reconstruction quality is a useful diagnostic, not a universal numerical bound on every generation-quality metric.
 
 ### Failure modes
 
@@ -331,13 +331,13 @@ They may appear side by side in ComfyUI, but they are conceptually different obj
 
 ## 15. Steps and NFE
 
-`Steps` is the number of discretization steps. Actual cost depends on network evaluations:
+`Steps` counts integration updates of the solver. Keep it separate from model evaluations per generated sample:
 
 ```math
-NFE=\text{number of }f_\theta\text{ forward passes}
+NFE_{model}=\text{number of model evaluations per generated sample}
 ```
 
-A method with two evaluations per step may cost roughly 2× the denoiser work of a one-evaluation method.
+Count each guidance branch separately, even when branches share one batched forward call. Batching can change wall-clock time and memory use without removing the arithmetic work of those branches. With the same guidance and evaluation cost, two field evaluations per step require roughly twice the denoiser work of one; some solvers reuse evaluations or omit a final correction.
 
 ### Quality
 
@@ -367,7 +367,7 @@ z_{t_s}=\alpha_{t_s}z_0+\sigma_{t_s}\epsilon
 
 The reverse process then begins there.
 
-Denoising strength is therefore better understood as **how much of the original trajectory is discarded**, not simply “creativity.”
+Denoising strength controls the **initial noise level and the portion of the reverse trajectory traversed**. In typical img2img pipelines, higher strength adds more noise to the reference and runs more of the denoising trajectory; the exact mapping depends on the scheduler and pipeline.
 
 ### Intuitive approximation
 
@@ -482,10 +482,12 @@ Additional guiders may add extra forward passes.
 
 # PART XI — COUPLING MATRIX
 
+Qualitative tendencies within a suitable operating regime; arrows are not monotonic guarantees. Outcomes depend on the model, sampler, data, and implementation.
+
 | Control ↑ | Prompt adherence | Diversity | Compute | Reference structure |
 |---|---:|---:|---:|---:|
 | CFG | ↑ until saturation | ↓ | ↑ if extra pass | — |
-| Steps/NFE | may ↑ until plateau | ~ | ↑ | — |
+| Steps (fixed solver/guidance) | may ↑ until plateau | ~ | ↑ | — |
 | Denoise strength | conditioning may dominate | ↑ | depends | ↓ |
 | Resolution | potential detail ↑ | — | ↑ sharply | — |
 | Guidance rescale | stabilizes high-CFG | may ↑ | small | — |

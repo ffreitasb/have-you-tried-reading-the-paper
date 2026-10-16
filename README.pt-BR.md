@@ -334,6 +334,8 @@ O repositório inclui um [`CITATION.cff`](CITATION.cff) legível por máquina, q
 
 [Release arquivada no Zenodo →](https://zenodo.org/records/23092486) · [Proveniência da produção](PROVENANCE.pt-BR.md) · [CC BY-SA 4.0](LICENSE)
 
+A referência viva inclui correções posteriores à v1.0.0. Ao citar material de `main`, registre também o SHA do commit ou o permalink utilizado: o DOI da release arquivada identifica seu snapshot original. O [changelog](docs/pt-BR/CHANGELOG.md) registra mudanças conceituais posteriores.
+
 **[Metadados de citação →](CITATION.cff)**
 
 ---
@@ -344,7 +346,9 @@ Este projeto é **dirigido por humano e assistido por IA**.
 
 Os datasheets originais do fim de 2025 foram predominantemente escritos por Felipe Freitas Braga e posteriormente revisados e refinados com assistência de IA. A reconstrução e expansão SOTA++ de 2026 utilizou extensivamente o OpenAI ChatGPT para síntese de pesquisa, redação técnica, reestruturação, revisão, localização para o inglês e controle de qualidade, enquanto arquitetura do projeto, padrões, escopo, julgamento técnico, decisões editoriais finais e responsabilidade pela publicação permaneceram sob controle humano.
 
-A contribuição da IA é declarada intencionalmente em vez de escondida silenciosamente no histórico de commits. Ela foi material para a produção da base atual, mas o sistema de IA não aparece como autor acadêmico porque não pode assumir as responsabilidades e accountability próprias da autoria.
+O trabalho posterior utilizou o OpenAI Codex para engenharia do repositório, renderização matemática e correções verificadas, incluindo uma revisão científica das duas edições com GPT-6 Astra. As correções foram conferidas com fontes primárias e exemplos direcionados, com integridade e renderização verificadas separadamente; isso não constitui revisão por pares humanos independentes nem garantia de ausência de erros.
+
+A contribuição da IA é declarada intencionalmente em vez de escondida silenciosamente no histórico de commits. Ela foi material para a produção da base atual, mas sistemas de IA não aparecem como autores acadêmicos porque não podem assumir as responsabilidades e accountability próprias da autoria.
 
 **[Leia a declaração completa de proveniência →](PROVENANCE.pt-BR.md)**
 

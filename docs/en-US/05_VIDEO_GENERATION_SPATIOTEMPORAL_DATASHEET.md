@@ -1,7 +1,7 @@
 ---
 title: Video Generation — Spatiotemporal Latent Datasheet v2.0
 tags: [ai, video, diffusion, flow, temporal, dit]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Video Generation — Spatiotemporal Latent Datasheet v2.0
@@ -76,10 +76,10 @@ That is why video needs:
 All frames/latents belong to the same state:
 
 ```math
-Z_t=[z_t^1,z_t^2,\ldots,z_t^T]
+Z_t=[z_t^1,z_t^2,\ldots,z_t^{T_l}]
 ```
 
-The model may denoise/transport the sequence jointly.
+Here $`t`$ is diffusion/flow time, while the superscript indexes the $`T_l`$ latent temporal positions after compression. The model may denoise/transport the sequence jointly.
 
 ### Consequence
 
@@ -232,6 +232,8 @@ In joint video+audio models, one prediction may be obtained with cross-modality 
 f_{guided}=f+ s_m(f-f_{isolated})
 ```
 
+Here $`s_m`$ is an abstract contrast coefficient: zero disables this term. It need not equal an API slider; for example, the documented LTX-2 `modality_scale` disables isolation guidance at 1.0. Check the pipeline convention when mapping controls to this equation.
+
 This shows that guidance is a general family of **contrasts between predictions**, not merely positive prompt vs negative prompt.
 
 ---
@@ -296,7 +298,7 @@ with overlap:
 |W_i\cap W_{i+1}|>0
 ```
 
-More overlap increases continuity and compute.
+More overlap can help continuity and typically adds repeated computation for a fixed output duration. The benefit depends on how windows are conditioned and combined; continuity is not guaranteed to improve monotonically.
 
 ---
 
@@ -319,13 +321,13 @@ The correct solution depends on topology, not a rule such as “cut off the last
 
 ## 17. Camera vs object motion
 
-Ideally decompose:
+Conceptual decomposition of motion sources (the sum below is schematic, not a general additive identity for image-space motion):
 
 ```math
 Motion_{observed}=Motion_{camera}+Motion_{objects}+deformation
 ```
 
-Prompting everything as one sentence leaves the model to infer that decomposition. Control representations can reduce ambiguity.
+Projection depends jointly on geometry, depth, camera pose, and object motion. Prompting everything as one sentence leaves the model to infer those factors; control representations can reduce ambiguity.
 
 ---
 
@@ -340,7 +342,7 @@ N=T_pH_pW_p
 Double the duration while holding everything else constant:
 
 ```math
-N\approx2N
+N_{new}\approx2N_{old}
 ```
 
 Naive global attention:
@@ -358,8 +360,10 @@ That is the structural reason for compression and factorized attention.
 CFG + STG + modality guidance may require multiple forward passes per step.
 
 ```math
-Cost\approx NFE\times passes_{guidance}\times C_{forward}
+Cost_{model}\approx\sum_{j=1}^{NFE_{model}}C_j\approx NFE_{model}\,C_{forward}
 ```
+
+Here cost means model computation per generated sample. $`NFE_{model}`$ counts each model evaluation, including separate guidance branches, once; $`C_j`$ is its work and $`C_{forward}`$ assumes comparable work per branch. Do not multiply by the guidance branch count again. For example, 20 Euler steps with two CFG branches require 40 model evaluations. Batching those branches can change wall-clock time and memory use without eliminating their arithmetic work.
 
 A guidance slider may therefore change both **quality and cost**.
 
@@ -367,9 +371,11 @@ A guidance slider may therefore change both **quality and cost**.
 
 # PART IX — COUPLING MATRIX
 
+Qualitative tendencies within a suitable operating regime; arrows are not monotonic guarantees. Duration-related risks refer to loss of coherence or identity over longer sequences.
+
 | Control ↑ | Motion freedom | Temporal coherence | Compute | Identity |
 |---|---:|---:|---:|---:|
-| duration | — | risk ↑ | ↑ sharply | risk ↓ |
+| duration | — | drift risk may ↑ | ↑ sharply | drift risk may ↑ |
 | resolution | — | indirect risk | ↑ sharply | potential ↑ |
 | I2V reference weight | ↓ | ↑ | varies | ↑ |
 | CFG | adherence ↑ | non-monotonic | ↑ | may ↑/↓ |

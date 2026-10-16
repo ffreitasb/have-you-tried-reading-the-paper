@@ -2,12 +2,28 @@
 title: Changelog — Foundation Model Engineering Datasheets
 aliases: [Datasheet Changelog]
 tags: [ai, reference, changelog, knowledge-management]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Changelog
 
 > Record of structural and conceptual changes to the collection. Trivial typographical fixes may not appear here.
+
+---
+
+# 2026-10-16 — Bilingual technical corrections
+
+## Corrected and clarified
+
+- Corrected the Top-K support direction, the CTC alignment example, selection indices, probability components, and temporal/patch indexing.
+- Separated integration steps from model evaluations, codec code counts from sequential decoding steps, and prediction horizons from execution horizons.
+- Qualified complexity, uncertainty, voting, Best-of-N, GRPO, graph operators, and risk statements with their required assumptions; distinguished scientific claims from conceptual diagrams and empirical tendencies.
+- Distinguished off-policy from offline training and frozen parameters from mathematical derivatives; clarified optimizer, adaptation, and chat-serialization semantics.
+- Preserved the contrastive formula as an explicitly identified decoupled contrastive loss (DCL), with its domain and primary reference.
+- Corrected graph-generation and link-prediction task definitions, schema-prefix constraints, retrieval conventions, and the strength of a cited time-series claim.
+- Aligned terminology, conditioning tags, portable-link conventions, and relevant English/Portuguese wording while preserving each edition's editorial voice.
+
+These are corrections to the living reference. The archived v1.0.0 release and its DOI remain unchanged. The review and corrections were AI-assisted and checked against primary sources and reproducible examples; they do not constitute a guarantee that no further errors remain.
 
 ---
 

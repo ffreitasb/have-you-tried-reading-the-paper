@@ -1,7 +1,7 @@
 ---
 title: Agent & Action Control System Datasheet v2.0
 tags: [ai, agents, tools, function-calling, mcp, control-systems]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Agent & Action Control System Datasheet v2.0
@@ -83,10 +83,16 @@ L(Schema)
 Durante decode:
 
 ```math
-p(x_t)=0\quad\forall x_t\notin ValidPrefix(Schema)
+V_t=\{v\in\mathcal V_{ordinary}:decode(x_{\lt t}\circ v)\in Pref(L(Schema))\}
 ```
 
-Isso garante, dependendo da implementação, forte validade sintática/estrutural.
+Aqui $`x_{<t}`$ é o prefixo de tokens emitido, $`\circ`$ acrescenta um token e $`Pref(L)`$ contém prefixos de strings que ainda podem ser completados para um membro de $`L`$. A máscara depende, portanto, do estado atual do parser/tokenizer. Adicione EOS a $`V_t`$ somente quando o prefixo decodificado já pertencer a $`L(Schema)`$.
+
+```math
+p_S(v\mid x_{\lt t})=\frac{p_\theta(v\mid x_{\lt t})\mathbf 1[v\in V_t]}{\sum_{u\in V_t}p_\theta(u\mid x_{\lt t})}
+```
+
+Mascare logits proibidos com menos infinito e renormalize. Se nenhuma continuação admissível tiver probabilidade positiva, falhe sem efetivar uma saída. Com enforcement correto, uma saída concluída pode ter validade sintática/estrutural garantida; um prefixo truncado não é uma saída válida concluída.
 
 ### Mas:
 
@@ -260,19 +266,19 @@ Nem toda ação é reversível.
 
 Não simplesmente `True/False` global.
 
-Definir função:
+Um possível score **HEURISTIC** de priorização:
 
 ```math
-Risk(a)=Impact(a)\times Probability(error)\times Irreversibility(a)
+Risk_{score}(a)=Impact(a)\times Probability(error)\times Irreversibility(a)
 ```
 
 Exigir aprovação quando:
 
 ```math
-Risk(a)>\tau
+Risk_{score}(a)>\tau
 ```
 
-ou por classe de capability.
+Defina as escalas dos fatores, o evento de erro, o contexto e o limiar para a aplicação. Esse produto não é probabilidade calibrada nem medida universal de risco validada. Restrições de capability e regras de aprovação/bloqueio para alto impacto se aplicam independentemente: score baixo ou alta reversibilidade não podem anular esses gates. Autorização e danos transitórios continuam relevantes mesmo quando a ação é reversível.
 
 ### Exemplos de alto risco
 
@@ -346,7 +352,7 @@ Ação:
 a_t=(mouse/keyboard/navigation)
 ```
 
-Estado novo:
+Fluxo esquemático de atualização da tela (a aplicação também possui estado oculto):
 
 ```math
 screen_{t+1}=App(screen_t,a_t)
@@ -373,7 +379,7 @@ Computer use possui observabilidade menor que API estruturada. Preferir API/tool
 audio\rightarrow VAD\rightarrow ASR\rightarrow agent/policy\rightarrow tool\rightarrow environment
 ```
 
-Latência total:
+Latência total para etapas sequenciais sem sobreposição; streaming/pipelining exige contabilizar a sobreposição:
 
 ```math
 T=T_{VAD}+T_{ASR}+T_{LLM}+T_{tool}+T_{feedback}

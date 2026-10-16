@@ -1,7 +1,7 @@
 ---
 title: 3D Generation Representation Datasheet v2.0
 tags: [ai, 3d, mesh, nerf, gaussian-splatting, slat, cad]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # 3D Generation Representation Datasheet v2.0
@@ -241,8 +241,10 @@ Disconnected components:
 Filtering by connected-component size is often useful:
 
 ```math
-\mathcal M^*=\arg\max_i Volume/Area(\mathcal M_i)
+i^*\in\arg\max_i s(\mathcal M_i),\qquad \mathcal M^*=\mathcal M_{i^*}
 ```
+
+Choose one scalar size metric $`s`$ for the comparison: surface area, or enclosed volume for closed, consistently oriented components without self-intersections. These are alternative metrics with different units, not a volume/area ratio. If several components tie, choose a maximizing index according to a declared tie rule.
 
 But do not blindly remove small components if the object intentionally contains separate parts.
 
@@ -252,11 +254,13 @@ But do not blindly remove small components if the object intentionally contains 
 
 ## 10. UV texture
 
-A 2D image mapped over the surface:
+A 2D image mapped over a local surface chart $`c`$:
 
 ```math
-(u,v)=\phi(\mathbf x_{surface})
+(u,v)=\phi_c(\mathbf x_{surface})
 ```
+
+At UV seams, the same surface point may have different coordinates in adjacent charts. Mesh implementations can therefore store UV coordinates per face corner rather than one pair per geometric vertex.
 
 Texture resolution affects memory and appearance, but not geometry.
 
@@ -395,17 +399,19 @@ It may be:
 
 It is not a universal variable.
 
-Explicit geometric postprocessing:
+Explicit geometric postprocessing, shown here only at the vertex-set level:
 
 ```math
 V'=V\cup Mirror(V,plane)
 ```
 
-is different from “asking for symmetry” from the generative model.
+This differs from “asking for symmetry” from the generative model. A complete mirrored mesh also needs mirrored face connectivity, corrected winding/normals under reflection, and welding at the mirror plane where a continuous surface is intended. The vertex union alone does not establish those properties.
 
 ---
 
 # PART XI — COUPLING MATRIX
+
+Qualitative tendencies within a suitable operating regime; arrows are not monotonic guarantees. More resolution creates capacity for detail but does not guarantee accurate geometry, valid topology, or better textures.
 
 | Control ↑ | Geometry detail | Manifold risk | Compute | Texture quality |
 |---|---:|---:|---:|---:|

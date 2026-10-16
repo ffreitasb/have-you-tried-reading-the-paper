@@ -8,12 +8,75 @@ from pathlib import Path
 from math_rendering import (
     ALIASES, CASES, REGISTRY, TRAINING, check_corpus, check_rendering,
     convert_legacy, fingerprint, formulas, to_arithmatex,
-    reviewed_less_than_aliases,
+    reviewed_less_than_aliases, reviewed_baseline,
 )
 import mkdocs_math
 
 
 class PreservationTests(unittest.TestCase):
+    def test_scientific_revision_is_explicit_and_rejects_unreviewed_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'scripts').mkdir()
+            source = 'Original claim\n\n```math\nx>y\n```\n'
+            revised = 'Qualified claim\n\n```math\nx\\ge y\n```\n'
+            before = fingerprint(source, 'example.md')
+            after = fingerprint(revised, 'example.md')
+            (root / 'scripts/math-preservation.json').write_text(json.dumps({'files': {'example.md': before}}), encoding='utf-8')
+            revision = {'schema': 1, 'revisions': [{'id': 'review-1', 'source_commit': 'a' * 40,
+                'files': {'example.md': {'before': before, 'after': after, 'review_ids': ['EX-01']}}}]}
+            manifest = root / 'scripts/content-revisions.json'
+            manifest.write_text(json.dumps(revision), encoding='utf-8')
+            path = root / 'example.md'
+            path.write_bytes(revised.encode('utf-8'))
+            self.assertEqual(check_corpus(root), [])
+            for mutation in (source, revised.replace(r'\ge', r'\le'), revised.replace('Qualified', 'Unreviewed')):
+                path.write_bytes(mutation.encode('utf-8'))
+                self.assertTrue(check_corpus(root))
+            path.write_bytes(revised.encode('utf-8'))
+            for mutation in ('wrong_before', 'unknown_file', 'missing_review', 'duplicate_revision'):
+                candidate = json.loads(json.dumps(revision))
+                change = candidate['revisions'][0]['files']['example.md']
+                if mutation == 'wrong_before':
+                    change['before'] = after
+                elif mutation == 'unknown_file':
+                    candidate['revisions'][0]['files']['other.md'] = change
+                elif mutation == 'missing_review':
+                    change['review_ids'] = []
+                else:
+                    candidate['revisions'].append(candidate['revisions'][0])
+                manifest.write_text(json.dumps(candidate), encoding='utf-8')
+                with self.subTest(mutation=mutation):
+                    self.assertTrue(check_corpus(root))
+
+            # A later review must chain from the first revision, not bypass it.
+            latest = revised.replace('Qualified claim', 'Further qualified claim')
+            revision['revisions'].append({'id': 'review-2', 'source_commit': 'b' * 40,
+                'files': {'example.md': {'before': after, 'after': fingerprint(latest, 'example.md'),
+                                          'review_ids': ['EX-02']}}})
+            manifest.write_text(json.dumps(revision), encoding='utf-8')
+            path.write_bytes(latest.encode('utf-8'))
+            self.assertEqual(check_corpus(root), [])
+            revision['revisions'].reverse()
+            manifest.write_text(json.dumps(revision), encoding='utf-8')
+            self.assertTrue(check_corpus(root))
+            manifest.write_text('[]', encoding='utf-8')
+            self.assertTrue(check_corpus(root))
+
+    def test_scientific_revision_does_not_bypass_rendering_safety(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'scripts').mkdir()
+            source = 'Claim\n\n```math\nx>y\n```\n'
+            revised = source.replace('>', '<')
+            before = fingerprint(source, 'example.md')
+            (root / 'scripts/math-preservation.json').write_text(json.dumps({'files': {'example.md': before}}), encoding='utf-8')
+            (root / 'scripts/content-revisions.json').write_text(json.dumps({'schema': 1, 'revisions': [{
+                'id': 'review-1', 'source_commit': 'a' * 40, 'files': {'example.md': {
+                    'before': before, 'after': fingerprint(revised, 'example.md'), 'review_ids': ['EX-01']}}}]}), encoding='utf-8')
+            (root / 'example.md').write_bytes(revised.encode('utf-8'))
+            self.assertTrue(any('literal less-than' in error for error in check_corpus(root)))
+
     def test_less_than_aliases_are_exact_and_context_specific(self):
         aliases = reviewed_less_than_aliases()
         self.assertEqual(sum(map(len, aliases.values())), 26)
@@ -109,21 +172,14 @@ class PreservationTests(unittest.TestCase):
     def test_reviewed_corpus_and_every_native_render(self):
         root = Path(__file__).resolve().parents[1]
         self.assertEqual(check_corpus(root), [])
+        baseline = reviewed_baseline(root)
         count = 0
-        changed_less_than_bodies = 0
-        less_than_operators = 0
         for path in sorted((root / 'docs').glob('*/*.md')):
             with self.subTest(file=path.name, locale=path.parent.name):
                 text = path.read_bytes().decode('utf-8')
                 check_rendering(text)
                 count += len(formulas(text))
-                for item in formulas(text):
-                    if item.kind == 'display' and item.body in reviewed_less_than_aliases().get(path.name, {}).values():
-                        changed_less_than_bodies += 1
-                        less_than_operators += item.body.count(r'\lt')
-        self.assertEqual(count, 2775)
-        self.assertEqual(changed_less_than_bodies, 52)
-        self.assertEqual(less_than_operators, 54)
+        self.assertEqual(count, sum(x['inline'] + x['display'] for x in baseline.values()))
 
 
 class HookTests(unittest.TestCase):

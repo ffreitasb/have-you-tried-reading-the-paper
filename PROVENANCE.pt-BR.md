@@ -13,7 +13,7 @@ A versão curta:
 
 > **Este é um projeto técnico dirigido por humano e produzido com assistência de IA.**
 
-Felipe Freitas Braga é o autor humano, editor, mantenedor e responsável pela publicação do repositório. O OpenAI ChatGPT foi utilizado de forma extensiva como assistente de pesquisa, síntese, redação, reestruturação, revisão, localização e controle de qualidade durante a reconstrução e expansão do material em 2026.
+Felipe Freitas Braga é o autor humano, editor, mantenedor e responsável pela publicação do repositório. O OpenAI ChatGPT foi utilizado de forma extensiva como assistente de pesquisa, síntese, redação, reestruturação, revisão, localização e controle de qualidade durante a reconstrução e expansão do material em 2026. A engenharia do repositório e a revisão científica posteriores utilizaram o OpenAI Codex, incluindo rodadas de revisão e correção com GPT-6 Astra, conforme descrito abaixo.
 
 ---
 
@@ -61,14 +61,35 @@ Tentar resumir isso a uma porcentagem exata produziria uma precisão que o proce
 
 ---
 
-## Sistema de IA utilizado
+### Engenharia do repositório e renderização matemática — outubro de 2026
 
-O principal sistema de IA utilizado na reconstrução de outubro de 2026 foi:
+O OpenAI Codex auxiliou na organização do repositório, navegação portável, documentação de contribuição e governança, integração de citação e arquivamento, validação automatizada e investigação e correção de falhas de renderização matemática no GitHub e em builds temporários do MkDocs.
 
-- **OpenAI ChatGPT**
-- **Configuração de modelo durante a produção:** GPT-5.6 Sol
+As correções de renderização alteraram delimitadores e grafias TeX equivalentes explicitamente revisadas. Suas verificações de preservação separaram mudanças de apresentação de mudanças no significado científico. A release arquivada v1.0.0 não foi reescrita.
 
-Nomes de modelos, configurações e comportamento do produto podem mudar ao longo do tempo. Esta declaração identifica o sistema utilizado neste ciclo de produção; ele não é uma dependência de runtime do repositório.
+### Revisão científica e correções bilíngues — 9 a 16 de outubro de 2026
+
+A pedido do mantenedor, agentes GPT-6 Astra no Codex revisaram os 44 documentos das edições em inglês e português brasileiro. A revisão abrangeu afirmações técnicas, equações e seus domínios, dimensões de tensores, hipóteses, fontes e consistência conceitual dentro de cada edição e entre elas. O trabalho combinou consulta a fontes primárias com cálculos direcionados e contraexemplos reproduzíveis.
+
+O mantenedor então autorizou as correções. O ciclo concluído tratou 47 achados consolidados no corpus e um no guia de contribuição, além de esclarecer 46 registros condicionais ou editoriais. Esses números descrevem os achados dessa revisão, não uma contagem exaustiva de todos os erros possíveis. Questões materiais de intenção foram encaminhadas ao mantenedor: o exemplo contrastivo preserva sua fórmula e é identificado como aprendizagem contrastiva desacoplada (DCL); a comparação corrompida entre templates foi substituída por prosa sobre compatibilidade de serialização, sem exigir entradas de treino e inferência idênticas byte a byte.
+
+O Codex auxiliou na implementação das correções pareadas, revisão dos diffs, registro exato dos trechos antes/depois e execução dos checks de integridade e renderização. A verificação de 16 de outubro cobriu 22 testes de regressão e 3.025 expressões matemáticas no parser nativo, em builds temporários do MkDocs e no componente real de renderização do GitHub em fixtures descartáveis de navegador, com inspeção representativa em desktop/mobile. Uma fixture verifica a renderização candidata; ela não demonstra que as alterações foram publicadas ou que um site de documentação está em produção.
+
+A avaliação científica e a verificação mecânica permanecem separadas. Hashes coincidentes, MathML válido e testes aprovados não provam a veracidade de uma afirmação técnica. O trabalho foi uma revisão assistida por IA sob direção humana, não uma revisão por pares humanos independentes nem uma reprodução de todos os benchmarks e treinamentos citados. O mantenedor conserva a responsabilidade editorial e de publicação; esses checks não implicam que ele tenha rederivado pessoalmente cada equação.
+
+O [changelog da edição](docs/pt-BR/CHANGELOG.md) registra as correções conceituais. O [registro de revisões de conteúdo](scripts/content-revisions.json) documenta fingerprints revisados de antes/depois, identificadores de revisão e fontes, preservando a baseline histórica de formatação. Consulte a [manutenção da renderização matemática](scripts/MATH_RENDERING.md) para conhecer o alcance dessas verificações.
+
+---
+
+## Sistemas de IA utilizados
+
+As ferramentas e configurações de modelo registradas têm papéis distintos na história do projeto:
+
+- **OpenAI ChatGPT, GPT-5.6 Sol:** reconstrução, expansão e localização iniciais de outubro de 2026.
+- **OpenAI Codex:** engenharia posterior do repositório, correções de renderização, implementação e verificação.
+- **GPT-6 Astra no Codex:** rodadas de revisão e correção científica das duas edições em outubro de 2026.
+
+Nomes de modelos, configurações e comportamento do produto podem mudar ao longo do tempo. Esses nomes identificam as etapas registradas de produção e revisão; não são dependências de runtime do repositório nem implicam que todas as tarefas utilizaram o mesmo modelo.
 
 ---
 
@@ -132,6 +153,8 @@ Consulte [`LICENSE`](LICENSE) para o texto integral da licença.
 Se este repositório contribuir materialmente para um trabalho acadêmico, científico, educacional ou técnico, utilize os metadados disponíveis em [`CITATION.cff`](CITATION.cff) para citá-lo.
 
 O arquivamento no Zenodo e a citação via DOI estão implementados. A release imutável v1.0.0 está publicada no [arquivo do Zenodo](https://zenodo.org/records/23092486) com DOI [10.5281/zenodo.23092486](https://doi.org/10.5281/zenodo.23092486), que identifica essa versão exata. O [DOI do projeto](https://doi.org/10.5281/zenodo.23092485) representa todas as versões.
+
+A referência viva contém correções de formatação e de conteúdo científico posteriores à v1.0.0. Elas não alteram retroativamente aquele arquivo nem seus metadados de citação. Ao referenciar material de `main`, registre também o SHA do commit ou um permalink que identifique a revisão utilizada; o DOI da v1.0.0, isoladamente, não identifica correções posteriores.
 
 ---
 

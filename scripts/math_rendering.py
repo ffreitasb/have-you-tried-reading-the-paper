@@ -196,13 +196,63 @@ def fingerprint(text: str, filename: str) -> dict:
             "inline": sum(x.kind == "inline" for x in items), "display": sum(x.kind == "display" for x in items)}
 
 
-def check_corpus(root: Path) -> list[str]:
+def reviewed_baseline(root: Path) -> dict[str, dict]:
+    """Apply explicit scientific revisions without rewriting the historical manifest.
+
+    Each revision must name its evidence and exactly match the previous hashes.
+    This records intentional content changes, not rendering-equivalent aliases.
+    The resulting hashes remain strict: no normalization is added here.
+    """
     manifest_path = root / "scripts/math-preservation.json"
-    if not manifest_path.exists():
-        return ["missing math preservation manifest"]
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        raise ValueError("invalid historical preservation manifest")
+    expected = dict(manifest["files"])
+    revisions_path = root / "scripts/content-revisions.json"
+    if not revisions_path.exists():
+        return expected
+    revisions = json.loads(revisions_path.read_text(encoding="utf-8"))
+    if (not isinstance(revisions, dict) or revisions.get("schema") != 1
+            or not isinstance(revisions.get("revisions"), list)):
+        raise ValueError("invalid content revision manifest")
+    seen = set()
+    for revision in revisions["revisions"]:
+        if not isinstance(revision, dict):
+            raise ValueError("invalid content revision entry")
+        identifier = revision.get("id")
+        if not isinstance(identifier, str) or not identifier or identifier in seen:
+            raise ValueError("missing or repeated content revision id")
+        seen.add(identifier)
+        if not re.fullmatch(r"[a-f0-9]{40}", revision.get("source_commit", "")):
+            raise ValueError("content revision requires its source commit")
+        if not isinstance(revision.get("files"), dict) or not revision["files"]:
+            raise ValueError("content revision has no reviewed files")
+        for relative, change in revision["files"].items():
+            if not isinstance(change, dict):
+                raise ValueError(f"{relative}: invalid content revision change")
+            if relative not in expected or change.get("before") != expected[relative]:
+                raise ValueError(f"{relative}: content revision does not match preceding baseline")
+            after = change.get("after", {})
+            if (set(after) != {"outside_sha256", "tex_sha256", "inline", "display"}
+                    or any(not isinstance(after[k], str) or not re.fullmatch(r"[a-f0-9]{64}", after[k])
+                           for k in ("outside_sha256", "tex_sha256"))
+                    or any(type(after[k]) is not int or after[k] < 0 for k in ("inline", "display"))
+                    or after == expected[relative]):
+                raise ValueError(f"{relative}: invalid revised content fingerprint")
+            if not (isinstance(change.get("review_ids"), list) and change["review_ids"]
+                    and all(isinstance(x, str) and x for x in change["review_ids"])):
+                raise ValueError(f"{relative}: missing scientific review references")
+            expected[relative] = after
+    return expected
+
+
+def check_corpus(root: Path) -> list[str]:
+    try:
+        expected = reviewed_baseline(root)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return [f"invalid or missing reviewed content baseline: {exc}"]
     errors = []
-    for relative, baseline in manifest["files"].items():
+    for relative, baseline in expected.items():
         try:
             path = root / relative
             text = path.read_bytes().decode("utf-8")

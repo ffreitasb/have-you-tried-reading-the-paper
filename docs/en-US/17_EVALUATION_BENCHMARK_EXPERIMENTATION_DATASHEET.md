@@ -2,7 +2,7 @@
 title: Evaluation, Benchmarking & Experimentation Datasheet — SOTA++ 2026
 aliases: [Evaluation Datasheet, Benchmarking Datasheet, AI Experimentation Reference]
 tags: [ai, reference, evaluation, benchmarks, experimentation, statistics, reproducibility]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Evaluation, Benchmarking & Experimentation Datasheet — SOTA++ 2026
@@ -243,7 +243,7 @@ F1=
 2\frac{Precision\cdot Recall}{Precision+Recall}
 ```
 
-Macro and micro averaging answer different questions.
+Macro and micro averaging answer different questions. These ratios require nonzero denominators; declare how undefined cases are scored or excluded before averaging.
 
 ---
 
@@ -313,6 +313,8 @@ MRR
 \frac1{rank_i}
 ```
 
+Here $`rank_i`$ is the rank of the first relevant result for query $`i`$; its reciprocal-rank contribution is zero if no relevant result is retrieved.
+
 ## DCG
 
 ```math
@@ -329,6 +331,8 @@ NDCG@K
 =
 \frac{DCG@K}{IDCG@K}
 ```
+
+Declare the policy for queries with no relevant documents or zero ideal DCG, and for fewer than $`K`$ returned results; these choices affect averages and comparability.
 
 See [11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET](11_EMBEDDING_RETRIEVAL_RERANKER_DATASHEET.md).
 
@@ -370,6 +374,8 @@ P(correct|confidence=p)\approx p
 ```
 
 ## Brier score
+
+For binary outcomes $`y_i\in\{0,1\}`$ and predicted probabilities $`p_i`$ of outcome 1:
 
 ```math
 BS=
@@ -571,14 +577,14 @@ with uncertainty.
 ---
 # 20. Standard error
 
-For a mean:
+For $`N`$ independent observations with a common mean and common finite variance, the estimated standard error of their mean is:
 
 ```math
 SE=
 \frac{s}{\sqrt N}
 ```
 
-Increasing $`N`$ reduces uncertainty approximately as:
+Under these assumptions, increasing the number of independent observations reduces uncertainty approximately as:
 
 ```math
 1/\sqrt N
@@ -600,11 +606,15 @@ CI
 z_{\alpha/2}SE
 ```
 
+Here $`z_{\alpha/2}=\Phi^{-1}(1-\alpha/2)`$ is the positive upper-tail critical value of the standard normal distribution, for $`0<\alpha<1`$; $`\Phi`$ is its CDF.
+
 For many benchmarks, bootstrap is more flexible.
 
 ---
 
 # 22. Bootstrap
+
+First define the statistic, target population and sampling unit. For independent examples:
 
 1. sample examples with replacement;
 2. recompute the metric;
@@ -615,7 +625,7 @@ For many benchmarks, bootstrap is more flexible.
 \{\hat\theta_1^*,\ldots,\hat\theta_B^*\}
 ```
 
-Useful for metrics without a simple analytical variance formula.
+Useful for metrics without a simple analytical variance formula. For clustered or dependent observations, choose a cluster/block resampling scheme or a statistical model consistent with the sampling design and estimand; do not treat every item/seed row as independent. Preserve A/B pairs when resampling paired comparisons. A hierarchical bootstrap is appropriate only when its hierarchy matches that design.
 
 ---
 
@@ -739,7 +749,7 @@ This reveals whether the result is dominated by:
 - a few items;
 - randomness.
 
-A macro-average can hide all of this.
+A macro-average can hide all of this. Use the sampling design and target population to choose the independent unit for the uncertainty estimates in sections 20–22; repeated seeds on the same item do not create new independent items.
 
 ---
 
@@ -1034,17 +1044,19 @@ Generate:
 y_1,\ldots,y_N
 ```
 
-Select:
+Select using a fixed tie-breaking rule:
 
 ```math
-y^*=\arg\max_i V(y_i)
+i^*=\arg\max_{i\in\{1,\ldots,N\}} V(y_i),\qquad y^*=y_{i^*}
 ```
 
-Score increases with:
+Score depends on:
 
 - generator diversity;
 - N;
 - verifier quality.
+
+For a fixed verifier and candidate sets enlarged by inclusion, the maximum proxy score does not decrease. True task quality can decrease through verifier error or overoptimization; greater diversity also does not guarantee a gain.
 
 Attributing the entire gain to the generator is a causal error.
 
@@ -1072,6 +1084,8 @@ Average time per token after the first token.
 TPS=
 \frac{N_{generated}}{T_{decode}}
 ```
+
+Count only tokens produced during the stated $`T_{decode}`$ window. If timing from the first token's arrival $`t_1`$ to the last token's arrival $`t_N`$, the rate is $`(N-1)/(t_N-t_1)`$ for $`N>1`$, with the first token excluded from the count. Report the window separately from end-to-end request time.
 
 ## Throughput
 
@@ -1180,7 +1194,7 @@ Quality/Second
 Quality/TokenBudget
 ```
 
-especially when comparing quantizations and model sizes.
+especially when comparing quantizations and model sizes. These ratios require a declared quality metric with a meaningful zero and a positive budget denominator. For scores with an arbitrary origin, use Pareto analysis or explicitly defined gains over a baseline; shifting the score origin can reverse ratio rankings.
 
 ---
 

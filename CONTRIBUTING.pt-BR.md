@@ -31,13 +31,16 @@ Nome novo de produto ou modelo não constitui automaticamente uma nova categoria
    ```sh
    python -m venv .venv
    # Ative .venv com o comando habitual do seu shell.
-   python -m pip install -r scripts/requirements-validation.txt
+   python -m pip install -r scripts/requirements-validation.txt -r scripts/requirements-rendering.txt
    python scripts/validate_repository.py
    python -m unittest discover -s scripts -p "test_*.py"
+   python scripts/verify_math_rendering.py
    cffconvert --validate -i CITATION.cff
    ```
 
 O validador não modifica arquivos. Ele verifica estrutura, links locais e fragmentos determinísticos, higiene de texto, metadados de citação e o espelho do Zenodo quando presente. Referências externas passam por um workflow separado, semanal ou manual, com relatório para download; uma falha de rede não demonstra que uma afirmação técnica está errada.
+
+Edições científicas intencionais também exigem uma entrada revisada no registro de alterações de conteúdo; não regenere hashes históricos apenas para passar em um check. Siga a [manutenção da renderização matemática](scripts/MATH_RENDERING.md) para registrar a correção bilíngue e validar sua apresentação separadamente de seu significado.
 
 Não inclua estado de editor, memória de agentes, credenciais ou saídas locais de build nos commits. Encaminhe problemas ativos de segurança em particular, conforme a [política de segurança](SECURITY.md). A participação na comunidade segue o [código de conduta](CODE_OF_CONDUCT.md).
 

@@ -1,7 +1,7 @@
 ---
 title: Local AI Inference & Runtime Datasheet v2.0 — VRAM, State, Retrieval, Multimodal and Parallel Inference
 tags: [ai, local-ai, gguf, quantization, vram, inference, multimodal, retrieval, runtime]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Local AI Inference & Runtime Datasheet v2.0
@@ -257,7 +257,7 @@ MLA goes further by compressing K/V into learned latents.
 
 ## 11. MoE: active compute ≠ total storage
 
-For top-k routed MoE:
+For a schematic top-k routed-MoE variant (gate activation, selected-weight normalization, and shared experts are architecture-specific):
 
 ```math
 y=\sum_{i\in TopK(g(x))}g_i(x)E_i(x)
@@ -543,7 +543,7 @@ Idealized patchification:
 N_v\approx\frac{H}{P_h}\frac{W}{P_w}
 ```
 
-After merge factor $`m`$:
+After a token-count merge factor $`m`$ (input tokens per output token; a spatial $`k\times k`$ merge has $`m=k^2`$):
 
 ```math
 N'_v\approx\frac{N_v}{m}
@@ -617,7 +617,7 @@ Example:
 M_{vec}\approx4.096GB
 ```
 
-before graph/IVF/PQ/metadata overhead.
+for the raw vectors, before index structures and metadata. PQ codes can replace the FP32 vectors in the index rather than simply add overhead: size codes, codebooks, IDs and structures separately, and add original vectors only if retained. The 4.096 GB above uses decimal GB.
 
 ---
 
@@ -646,13 +646,13 @@ With $`K`$ candidates:
 C_{rerank}\approx K\cdot C_{cross-encoder}
 ```
 
-Batching improves utilization:
+Batching can improve utilization:
 
 ```math
 Throughput_{batch}\uparrow
 ```
 
-but increases latency/peak VRAM.
+Larger batches can increase peak VRAM. Batching across queries may add queueing delay, while batching candidates within one query may reduce its end-to-end reranking latency. Report which batching regime and latency measure are used.
 
 Pipeline sizing should measure:
 
@@ -806,13 +806,19 @@ Point tokens:
 N=T
 ```
 
-Patch size $`P`$:
+For non-overlapping patches of length $`P`$ and stride $`S=P`$:
 
 ```math
 N\approx T/P
 ```
 
-Patching reduces attention and memory, but sacrifices local resolution.
+More generally, without padding, for $`T\ge P`$ and positive integer stride $`S`$:
+
+```math
+N=\left\lfloor\frac{T-P}{S}\right\rfloor+1
+```
+
+Padding changes the count. When patching reduces the token count, it reduces attention cost and token-level temporal resolution; loss of information within a patch depends on its projection/compression, not on grouping alone.
 
 ---
 

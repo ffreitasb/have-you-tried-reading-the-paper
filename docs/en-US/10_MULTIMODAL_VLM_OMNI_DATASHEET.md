@@ -1,7 +1,7 @@
 ---
 title: Multimodal / VLM / Omni Model Datasheet v1.0
 tags: [ai, multimodal, vlm, omni, vision-language, audio-language, inference]
-updated: 2026-10-01
+updated: 2026-10-16
 ---
 
 # Multimodal / VLM / Omni Model Datasheet v1.0
@@ -109,6 +109,8 @@ K=Z_vW_K,\quad V=Z_vW_V
 A=softmax\left(\frac{QK^T}{\sqrt d}\right)V
 ```
 
+Here $`d=d_k`$ is the query/key width, and softmax is applied over keys for each query. $`Q\in\mathbb R^{N_t\times d_k}`$, $`K\in\mathbb R^{N_v\times d_k}`$, and $`V\in\mathbb R^{N_v\times d_{value}}`$ produce $`A\in\mathbb R^{N_t\times d_{value}}`$.
+
 Advantage: the full modality does not need to be serialized into “text-equivalent tokens.”
 
 Trade-off: additional modules, state, and cross-attention cost.
@@ -117,7 +119,7 @@ Trade-off: additional modules, state, and cross-attention cost.
 
 ## 2.3 Joint / early fusion
 
-All modalities enter one shared sequence/state:
+All modalities enter one shared sequence/state. In this topology, each $`Z_m\in\mathbb R^{N_m\times d_h}`$ denotes features already projected to the common hidden width; concatenation is along the token axis:
 
 ```math
 H_0=[Z_t;Z_v;Z_a;Z_{vid}]
@@ -351,7 +353,7 @@ In addition to position, the backbone often needs to know **which modality a tok
 h_i=e_i+p_i+m_i
 ```
 
-or through modulation/segment embeddings.
+Here $`e_i,p_i,m_i\in\mathbb R^{d_h}`$: $`p_i`$ is a positional embedding derived from coordinates, not the raw physical coordinate itself. Modulation/segment embeddings are alternative mechanisms.
 
 ---
 
@@ -486,7 +488,7 @@ If the causal backbone builds KV for all of it:
 M_{KV}\propto T_{effective}
 ```
 
-This is one of the most useful equations in practice.
+Count tokens after modality compression and hold batch size, layer count, KV-head dimensions, and precision fixed. This proportionality describes full-attention KV storage; linear-attention states and hybrid backbones require accounting by layer type. This is one of the most useful equations in practice.
 
 ### Translation into engineering terms
 
@@ -508,7 +510,7 @@ If everything is fused under global self-attention:
 C_{joint}\sim O((N_t+N_v)^2d)
 ```
 
-Architecture determines the physical cost curve.
+These are attention-mixing costs at fixed batch size and layer count, with compatible per-head widths summarized by d. Projections, FFNs, modality encoders, and cache layouts must be counted separately. Architecture determines the physical cost curve.
 
 ---
 
