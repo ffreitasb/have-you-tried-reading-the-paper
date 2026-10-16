@@ -1,10 +1,15 @@
 """Regression tests for destructive-path and deployment authorization boundaries."""
 
+import hashlib
+import io
+import json
+import tarfile
 import tempfile
 import unittest
 from pathlib import Path
 
 from build_site import clean_output
+from site_assets import prepare_assets
 from validate_repository import PAGES_DEPLOY_GUARD, workflow_errors
 
 
@@ -58,6 +63,41 @@ class PublicationTests(unittest.TestCase):
                 self.assertFalse(target.exists())
             with self.assertRaises(ValueError):
                 clean_output(root, root)
+
+    def test_asset_checksum_mismatch_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "web").mkdir()
+            cache = root / ".cache/downloads"
+            cache.mkdir(parents=True)
+            digest = hashlib.sha256(b"reviewed font").hexdigest()
+            (cache / digest).write_bytes(b"tampered font")
+            (root / "web/assets.lock.json").write_text(json.dumps({
+                "test.woff2": {"url": "https://example.invalid/font", "sha256": digest},
+            }))
+            with self.assertRaisesRegex(ValueError, "checksum mismatch"):
+                prepare_assets(root)
+
+    def test_archive_traversal_is_rejected(self):
+        buffer = io.BytesIO()
+        with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+            member = tarfile.TarInfo("package/es5/../../outside")
+            member.size = 1
+            archive.addfile(member, io.BytesIO(b"x"))
+        data = buffer.getvalue()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "web").mkdir()
+            cache = root / ".cache/downloads"
+            cache.mkdir(parents=True)
+            digest = hashlib.sha256(data).hexdigest()
+            (cache / digest).write_bytes(data)
+            (root / "web/assets.lock.json").write_text(json.dumps({
+                "mathjax": {"url": "https://example.invalid/archive", "sha256": digest},
+            }))
+            with self.assertRaisesRegex(ValueError, "Unsafe archive member"):
+                prepare_assets(root)
+            self.assertFalse((root / ".cache/outside").exists())
 
 
 if __name__ == "__main__":

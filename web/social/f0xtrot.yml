@@ -1,5 +1,6 @@
 tags:
   og:type: website
+  og:site_name: "{{ config.site_name }}"
   og:title: "{{ page.meta.get('title', page.title) }}"
   og:description: "{{ page.meta.description }}"
   og:url: "{{ page.canonical_url }}"

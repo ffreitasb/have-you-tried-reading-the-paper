@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 from pathlib import Path
 
 import yaml
@@ -71,8 +72,9 @@ def on_page_context(context, page, config, **kwargs):
     context["config"] = local
     pt = config.extra["locale"] == "pt-BR"
     scholar = config.extra["scholar"]
+    kind = "WebSite" if page.is_homepage else ("TechArticle" if re.match(r"\d{2}_", page.file.src_uri) else "WebPage")
     schema = {
-        "@context": "https://schema.org", "@type": "WebSite" if page.is_homepage else "TechArticle",
+        "@context": "https://schema.org", "@type": kind,
         "name": config.site_name if page.is_homepage else page.meta.get("title", page.title),
         "url": page.canonical_url, "description": page.meta["description"],
         "inLanguage": config.extra["locale"],
@@ -81,6 +83,8 @@ def on_page_context(context, page, config, **kwargs):
     }
     if not page.is_homepage:
         schema["isPartOf"] = {"@type": "WebSite", "url": ORIGIN, "name": config.site_name}
+    if kind == "TechArticle":
+        schema["citation"] = "https://doi.org/" + scholar["doi"]
     context["structured_data"] = json.dumps(schema, ensure_ascii=False).replace("<", "\\u003c")
     context["source_url"] = scholar["repository"] + "/blob/main/docs/" + config.extra["locale"] + "/" + page.file.src_uri
     context["is_pt"] = pt
