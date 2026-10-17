@@ -163,3 +163,22 @@ certificate and enforced HTTPS, root/PT homes, deep routes, 404, search/filter,
 all asset requests, cards, sitemap index and robots. The custom domain is only
 announced in repository READMEs/About after those public checks succeed. A DNS
 or certificate wait is an open publication gate, not a completed launch.
+
+## Operational handoff
+
+The [source repository](https://github.com/ffreitasb/have-you-tried-reading-the-paper)
+links to the English site through its About homepage; the two READMEs link to
+their respective editions. Keep those entry points aligned with the canonical
+URLs above when changing publication settings.
+
+For each publication, check the **Repository integrity** and **Documentation
+site** workflows for the exact commit on `main`, then confirm that the successful
+`github-pages` deployment uses that same SHA. A successful PR build alone does
+not confirm a production deployment. Preserve the scientific release tags and
+Zenodo records when publishing presentation or maintenance changes.
+
+Open Dependabot PRs are maintenance proposals, not proof of a site defect or
+an incomplete launch. Review the diff and required checks before merging them.
+Parser and theme updates also require the browser and mathematical checks
+described above, even when automated builds pass. Keep that validation separate
+from documentation-only edits.
