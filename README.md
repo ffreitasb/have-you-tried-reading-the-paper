@@ -300,6 +300,8 @@ When contributing to one language, keeping the equivalent document in the other 
 
 **[Contribution guide →](CONTRIBUTING.md)** · [Code of conduct](CODE_OF_CONDUCT.md) · [Security policy](SECURITY.md)
 
+For changes to the reading site, see the [build, validation and deployment guide](SITE.md).
+
 ---
 
 ## Languages

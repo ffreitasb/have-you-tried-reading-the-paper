@@ -300,6 +300,8 @@ Ao contribuir com um idioma, manter o documento equivalente no outro idioma sinc
 
 **[Guia de contribuição →](CONTRIBUTING.pt-BR.md)** · [Código de conduta](CODE_OF_CONDUCT.md) · [Política de segurança](SECURITY.md)
 
+Para alterações no site de leitura, consulte o [guia de build, validação e publicação](SITE.md), em inglês.
+
 ---
 
 ## Idiomas
