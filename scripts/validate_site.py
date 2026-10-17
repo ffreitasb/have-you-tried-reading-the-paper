@@ -43,6 +43,7 @@ def validate_site(root: Path, site: Path) -> dict:
             for lang, base in (("en", ORIGIN), ("pt-BR", ORIGIN + "pt-BR/")):
                 alt = soup.find("link", hreflang=lang)
                 require(alt and alt.get("href") == base + page_path(name), "wrong reciprocal language target")
+                require(alt and "alternate" in alt.get("rel", []), "missing semantic alternate relation")
             schema = soup.find("script", type="application/ld+json")
             try:
                 data = json.loads(schema.string)
