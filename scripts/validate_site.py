@@ -60,6 +60,11 @@ def validate_site(root: Path, site: Path) -> dict:
                         require(card.size == (1200, 630), "wrong social-card dimensions")
                     cards.append(str(image_path.relative_to(site)))
             if name in DOCUMENTS:
+                headings = soup.select(".md-content__inner h1[id], .md-content__inner h2[id], .md-content__inner h3[id]")
+                if headings and headings[0].name == "h1":
+                    headings = headings[1:]
+                toc_targets = {a.get("href") for a in soup.select('[data-md-component="toc"] a[href]')}
+                require(all("#" + h["id"] in toc_targets for h in headings), "table of contents omits original sections")
                 parser = MathHTML()
                 parser.feed(str(soup.select_one(".md-content__inner")))
                 expected = [item.body.strip() for item in formulas((root / "docs" / locale / name).read_bytes().decode())]
