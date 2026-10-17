@@ -59,6 +59,20 @@ not hard-code another copy of these fields into templates. The version DOI is
 the archived release; the project DOI groups all versions. Living pages are not
 the immutable archived snapshot. Source/edit URLs use their actual locale path.
 
+The TOC override retains all original parts in documents with multiple H1s,
+reusing the theme's recursive item partial. The static gate checks every H1–H3
+anchor after the title. Do not rewrite source headings to accommodate the theme.
+
+Material 9.7.7 assumes exact-value `link[rel=alternate]` targets are edition
+roots and fetches a sitemap under each URL. Our targets already identify the
+corresponding page. The post-page hook adds a legal trailing relation-token
+separator to these head links: `rel="alternate "`. Their HTML `alternate`
+relation and reciprocal SEO metadata remain intact, while the optional native
+route mapper ignores them. Direct language-menu anchors perform navigation.
+Review this compatibility workaround on theme upgrades and verify the network
+contains no chapter-level `sitemap.xml` requests. Do not remove hreflang metadata
+or replace corresponding-page links with edition homes to silence errors.
+
 The Registry filter is a progressive enhancement over the existing tables. It
 matches names, definitions, tags and enclosing headings, folds case and accents,
 announces counts, and keeps explanatory prose visible. With JavaScript disabled,

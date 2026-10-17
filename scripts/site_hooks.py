@@ -92,6 +92,15 @@ def on_page_context(context, page, config, **kwargs):
 
 
 def on_post_page(output, page, config, **kwargs):
+    # Material 9.7.7 queries `link[rel=alternate]` as edition ROOTS, then fetches
+    # their sitemap.xml. Our reciprocal hreflang URLs already identify exact
+    # pages, so that optional mapper invents chapter/sitemap.xml requests and
+    # can replace correct language links. A trailing HTML-token separator keeps
+    # the standard `alternate` relation intact (relList/SEO) while excluding the
+    # links from that exact-value selector. Keep the version-specific workaround
+    # covered by public network and corresponding-language navigation checks.
+    head, separator, body = output.partition("</head>")
+    output = head.replace('rel="alternate"', 'rel="alternate "') + separator + body
     # Material's Portuguese UI locale is `pt`; the document edition is `pt-BR`.
     if config.extra["locale"] == "pt-BR":
         output = output.replace('<html lang="pt"', '<html lang="pt-BR"', 1)
