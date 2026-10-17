@@ -1,0 +1,18 @@
+{# Keep every original part when a canonical document contains multiple H1s. #}
+{% set title = config.mdx_configs.toc.title or lang.t("toc") %}
+{% set entries = page.toc | list %}
+{% if entries and entries[0].level == 1 %}
+  {% set entries = entries[0].children + entries[1:] %}
+{% endif %}
+<nav class="md-nav md-nav--secondary" aria-label="{{ title | e }}">
+  {% if entries %}
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>{{ title }}
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      {% for toc_item in entries %}
+        {% include "partials/toc-item.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</nav>
