@@ -81,6 +81,14 @@ The language-specific [changelog](docs/en-US/CHANGELOG.md) records the conceptua
 
 ---
 
+### Bilingual reading site — October 2026
+
+Under the maintainer's direction, OpenAI Codex assisted with implementing and publishing the [reading site](https://rtfm.ffreitasb.cc/) using MkDocs and Material for MkDocs, with original F0XTROT presentation, separate English and Brazilian Portuguese builds, local search, a progressive Parameter Registry filter, mathematical rendering, and CFF-derived citation metadata.
+
+This publication phase preserved the bytes of all 44 technical documents and the scientific metadata. Static build and integrity checks were supplemented by desktop/mobile browser, accessibility, network, and public-domain verification. These checks assess publication behavior; they do not constitute a new scientific review. The living site does not replace the immutable Zenodo archives or change their DOIs. [Site maintenance](SITE.md) documents the architecture, asset origins, licensing, and validation procedures.
+
+---
+
 ## AI systems used
 
 The recorded tools and model configurations have distinct roles in the project's history:

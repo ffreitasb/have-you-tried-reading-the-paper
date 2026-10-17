@@ -81,6 +81,14 @@ O [changelog da edição](docs/pt-BR/CHANGELOG.md) registra as correções conce
 
 ---
 
+### Site de leitura bilíngue — outubro de 2026
+
+Sob direção do mantenedor, o OpenAI Codex auxiliou na implementação e publicação do [site de leitura](https://rtfm.ffreitasb.cc/pt-BR/) com MkDocs e Material for MkDocs, apresentação F0XTROT própria, builds separados em inglês e português brasileiro, busca local, filtro progressivo do Parameter Registry, renderização matemática e metadados de citação derivados do CFF.
+
+Esta etapa de publicação preservou os bytes dos 44 documentos técnicos e dos metadados científicos. Checks estáticos de build e integridade foram complementados por verificações de navegador em desktop/mobile, acessibilidade, rede e domínio público. Esses checks avaliam o comportamento da publicação; não constituem uma nova revisão científica. O site vivo não substitui os arquivos imutáveis do Zenodo nem altera seus DOIs. A [manutenção do site](SITE.md) documenta arquitetura, origens dos ativos, licenciamento e procedimentos de validação.
+
+---
+
 ## Sistemas de IA utilizados
 
 As ferramentas e configurações de modelo registradas têm papéis distintos na história do projeto:

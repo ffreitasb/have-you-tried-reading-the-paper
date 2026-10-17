@@ -8,6 +8,8 @@
 
 [**English**](README.md) · [**Português (Brasil)**](README.pt-BR.md)
 
+**Read the reference:** [rtfm.ffreitasb.cc](https://rtfm.ffreitasb.cc/)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23092485.svg)](https://doi.org/10.5281/zenodo.23092485)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/license-CC%20BY--SA%204.0-1769aa)](LICENSE)
 [![Repository integrity](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml/badge.svg?branch=main)](https://github.com/ffreitasb/have-you-tried-reading-the-paper/actions/workflows/repository-integrity.yml)
