@@ -794,17 +794,29 @@ mjx-container[jax=CHTML] {
 
 }
 
-/* Keep the native language menu inside narrow viewports. */
-.md-select__inner {
-  inset-inline-start:auto;
-  inset-inline-end:0;
-  max-width:calc(100vw - 1rem)
+/* A visible, touch-sized language link also fits the narrow mobile header. */
+.md-header .md-header__button.rtfm-language {
+  display:inline-flex;
+  flex-shrink:0;
+  align-items:center;
+  justify-content:center;
+  min-height:2.2rem;
+  min-width:3rem;
+  margin-inline:.2rem;
+  padding:.3rem .4rem;
+  border:1px solid var(--terminal);
+  border-radius:2px;
+  color:var(--terminal);
+  font-family:var(--md-text-font);
+  font-size:.65rem;
+  font-weight:700;
+  white-space:nowrap;
+  opacity:1
 }
 
-.md-select .md-select__inner,
-.md-select:hover .md-select__inner,
-.md-select:focus-within .md-select__inner {
-  transform:none;
+.rtfm-language:hover,.rtfm-language:focus-visible {
+  color:var(--void);
+  background:var(--terminal)
 }
 
 .md-content__inner:has(.rtfm-home)>.md-content__button {

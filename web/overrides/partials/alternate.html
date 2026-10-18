@@ -1,0 +1,7 @@
+{# Direct corresponding-page link, visible without opening a language menu. #}
+{% set pt = config.extra.locale == 'pt-BR' %}
+{% for alt in config.extra.alternate %}
+  {% if alt.lang == ('en' if pt else 'pt-BR') %}
+    <a class="md-header__button rtfm-language" href="{{ alt.link | url }}" hreflang="{{ 'en-US' if pt else 'pt-BR' }}" lang="{{ 'en-US' if pt else 'pt-BR' }}" aria-label="{{ 'EN-US — Ler esta página em inglês' if pt else 'PT-BR — Read this page in Brazilian Portuguese' }}">{{ 'EN-US' if pt else 'PT-BR' }}</a>
+  {% endif %}
+{% endfor %}
