@@ -38,6 +38,8 @@ def validate_site(root: Path, site: Path) -> dict:
                 if not condition:
                     errors.append(f"{prefix}{name}: {message}")
             require(soup.html.get("lang") == locale, "wrong HTML language")
+            navigation = soup.select_one(".md-sidebar--primary")
+            require(navigation and not navigation.has_attr("hidden"), "primary navigation is unavailable to the drawer")
             canonical = soup.find("link", rel="canonical")
             require(canonical and canonical.get("href") == url, "wrong canonical")
             for lang, base in (("en", ORIGIN), ("pt-BR", ORIGIN + "pt-BR/")):

@@ -2,7 +2,6 @@
 title: Have You Tried Reading the Paper?
 hide:
   - toc
-  - navigation
 ---
 
 <div class="rtfm-home" markdown="1">

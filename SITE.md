@@ -72,6 +72,9 @@ route mapper ignores them. Direct language-menu anchors perform navigation.
 The header's minimal `partials/alternate.html` override exposes one direct
 `PT-BR` or `EN-US` link, including on mobile, with an accessible label and the
 corresponding-page destination. It does not require JavaScript or a dropdown.
+Both homes retain the primary navigation: `hide: navigation` makes the theme
+emit a hidden sidebar while leaving the mobile drawer icon active. Keep only
+the home TOC hidden so the drawer works and desktop readers can use the sidebar.
 Review this compatibility workaround on theme upgrades and verify the network
 contains no chapter-level `sitemap.xml` requests. Do not remove hreflang metadata
 or replace corresponding-page links with edition homes to silence errors.
