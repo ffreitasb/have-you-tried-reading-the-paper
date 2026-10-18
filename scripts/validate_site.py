@@ -44,6 +44,14 @@ def validate_site(root: Path, site: Path) -> dict:
                 alt = soup.find("link", hreflang=lang)
                 require(alt and alt.get("href") == base + page_path(name), "wrong reciprocal language target")
                 require(alt and "alternate" in alt.get("rel", []), "missing semantic alternate relation")
+            language_link = soup.select_one(".md-header a.rtfm-language")
+            target_pt = locale == "en-US"
+            target_lang = "pt-BR" if target_pt else "en-US"
+            target_url = ORIGIN + ("pt-BR/" if target_pt else "") + page_path(name)
+            require(language_link and language_link.get("href") == target_url, "wrong visible language target")
+            require(language_link and language_link.get_text(strip=True) == target_lang.upper(), "wrong visible language label")
+            require(language_link and language_link.get("hreflang") == target_lang, "wrong visible language metadata")
+            require(language_link and language_link.get("aria-label", "").startswith(target_lang.upper()), "missing accessible language label")
             schema = soup.find("script", type="application/ld+json")
             try:
                 data = json.loads(schema.string)
